@@ -1,15 +1,15 @@
 import React from 'react';
 import {
-  fade,
+  alpha,
   withStyles,
   makeStyles,
-  createMuiTheme
+  createTheme
 } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
+import FormControl from '@material-ui/core/FormControl';
 import InputBase from '@material-ui/core/InputBase';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
-import FormControl from '@material-ui/core/FormControl';
 import { green } from '@material-ui/core/colors';
 
 const CssTextField = withStyles({
@@ -37,7 +37,7 @@ const CssTextField = withStyles({
 const BootstrapInput = withStyles(theme => ({
   root: {
     'label + &': {
-      marginTop: theme.spacing(3),
+      marginTop: theme.spacing(2),
     },
   },
   input: {
@@ -47,7 +47,7 @@ const BootstrapInput = withStyles(theme => ({
     border: '1px solid #ced4da',
     fontSize: 16,
     width: 'auto',
-    padding: '10px 12px',
+    padding: '24px 12px 10px',
     transition: theme.transitions.create(['border-color', 'box-shadow']),
     // Use the system font instead of the default Roboto font.
     fontFamily: [
@@ -63,7 +63,7 @@ const BootstrapInput = withStyles(theme => ({
       '"Segoe UI Symbol"',
     ].join(','),
     '&:focus': {
-      boxShadow: `${fade(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
+      boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
       borderColor: theme.palette.primary.main,
     },
   },
@@ -81,7 +81,7 @@ const useStylesReddit = makeStyles(theme => ({
     },
     '&$focused': {
       backgroundColor: '#fff',
-      boxShadow: `${fade(theme.palette.primary.main, 0.25)} 0 0 0 2px`,
+      boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 2px`,
       borderColor: theme.palette.primary.main,
     },
   },
@@ -102,9 +102,12 @@ const useStyles = makeStyles(theme => ({
   margin: {
     margin: theme.spacing(1),
   },
+  marginBootstrap: {
+    margin: theme.spacing(-1, 1, 1)
+  }
 }));
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: green,
   },
@@ -115,7 +118,10 @@ export default function CustomizedInputs() {
 
   return (
     <div className={classes.root}>
-      <CssTextField className={classes.margin} id="custom-css-standard-input" label="Custom CSS" />
+      <CssTextField
+        id="custom-css-standard-input"
+        label="Custom CSS"
+      />
       <CssTextField
         className={classes.margin}
         label="Custom CSS"
@@ -135,7 +141,7 @@ export default function CustomizedInputs() {
           id="mui-theme-provider-outlined-input"
         />
       </ThemeProvider>
-      <FormControl className={classes.margin}>
+      <FormControl className={classes.marginBootstrap}>
         <InputLabel shrink htmlFor="bootstrap-input">
           Bootstrap
         </InputLabel>

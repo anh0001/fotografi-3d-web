@@ -13,11 +13,11 @@ function CircularStatic(props) {
   const { classes } = props;
   return (
     <div>
-      <CircularProgress className={classes.progress} variant="static" value={5} />
-      <CircularProgress className={classes.progress} variant="static" value={25} />
-      <CircularProgress className={classes.progress} variant="static" value={50} />
-      <CircularProgress className={classes.progress} variant="static" value={75} />
-      <CircularProgress className={classes.progress} variant="static" value={100} />
+      <CircularProgress className={classes.progress} variant="determinate" value={5} />
+      <CircularProgress className={classes.progress} variant="determinate" value={25} />
+      <CircularProgress className={classes.progress} variant="determinate" value={50} />
+      <CircularProgress className={classes.progress} variant="determinate" value={75} />
+      <CircularProgress className={classes.progress} variant="determinate" value={100} />
     </div>
   );
 }

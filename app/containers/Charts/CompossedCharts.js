@@ -1,8 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import brand from 'enl-api/dummy/brand';
 import { SourceReader, PapperBlock } from 'enl-components';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import messages from './messages';
 import {
   CompossedLineBarArea,
@@ -10,62 +11,60 @@ import {
   CompossedVertical,
 } from './demos';
 
-class CompossedCharts extends React.Component {
-  render() {
-    const title = brand.name + ' - Chart';
-    const description = brand.desc;
-    const docSrc = 'containers/Charts/demos/';
-    const { intl } = this.props;
-    return (
-      <div>
-        <Helmet>
-          <title>{title}</title>
-          <meta name="description" content={description} />
-          <meta property="og:title" content={title} />
-          <meta property="og:description" content={description} />
-          <meta property="twitter:title" content={title} />
-          <meta property="twitter:description" content={description} />
-        </Helmet>
-        <PapperBlock
-          title={intl.formatMessage(messages.compossedDefaultTitle)}
-          icon="insert_chart"
-          desc=""
-          overflowX
-        >
-          <div>
-            <CompossedLineBarArea />
-            <SourceReader componentName={docSrc + 'CompossedLineBarArea.js'} />
-          </div>
-        </PapperBlock>
-        <PapperBlock
-          title={intl.formatMessage(messages.compossedSameDataTitle)}
-          icon="insert_chart"
-          desc=""
-          overflowX
-        >
-          <div>
-            <CompossedSameData />
-            <SourceReader componentName={docSrc + 'CompossedSameData.js'} />
-          </div>
-        </PapperBlock>
-        <PapperBlock
-          title={intl.formatMessage(messages.compossedVerticalTitle)}
-          icon="insert_chart"
-          desc=""
-          overflowX
-        >
-          <div>
-            <CompossedVertical />
-            <SourceReader componentName={docSrc + 'CompossedVertical.js'} />
-          </div>
-        </PapperBlock>
-      </div>
-    );
-  }
+function CompossedCharts(props) {
+  const title = brand.name + ' - Chart';
+  const description = brand.desc;
+  const docSrc = 'containers/Charts/demos/';
+  const { intl } = props;
+  return (
+    <div>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="twitter:title" content={title} />
+        <meta property="twitter:description" content={description} />
+      </Helmet>
+      <PapperBlock
+        title={intl.formatMessage(messages.compossedDefaultTitle)}
+        icon="insert_chart"
+        desc=""
+        overflowX
+      >
+        <div>
+          <CompossedLineBarArea />
+          <SourceReader componentName={docSrc + 'CompossedLineBarArea.js'} />
+        </div>
+      </PapperBlock>
+      <PapperBlock
+        title={intl.formatMessage(messages.compossedSameDataTitle)}
+        icon="insert_chart"
+        desc=""
+        overflowX
+      >
+        <div>
+          <CompossedSameData />
+          <SourceReader componentName={docSrc + 'CompossedSameData.js'} />
+        </div>
+      </PapperBlock>
+      <PapperBlock
+        title={intl.formatMessage(messages.compossedVerticalTitle)}
+        icon="insert_chart"
+        desc=""
+        overflowX
+      >
+        <div>
+          <CompossedVertical />
+          <SourceReader componentName={docSrc + 'CompossedVertical.js'} />
+        </div>
+      </PapperBlock>
+    </div>
+  );
 }
 
 CompossedCharts.propTypes = {
-  intl: intlShape.isRequired
+  intl: PropTypes.object.isRequired
 };
 
 export default injectIntl(CompossedCharts);

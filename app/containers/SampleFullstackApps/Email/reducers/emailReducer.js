@@ -1,4 +1,4 @@
-import { fromJS, List } from 'immutable';
+import produce from 'immer';
 import notif from 'enl-api/ui/notifMessage';
 import { CLOSE_NOTIF } from 'enl-redux/constants/notifConstants';
 import {
@@ -16,7 +16,7 @@ import {
 } from './emailConstants';
 
 const initialState = {
-  inbox: new List([]),
+  inbox: [],
   selectedMail: 0,
   selectedMailId: '',
   keywordValue: '',
@@ -27,80 +27,70 @@ const initialState = {
   processing: false,
 };
 
-const initialImmutableState = fromJS(initialState);
-
-export default function reducer(state = initialImmutableState, action = {}) {
+/* eslint-disable default-case, no-param-reassign */
+const emailReducer = (state = initialState, action = {}) => produce(state, draft => {
   switch (action.type) {
     case FETCH_EMAIL_SUCCESS:
-      return state.withMutations((mutableState) => {
-        const items = fromJS(action.payload);
-        mutableState
-          .set('inbox', new List(items))
-          .set('loading', false);
-      });
+      draft.inbox = action.payload;
+      draft.loading = false;
+      break;
     case SEND_MAIL:
     case UPDATE_MAIL:
-      return state.withMutations((mutableState) => {
-        mutableState.set('processing', true);
-      });
+      draft.processing - true;
+      break;
     case SEND_MAIL_SUCCESS:
-      return state.withMutations((mutableState) => {
-        const items = action.payload;
-        mutableState.set('inbox', state.get('inbox').unshift(items));
-        mutableState
-          .set('selectedMailId', '')
-          .set('openFrm', false)
-          .set('notifMsg', notif.sent)
-          .set('processing', false);
-      });
-    case DELETE_MAIL_SUCCESS:
-      return state.withMutations((mutableState) => {
-        mutableState
-          .set('inbox',
-            state.get('inbox').filter(mail => mail.key !== action.payload.key)
-          )
-          .set('notifMsg', notif.removed);
-      });
-    case UPDATE_MAIL_SUCCESS:
-      return state.withMutations((mutableState) => {
-        mutableState
-          .set(
-            'inbox',
-            state.get('inbox').map(mail => (mail.key === action.payload.key ? action.payload : mail))
-          )
-          .set('notifMsg', notif.updated);
-      });
-    case OPEN_MAIL:
-      return state.withMutations((mutableState) => {
-        const index = state.get('inbox').indexOf(action.mail);
-        mutableState.set('selectedMail', index);
-      });
+      draft.inbox.unshift(action.payload);
+      draft.selectedMail = '';
+      draft.openFrm = false;
+      draft.notifMsg = notif.sent;
+      draft.processing = false;
+      break;
+    case DELETE_MAIL_SUCCESS: {
+      const index = draft.inbox.findIndex((obj) => obj.key === action.payload.key);
+      if (index !== -1) {
+        draft.inbox.splice(index, 1);
+        draft.notifMsg = notif.removed;
+      }
+      break;
+    }
+    case UPDATE_MAIL_SUCCESS: {
+      const index = draft.inbox.findIndex((obj) => obj.key === action.payload.key);
+      if (index !== -1) {
+        draft.inbox[index] = action.payload;
+        draft.notifMsg = notif.updated;
+      }
+      break;
+    }
+    case OPEN_MAIL: {
+      const index = draft.inbox.findIndex((obj) => obj.key === action.mail.key);
+      if (index !== -1) {
+        draft.selectedMail = index;
+      }
+      break;
+    }
     case FILTER_MAIL:
-      return state.withMutations((mutableState) => {
-        mutableState.set('currentPage', action.filter);
-      });
+      draft.currentPage = action.filter;
+      break;
     case COMPOSE_MAIL:
-      return state.withMutations((mutableState) => {
-        mutableState.set('openFrm', true);
-      });
+      draft.openFrm = true;
+      break;
     case DISCARD_MESSAGE:
-      return state.withMutations((mutableState) => {
-        mutableState
-          .set('openFrm', false)
-          .set('selectedMailId', '')
-          .set('notifMsg', notif.discard);
-      });
-    case SEARCH_MAIL:
-      return state.withMutations((mutableState) => {
-        action.keyword.persist();
-        const keyword = action.keyword.target.value.toLowerCase();
-        mutableState.set('keywordValue', keyword);
-      });
+      draft.openFrm = false;
+      draft.selectedMailId = '';
+      draft.notifMsg = notif.discard;
+      break;
+    case SEARCH_MAIL: {
+      action.keyword.persist();
+      const keyword = action.keyword.target.value.toLowerCase();
+      draft.keywordValue = keyword;
+      break;
+    }
     case CLOSE_NOTIF:
-      return state.withMutations((mutableState) => {
-        mutableState.set('notifMsg', '');
-      });
+      draft.notifMsg = '';
+      break;
     default:
-      return state;
+      break;
   }
-}
+});
+
+export default emailReducer;

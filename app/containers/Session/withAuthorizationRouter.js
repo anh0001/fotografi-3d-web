@@ -40,9 +40,8 @@ export default function withAuthorizationRouter(Component) {
     isAuthenticated: null
   };
 
-  const reducer = 'authReducer';
   const mapStateToProps = (state) => ({
-    isAuthenticated: state.get(reducer).loggedIn,
+    isAuthenticated: state.authReducer.loggedIn,
     ...state
   });
 

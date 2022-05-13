@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Slider from 'react-slick';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -31,58 +31,53 @@ const styles = ({
 
 const getThumb = imgData.map(a => a.thumb);
 
-class ThumbnailCarousel extends React.Component {
-  state = {
-    transition: 'slide'
-  }
+function ThumbnailCarousel(props) {
+  const [transition, setTransition] = useState('slide');
 
-  handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
+  const handleChange = event => {
+    setTransition(event.target.value);
   };
 
-  render() {
-    const { classes } = this.props;
-    const { transition } = this.state;
-    const settings = {
-      customPaging: (i) => (
-        <a>
-          <img src={getThumb[i]} alt="thumb" />
-        </a>
-      ),
-      infinite: true,
-      dots: true,
-      slidesToShow: 1,
-      slidesToScroll: 1,
-      fade: transition === 'fade',
-    };
-    return (
-      <div className={classes.root}>
-        <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="age-simple">Carousel Transition</InputLabel>
-          <Select
-            value={transition}
-            onChange={this.handleChange}
-            inputProps={{
-              name: 'transition',
-              id: 'transition-single-carousel',
-            }}
-          >
-            <MenuItem value="slide">Slide</MenuItem>
-            <MenuItem value="fade">Fade</MenuItem>
-          </Select>
-        </FormControl>
-        <div className="container thumb-nav custom-nav">
-          <Slider {...settings}>
-            {imgData.map((item, index) => (
-              <div key={index.toString()} className={classes.item}>
-                <img src={item.img} alt={item.title} />
-              </div>
-            ))}
-          </Slider>
-        </div>
+  const { classes } = props;
+  const settings = {
+    customPaging: (i) => (
+      <a>
+        <img src={getThumb[i]} alt="thumb" />
+      </a>
+    ),
+    infinite: true,
+    dots: true,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    fade: transition === 'fade',
+  };
+  return (
+    <div className={classes.root}>
+      <FormControl className={classes.formControl}>
+        <InputLabel htmlFor="age-simple">Carousel Transition</InputLabel>
+        <Select
+          value={transition}
+          onChange={(e) => handleChange(e)}
+          inputProps={{
+            name: 'transition',
+            id: 'transition-thumbnail-carousel',
+          }}
+        >
+          <MenuItem value="slide">Slide</MenuItem>
+          <MenuItem value="fade">Fade</MenuItem>
+        </Select>
+      </FormControl>
+      <div className="container thumb-nav custom-nav">
+        <Slider {...settings}>
+          {imgData.map((item, index) => (
+            <div key={index.toString()} className={classes.item}>
+              <img src={item.img} alt={item.title} />
+            </div>
+          ))}
+        </Slider>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 ThumbnailCarousel.propTypes = {

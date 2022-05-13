@@ -1,4 +1,4 @@
-import { fromJS, List, Map } from 'immutable';
+import produce from 'immer';
 import { getDate, getTime } from 'enl-components/helpers/dateTimeHelper';
 import {
   FETCH_CHAT_DATA,
@@ -9,65 +9,56 @@ import {
 } from './chatConstants';
 
 const initialState = {
-  chatList: List([]),
-  activeChat: List([]),
+  chatList: [],
+  activeChat: [],
   chatSelected: 0,
   showMobileDetail: false
 };
 
-const buildMessage = (message, curData) => {
+const buildMessage = message => {
   const id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
-  const newData = Map({
+  const newData = {
     id,
     from: 'me',
     date: getDate(),
     time: getTime(),
     message,
-  });
-  return curData.push(newData);
+  };
+  return newData;
 };
 
-const initialImmutableState = fromJS(initialState);
-export default function reducer(state = initialImmutableState, action = {}) {
+/* eslint-disable default-case, no-param-reassign */
+const chatdReducer = (state = initialState, action = {}) => produce(state, draft => {
   switch (action.type) {
     case FETCH_CHAT_DATA:
-      return state.withMutations((mutableState) => {
-        const items = fromJS(action.items);
-        mutableState
-          .set('chatList', items)
-          .set('activeChat', items.getIn([state.get('chatSelected'), 'chat']));
-      });
-    case SHOW_CHAT:
-      return state.withMutations((mutableState) => {
-        const chatItem = state.get('chatList')
-          .find(obj => (
-            obj.get('with') === action.person.get('key')
-          ));
-        const index = state.get('chatList').indexOf(chatItem);
-        const chatValue = chatItem.get('chat') !== [] ? chatItem.get('chat') : List([]);
-        mutableState
-          .set('chatSelected', index)
-          .set('activeChat', chatValue)
-          .set('showMobileDetail', true);
-      });
+      draft.chatList = action.items;
+      draft.activeChat = action.items[draft.chatSelected].chat;
+      break;
+    case SHOW_CHAT: {
+      const index = draft.chatList.findIndex((obj) => obj.with === action.person.key);
+      if (index !== -1) {
+        draft.chatSelected = index;
+        draft.activeChat = draft.chatList[index].chat;
+        draft.showMobileDetail = true;
+      }
+      break;
+    }
     case HIDE_CHAT:
-      return state.withMutations((mutableState) => {
-        mutableState.set('showMobileDetail', false);
-      });
-    case SEND_CHAT:
-      return state.withMutations((mutableState) => {
-        const newMessage = buildMessage(action.message, state.getIn(['chatList', state.get('chatSelected'), 'chat']));
-        mutableState
-          .update('chatList', chatList => chatList.setIn([state.get('chatSelected'), 'chat'], newMessage))
-          .set('activeChat', newMessage);
-      });
+      draft.showMobileDetail = false;
+      break;
+    case SEND_CHAT: {
+      const newMessage = buildMessage(action.message);
+      draft.chatList[draft.chatSelected].chat.push(newMessage);
+      draft.activeChat = draft.chatList[draft.chatSelected].chat;
+      break;
+    }
     case DELETE_CONVERSATION:
-      return state.withMutations((mutableState) => {
-        mutableState
-          .update('chatList', chatList => chatList.setIn([state.get('chatSelected'), 'chat'], List([])))
-          .set('activeChat', List([]));
-      });
+      draft.chatList[draft.chatSelected].chat = [];
+      draft.activeChat = [];
+      break;
     default:
-      return state;
+      break;
   }
-}
+});
+
+export default chatdReducer;

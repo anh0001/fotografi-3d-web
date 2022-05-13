@@ -1,8 +1,8 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
-import Editor, { createEditorStateWithText } from 'draft-js-plugins-editor';
+import Editor, { createEditorStateWithText } from '@draft-js-plugins/editor';
 import { withStyles } from '@material-ui/core/styles';
-import createInlineToolbarPlugin, { Separator } from 'draft-js-inline-toolbar-plugin';
+import createInlineToolbarPlugin, { Separator } from '@draft-js-plugins/inline-toolbar';
 import { HeadlinesButton } from 'enl-components';
 import {
   ItalicButton,
@@ -13,8 +13,8 @@ import {
   OrderedListButton,
   BlockquoteButton,
   CodeBlockButton,
-} from 'draft-js-buttons/lib';
-import 'draft-js-inline-toolbar-plugin/lib/plugin.css';
+} from '@draft-js-plugins/buttons';
+import '@draft-js-plugins/inline-toolbar/lib/plugin.css';
 import styles from 'enl-components/TextEditor/editorStyles-jss';
 
 const inlineToolbarPlugin = createInlineToolbarPlugin();
@@ -22,57 +22,51 @@ const { InlineToolbar } = inlineToolbarPlugin;
 const plugins = [inlineToolbarPlugin];
 const text = 'In this editor a toolbar shows up once you select part of the text …';
 
-class InlineWysiwyg extends Component {
-  state = {
-    editorState: createEditorStateWithText(text),
+function InlineWysiwyg(props) {
+  const { classes } = props;
+  const [editorState, setEditorState] = useState(createEditorStateWithText(text));
+  let editor = useRef(null);
+
+  const onChange = (editorStateParams) => {
+    setEditorState(editorStateParams);
   };
 
-  onChange = (editorState) => {
-    this.setState({
-      editorState,
-    });
+  const focus = () => {
+    editor.focus();
   };
 
-  focus = () => {
-    this.editor.focus();
-  };
-
-  render() {
-    const { classes } = this.props;
-    const { editorState } = this.state;
-    return (
-      <Fragment>
-        { /* eslint-disable-next-line */ }
-        <div className={classes.editor} onClick={this.focus}>
-          <Editor
-            editorState={editorState}
-            onChange={this.onChange}
-            plugins={plugins}
-            ref={(element) => { this.editor = element; }}
-          />
-          <InlineToolbar>
-            {
-              // may be use React.Fragment instead of div to improve perfomance after React 16
-              (externalProps) => (
-                <div className={classes.toolbar}>
-                  <BoldButton {...externalProps} />
-                  <ItalicButton {...externalProps} />
-                  <UnderlineButton {...externalProps} />
-                  <CodeButton {...externalProps} />
-                  <Separator {...externalProps} />
-                  <HeadlinesButton {...externalProps} />
-                  <UnorderedListButton {...externalProps} />
-                  <OrderedListButton {...externalProps} />
-                  <BlockquoteButton {...externalProps} />
-                  <CodeBlockButton {...externalProps} />
-                </div>
-              )
-            }
-          </InlineToolbar>
-        </div>
-      </Fragment>
-    );
-  }
+  return (
+    <Fragment>
+      { /* eslint-disable-next-line */ }
+      <div className={classes.editor} onClick={focus}>
+        <Editor
+          editorState={editorState}
+          onChange={onChange}
+          plugins={plugins}
+          ref={(element) => { editor = element; }}
+        />
+        <InlineToolbar>
+          {
+            // may be use React.Fragment instead of div to improve perfomance after React 16
+            (externalProps) => (
+              <div className={classes.toolbar}>
+                <BoldButton {...externalProps} />
+                <ItalicButton {...externalProps} />
+                <UnderlineButton {...externalProps} />
+                <CodeButton {...externalProps} />
+                <Separator {...externalProps} />
+                <HeadlinesButton {...externalProps} />
+                <UnorderedListButton {...externalProps} />
+                <OrderedListButton {...externalProps} />
+                <BlockquoteButton {...externalProps} />
+                <CodeBlockButton {...externalProps} />
+              </div>
+            )
+          }
+        </InlineToolbar>
+      </div>
+    </Fragment>
+  );
 }
 
 InlineWysiwyg.propTypes = {

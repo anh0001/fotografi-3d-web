@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { NavLink } from 'react-router-dom';
@@ -34,7 +34,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import dataContact from 'enl-api/apps/contactData';
 import messageStyles from 'enl-styles/Messages.scss';
-import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import messages from './messages';
 import styles from './widget-jss';
 
@@ -106,7 +106,7 @@ function ContactList(props) {
 ContactList.propTypes = {
   classes: PropTypes.object.isRequired,
   openMenu: PropTypes.func.isRequired,
-  intl: intlShape.isRequired
+  intl: PropTypes.object.isRequired
 };
 
 const ContactListStyled = withStyles(styles)(injectIntl(ContactList));
@@ -297,138 +297,131 @@ NotifList.propTypes = {
 const NotifListStyled = withStyles(styles)(injectIntl(NotifList));
 /* END Email List */
 
-class ContactWidget extends React.Component {
-  state = {
-    value: 0,
-    anchorEl: null,
-    anchorElAction: null,
+function ContactWidget(props) {
+  const [value, setValue] = useState(0);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorElAction, setAnchorElAction] = useState(null);
+
+  const handleChange = (event, val) => {
+    setValue(val);
   };
 
-  handleChange = (event, value) => {
-    this.setState({ value });
+  const handleOpen = event => {
+    setAnchorEl(event.currentTarget);
   };
 
-  handleOpen = event => {
-    this.setState({ anchorEl: event.currentTarget });
+  const handleOpenAction = event => {
+    setAnchorElAction(event.currentTarget);
   };
 
-  handleOpenAction = event => {
-    this.setState({ anchorElAction: event.currentTarget });
+  const handleClose = () => {
+    setAnchorEl(null);
+    setAnchorElAction(null);
   };
 
-  handleClose = () => {
-    this.setState({
-      anchorEl: null,
-      anchorElAction: null
-    });
-  };
-
-  render() {
-    const { classes, intl } = this.props;
-    const { value, anchorEl, anchorElAction } = this.state;
-    const open = Boolean(anchorEl);
-    const openAct = Boolean(anchorElAction);
-    return (
-      <Fragment>
-        <Menu
-          id="long-menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={this.handleClose}
-        >
-          <MenuItem onClick={this.handleClose}>
-            <ListItemIcon>
-              <Chat className={classes.blueText} />
-            </ListItemIcon>
-            <ListItemText variant="inset" primary="Chat" />
-          </MenuItem>
-          <MenuItem onClick={this.handleClose}>
-            <ListItemIcon>
-              <Mail className={classes.pinkText} />
-            </ListItemIcon>
-            <ListItemText variant="inset" primary="Email" />
-          </MenuItem>
-          <MenuItem onClick={this.handleClose}>
-            <ListItemIcon>
-              <PhoneIcon className={classes.tealText} />
-            </ListItemIcon>
-            <ListItemText variant="inset" primary="Call" />
-          </MenuItem>
-        </Menu>
-        <Menu
-          id="long-menu-act"
-          anchorEl={anchorElAction}
-          open={openAct}
-          onClose={this.handleClose}
-        >
-          <MenuItem onClick={this.handleClose}>
-            <ListItemIcon>
-              <Check className={classes.tealText} />
-            </ListItemIcon>
-            <ListItemText variant="inset" primary="Fix it" />
-          </MenuItem>
-          <MenuItem onClick={this.handleClose}>
-            <ListItemIcon>
-              <PlaylistAddCheck />
-            </ListItemIcon>
-            <ListItemText variant="inset" primary="Skip" />
-          </MenuItem>
-        </Menu>
-        <Paper className={classes.rootContact}>
-          <AppBar position="static" color="default">
-            <Hidden mdUp>
-              <Tabs
-                value={value}
-                onChange={this.handleChange}
-                indicatorColor="primary"
-                textColor="primary"
-                variant="fullWidth"
-              >
-                <Tab icon={<AccountBox />} />
-                <Tab icon={<Chat />} />
-                <Tab icon={<NotificationsActive />} />
-              </Tabs>
-            </Hidden>
-            <Hidden smDown>
-              <Tabs
-                value={value}
-                onChange={this.handleChange}
-                indicatorColor="primary"
-                textColor="primary"
-                variant="fullWidth"
-              >
-                <Tab label={intl.formatMessage(messages.contacts)} icon={<AccountBox />} />
-                <Tab
-                  label={(
-                    <Badge className={classes.tabNotif} color="secondary" badgeContent={4}>
-                      <FormattedMessage {...messages.massages} />
-                    </Badge>
-                  )}
-                  icon={<Chat />}
-                />
-                <Tab
-                  label={(
-                    <Badge className={classes.tabNotif} color="secondary" badgeContent={4}>
-                      <FormattedMessage {...messages.notification} />
-                    </Badge>
-                  )}
-                  icon={<NotificationsActive />}
-                />
-              </Tabs>
-            </Hidden>
-          </AppBar>
-          {value === 0 && <TabContainer><ContactListStyled openMenu={this.handleOpen} /></TabContainer>}
-          {value === 1 && <TabContainer><MessagesListStyled /></TabContainer>}
-          {value === 2 && <TabContainer><NotifListStyled openMenu={this.handleOpenAction} /></TabContainer>}
-        </Paper>
-      </Fragment>
-    );
-  }
+  const { classes, intl } = props;
+  const open = Boolean(anchorEl);
+  const openAct = Boolean(anchorElAction);
+  return (
+    <Fragment>
+      <Menu
+        id="long-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={handleClose}>
+          <ListItemIcon>
+            <Chat className={classes.blueText} />
+          </ListItemIcon>
+          <ListItemText variant="inset" primary="Chat" />
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          <ListItemIcon>
+            <Mail className={classes.pinkText} />
+          </ListItemIcon>
+          <ListItemText variant="inset" primary="Email" />
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          <ListItemIcon>
+            <PhoneIcon className={classes.tealText} />
+          </ListItemIcon>
+          <ListItemText variant="inset" primary="Call" />
+        </MenuItem>
+      </Menu>
+      <Menu
+        id="long-menu-act"
+        anchorEl={anchorElAction}
+        open={openAct}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={handleClose}>
+          <ListItemIcon>
+            <Check className={classes.tealText} />
+          </ListItemIcon>
+          <ListItemText variant="inset" primary="Fix it" />
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          <ListItemIcon>
+            <PlaylistAddCheck />
+          </ListItemIcon>
+          <ListItemText variant="inset" primary="Skip" />
+        </MenuItem>
+      </Menu>
+      <Paper className={classes.rootContact}>
+        <AppBar position="static" color="default">
+          <Hidden mdUp>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              indicatorColor="primary"
+              textColor="primary"
+              variant="fullWidth"
+            >
+              <Tab icon={<AccountBox />} />
+              <Tab icon={<Chat />} />
+              <Tab icon={<NotificationsActive />} />
+            </Tabs>
+          </Hidden>
+          <Hidden smDown>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              indicatorColor="primary"
+              textColor="primary"
+              variant="fullWidth"
+            >
+              <Tab label={intl.formatMessage(messages.contacts)} icon={<AccountBox />} />
+              <Tab
+                label={(
+                  <Badge className={classes.tabNotif} color="secondary" badgeContent={4}>
+                    <FormattedMessage {...messages.massages} />
+                  </Badge>
+                )}
+                icon={<Chat />}
+              />
+              <Tab
+                label={(
+                  <Badge className={classes.tabNotif} color="secondary" badgeContent={4}>
+                    <FormattedMessage {...messages.notification} />
+                  </Badge>
+                )}
+                icon={<NotificationsActive />}
+              />
+            </Tabs>
+          </Hidden>
+        </AppBar>
+        {value === 0 && <TabContainer><ContactListStyled openMenu={handleOpen} /></TabContainer>}
+        {value === 1 && <TabContainer><MessagesListStyled /></TabContainer>}
+        {value === 2 && <TabContainer><NotifListStyled openMenu={handleOpenAction} /></TabContainer>}
+      </Paper>
+    </Fragment>
+  );
 }
 
 ContactWidget.propTypes = {
   classes: PropTypes.object.isRequired,
-  intl: intlShape.isRequired
+  intl: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(injectIntl(ContactWidget));

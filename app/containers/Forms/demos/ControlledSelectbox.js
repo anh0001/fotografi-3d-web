@@ -1,4 +1,4 @@
-import React, { Fragment, PureComponent } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -19,7 +19,6 @@ const styles = theme => ({
     height: 'auto',
   },
   divider: {
-    display: 'block',
     margin: `${theme.spacing(3)}px 0`,
   },
   field: {
@@ -39,156 +38,160 @@ const styles = theme => ({
   },
 });
 
-class ControlledSelectbox extends PureComponent {
-  state = {
+function ControlledSelectbox(props) {
+  const { classes } = props;
+  const [dataState, setDataState] = useState({
     open: false,
-    openRemotely: false,
     age: '',
+  });
+  const [openRemotely, setOpenRemotely] = useState(false);
+
+  const handleChange = name => event => {
+    setDataState({
+      ...dataState,
+      [name]: Number(event.target.value)
+    });
   };
 
-  handleChange = name => event => {
-    this.setState({ [name]: Number(event.target.value) });
+  const handleChangeControll = event => {
+    setDataState({
+      ...dataState,
+      [event.target.name]: event.target.value
+    });
   };
 
-  handleChangeControll = event => {
-    this.setState({ [event.target.name]: event.target.value });
+  const handleClickOpen = () => {
+    setDataState({
+      ...dataState,
+      open: true
+    });
   };
 
-  handleClickOpen = () => {
-    this.setState({ open: true });
+  const handleClickOpenRemot = () => {
+    setOpenRemotely(true);
   };
 
-  handleClickOpenRemot = () => {
-    this.setState({ openRemotely: true });
+  const handleClose = () => {
+    setDataState({
+      ...dataState,
+      open: false
+    });
   };
 
-  handleClose = () => {
-    this.setState({ open: false });
+  const handleCloseRemot = () => {
+    setOpenRemotely(false);
   };
 
-  handleOpen = () => {
-    this.setState({ open: true });
+  const handleOpenRemot = () => {
+    setOpenRemotely(true);
   };
 
-  handleCloseRemot = () => {
-    this.setState({ openRemotely: false });
-  };
-
-  handleOpenRemot = () => {
-    this.setState({ openRemotely: true });
-  };
-
-  render() {
-    const { classes } = this.props;
-    const { open, age, openRemotely } = this.state;
-    return (
-      <Fragment>
+  return (
+    <Fragment>
+      <Grid
+        container
+        alignItems="flex-start"
+        justifyContent="space-around"
+        direction="row"
+        spacing={3}
+      >
         <Grid
-          container
-          alignItems="flex-start"
-          justify="space-around"
-          direction="row"
-          spacing={3}
+          item
+          md={6}
+          className={classes.demo}
         >
-          <Grid
-            item
-            md={6}
-            className={classes.demo}
-          >
-            <Typography variant="button" className={classes.divider}>With a Dialog</Typography>
-            <Typography className={classes.divider}>While its not encouraged by the Material Design specification, you can use a select inside a dialog.</Typography>
-            <div>
-              <Button variant="contained" color="secondary" onClick={this.handleClickOpen}>Open select dialog</Button>
-              <Dialog
-                disableBackdropClick
-                disableEscapeKeyDown
-                open={open}
-                onClose={this.handleClose}
-              >
-                <DialogTitle>Fill the form</DialogTitle>
-                <DialogContent>
-                  <form className={classes.container}>
-                    <FormControl className={classes.formControl}>
-                      <InputLabel htmlFor="age-native-simple">Age</InputLabel>
-                      <Select
-                        native
-                        value={age}
-                        onChange={this.handleChange('age')}
-                        input={<Input id="age-native-simple" />}
-                      >
-                        <option value="" />
-                        <option value={10}>Ten</option>
-                        <option value={20}>Twenty</option>
-                        <option value={30}>Thirty</option>
-                      </Select>
-                    </FormControl>
-                    <FormControl className={classes.formControl}>
-                      <InputLabel htmlFor="age-simple">Age</InputLabel>
-                      <Select
-                        value={age}
-                        onChange={this.handleChange('age')}
-                        input={<Input id="age-simple" />}
-                      >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </form>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={this.handleClose} color="primary">
-                    Cancel
-                  </Button>
-                  <Button onClick={this.handleClose} color="primary">
-                    Ok
-                  </Button>
-                </DialogActions>
-              </Dialog>
-            </div>
-          </Grid>
-          <Grid
-            item
-            md={6}
-            className={classes.demo}
-          >
-            <Typography variant="button" className={classes.divider}>Controlled open Select</Typography>
-            <div>
-              <form autoComplete="off">
-                <Button variant="contained" color="secondary" className={classes.button} onClick={this.handleClickOpenRemot}>
-                  Open the select
+          <Typography variant="button" className={classes.divider}>With a Dialog</Typography>
+          <Typography className={classes.divider}>While its not encouraged by the Material Design specification, you can use a select inside a dialog.</Typography>
+          <div>
+            <Button variant="contained" color="secondary" onClick={handleClickOpen}>Open select dialog</Button>
+            <Dialog
+              disableEscapeKeyDown
+              open={dataState.open}
+              onClose={handleClose}
+            >
+              <DialogTitle>Fill the form</DialogTitle>
+              <DialogContent>
+                <form className={classes.container}>
+                  <FormControl className={classes.formControl}>
+                    <InputLabel htmlFor="age-native-simple">Age</InputLabel>
+                    <Select
+                      native
+                      value={dataState.age}
+                      onChange={handleChange('age')}
+                      input={<Input id="age-native-simple" />}
+                    >
+                      <option value="" />
+                      <option value={10}>Ten</option>
+                      <option value={20}>Twenty</option>
+                      <option value={30}>Thirty</option>
+                    </Select>
+                  </FormControl>
+                  <FormControl className={classes.formControl}>
+                    <InputLabel htmlFor="age-simple">Age</InputLabel>
+                    <Select
+                      value={dataState.age}
+                      onChange={handleChange('age')}
+                      input={<Input id="age-simple" />}
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value={10}>Ten</MenuItem>
+                      <MenuItem value={20}>Twenty</MenuItem>
+                      <MenuItem value={30}>Thirty</MenuItem>
+                    </Select>
+                  </FormControl>
+                </form>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                  Cancel
                 </Button>
-                <FormControl className={classes.formControl}>
-                  <InputLabel htmlFor="controlled-open-select">Age</InputLabel>
-                  <Select
-                    open={openRemotely}
-                    onClose={this.handleCloseRemot}
-                    onOpen={this.handleOpenRemot}
-                    value={age}
-                    onChange={this.handleChangeControll}
-                    inputProps={{
-                      name: 'age',
-                      id: 'controlled-open-select',
-                    }}
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
-                  </Select>
-                </FormControl>
-              </form>
-            </div>
-          </Grid>
+                <Button onClick={handleClose} color="primary">
+                  Ok
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </div>
         </Grid>
-      </Fragment>
-    );
-  }
+        <Grid
+          item
+          md={6}
+          className={classes.demo}
+        >
+          <Typography variant="button" className={classes.divider}>Controlled open Select</Typography>
+          <div>
+            <form autoComplete="off">
+              <Button variant="contained" color="secondary" className={classes.button} onClick={handleClickOpenRemot}>
+                Open the select
+              </Button>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="controlled-open-select">Age</InputLabel>
+                <Select
+                  open={openRemotely}
+                  onClose={handleCloseRemot}
+                  onOpen={handleOpenRemot}
+                  value={dataState.age}
+                  onChange={handleChangeControll}
+                  inputProps={{
+                    name: 'age',
+                    id: 'controlled-open-select',
+                  }}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={10}>Ten</MenuItem>
+                  <MenuItem value={20}>Twenty</MenuItem>
+                  <MenuItem value={30}>Thirty</MenuItem>
+                </Select>
+              </FormControl>
+            </form>
+          </div>
+        </Grid>
+      </Grid>
+    </Fragment>
+  );
 }
 
 ControlledSelectbox.propTypes = {

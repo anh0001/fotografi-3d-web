@@ -1,11 +1,11 @@
-// ***********************************************
+// '''''''''''''''''''''''*
 /*
   This is an example app without redux implementation, may little bit messy.
   If your prefer use redux architecture you can change it.
   And We recommend to following this app pattern of redux.
 */
-// ***********************************************
-import React from 'react';
+// '''''''''''''''''''''''*
+import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import 'enl-styles/vendors/invoice/style.css';
@@ -28,8 +28,8 @@ const newDataTemplate = (id) => ({
   qty: 0,
 });
 
-class CommercialInvoice extends React.Component {
-  state = {
+const CommercialInvoice = React.forwardRef((props, ref) => {
+  const initialState = {
     header: 'INVOICE',
     address: `Chris Coyier
 123 Appleseed Street
@@ -63,218 +63,231 @@ c/o Steve Widget
     total: 0,
   };
 
-  componentDidMount() {
-    this.setTotal();
-  }
-
-  setTotal() {
-    let t = 0;
-    const { dataTable } = this.state;
-    for (let i = 0; i < dataTable.length; i += 1) {
-      t += (dataTable[i].price * dataTable[i].qty);
+  const reducer = (state, action) => {
+    const { type, payload } = action;
+    switch (type) {
+      case 'setHeader':
+        return { ...state, header: payload };
+      case 'setAddress':
+        return { ...state, address: payload };
+      case 'setTitle':
+        return { ...state, title: payload };
+      case 'setNumber':
+        return { ...state, number: payload };
+      case 'setDate':
+        return { ...state, date: payload };
+      case 'setPaid':
+        return { ...state, paid: payload };
+      case 'setNote':
+        return { ...state, note: payload };
+      case 'setDataTable':
+        return { ...state, dataTable: payload };
+      case 'setTotal':
+        return { ...state, total: payload };
+      default:
+        return state;
     }
-    this.setState({ total: t });
-  }
-
-  handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value,
-    });
   };
 
-  handleChangeTable = (name, id) => event => {
-    this.updateItem(id, { [name]: event.target.value });
-  };
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  handleChangePrice = (name, id) => event => {
-    this.updateItem(id, { [name]: event.target.value });
-    setTimeout(() => {
-      this.setTotal();
-    });
-  };
-
-  updateItem(id, itemAttributes) {
-    const { dataTable } = this.state;
+  const updateItem = (id, itemAttributes) => {
+    const { dataTable } = state;
     const index = dataTable.findIndex(x => x.id === id);
     if (index === -1) {
       console.error('Something wen\'t wrong');
     } else {
-      this.setState({
-        dataTable: [
-          ...dataTable.slice(0, index),
-          Object.assign({}, dataTable[index], itemAttributes),
-          ...dataTable.slice(index + 1)
-        ]
-      });
+      const data = [
+        ...dataTable.slice(0, index),
+        ...({}, dataTable[index], itemAttributes),
+        ...dataTable.slice(index + 1)
+      ];
+      dispatch({ type: 'setDataTable', payload: data });
     }
-  }
+  };
 
-  handleAddRow() {
+  const getTotal = () => {
+    let t = 0;
+    const { dataTable } = state;
+    for (let i = 0; i < dataTable.length; i += 1) {
+      t += (dataTable[i].price * dataTable[i].qty);
+    }
+    return t;
+  };
+
+  const handleChange = name => event => {
+    const stateType = `set${name.charAt(0).toUpperCase() + name.slice(1)}`;
+    dispatch({ type: stateType, payload: event.target.value });
+  };
+
+  const handleChangeTable = (name, id) => event => {
+    updateItem(id, { [name]: event.target.value });
+  };
+
+  const handleChangePrice = (name, id) => event => {
+    updateItem(id, { [name]: event.target.value });
+  };
+
+  const handleAddRow = e => {
+    e.preventDefault();
     const id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
-    const { dataTable } = this.state;
-    this.setState({
-      dataTable: [...dataTable, newDataTemplate(id)]
-    });
-  }
+    const { dataTable } = state;
+    dispatch({ type: 'setDataTable', payload: [...dataTable, newDataTemplate(id)] });
+  };
 
-  handleRemoveRow(target) {
-    const { dataTable } = this.state;
+  const handleRemoveRow = (e, target) => {
+    e.preventDefault();
+    const { dataTable } = state;
     const array = [...dataTable];
     const index = array.indexOf(target);
     array.splice(index, 1);
-    this.setState({ dataTable: array });
+    dispatch({ type: 'setDataTable', payload: array });
     // re-calculate total
-    setTimeout(() => {
-      this.setTotal();
-    });
-  }
+  };
 
-  render() {
-    const { classes } = this.props;
-    const {
-      dataTable,
-      total,
-      header,
-      address,
-      number,
-      date,
-      paid,
-      title,
-      note
-    } = this.state;
-    const getRow = dataArray => dataArray.map((data, index) => (
-      <tr className="item-row" key={index.toString()}>
-        <td className="item-name">
-          <div className="delete-wpr">
-            <textarea value={data.item} onChange={this.handleChangeTable('item', data.id)} />
-            <a className="delete" onClick={() => this.handleRemoveRow(data)} href="javascript:;" title="Remove row">X</a>
-          </div>
-        </td>
-        <td className="description">
-          <textarea value={data.desc} onChange={this.handleChangeTable('desc', data.id)} />
-        </td>
-        <td>
-          <textarea value={data.price} onChange={this.handleChangePrice('price', data.id)} />
-        </td>
-        <td>
-          <textarea value={data.qty} onChange={this.handleChangePrice('qty', data.id)} />
-        </td>
-        <td>
-          <span className="price">
-            { data.qty * data.price }
-          </span>
-        </td>
-      </tr>
-    ));
+  const { classes } = props;
+  const {
+    dataTable,
+    header,
+    address,
+    number,
+    date,
+    paid,
+    title,
+    note
+  } = state;
+  const getRow = dataArray => dataArray.map((data, index) => (
+    <tr className="item-row" key={index.toString()}>
+      <td className="item-name">
+        <div className="delete-wpr">
+          <textarea value={data.item} onChange={handleChangeTable('item', data.id)} />
+          <a className="delete" href="#" onClick={(e) => handleRemoveRow(e, data)} title="Remove row">X</a>
+        </div>
+      </td>
+      <td className="description">
+        <textarea value={data.desc} onChange={handleChangeTable('desc', data.id)} />
+      </td>
+      <td>
+        <textarea value={data.price} onChange={handleChangePrice('price', data.id)} />
+      </td>
+      <td>
+        <textarea value={data.qty} onChange={handleChangePrice('qty', data.id)} />
+      </td>
+      <td>
+        <span className="price">
+          {data.qty * data.price}
+        </span>
+      </td>
+    </tr>
+  ));
 
-    return (
-      <div className={classes.whitePaper}>
-        <div id="page-wrap">
-          <textarea id="header" value={header} onChange={this.handleChange('header')} />
-          <div id="identity">
-            <textarea id="address" value={address} onChange={this.handleChange('address')} />
-            <div id="logo">
-              <img id="image" width="80" src="/images/logo.png" alt="logo" />
-            </div>
-
+  return (
+    <div className={classes.whitePaper} ref={ref}>
+      <div id="page-wrap">
+        <textarea id="header" value={header} onChange={handleChange('header')} />
+        <div id="identity">
+          <textarea id="address" value={address} onChange={handleChange('address')} />
+          <div id="logo">
+            <img id="image" src="/images/print_logo.jpg" alt="logo" />
           </div>
 
-          <div style={{ clear: 'both' }} />
+        </div>
 
-          <div id="customer">
-            <textarea id="customer-title" onChange={this.handleChange('title')} value={title} />
-            <table id="meta">
-              <tbody>
-                <tr>
-                  <td className="meta-head">Invoice #</td>
-                  <td><textarea onChange={this.handleChange('number')} value={number} /></td>
-                </tr>
-                <tr>
-                  <td className="meta-head">Date</td>
-                  <td><textarea onChange={this.handleChange('date')} value={date} /></td>
-                </tr>
-                <tr>
-                  <td className="meta-head">Amount Due</td>
-                  <td>
-                    <div className="due">
-                      $
-                      {total - paid}
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+        <div style={{ clear: 'both' }} />
 
-          </div>
-
-          <table id="items">
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Description</th>
-                <th>Unit Cost</th>
-                <th>Quantity</th>
-                <th>Price</th>
-              </tr>
-            </thead>
+        <div id="customer">
+          <textarea id="customer-title" onChange={handleChange('title')} value={title} />
+          <table id="meta">
             <tbody>
-              { getRow(dataTable) }
-              <tr id="hiderow">
-                <td colSpan="5"><a id="addrow" onClick={() => this.handleAddRow()} href="javascript:;" title="Add a row">[+] Add a row</a></td>
-              </tr>
-
               <tr>
-                <td colSpan="2" className="blank">&nbsp;</td>
-                <td colSpan="2" className="total-line">Subtotal</td>
-                <td className="total-value">
-                  <div id="subtotal">
-                    $
-                    {total}
-                    .00
-                  </div>
-                </td>
+                <td className="meta-head">Invoice #</td>
+                <td><textarea onChange={handleChange('number')} value={number} /></td>
               </tr>
-
               <tr>
-                <td colSpan="2" className="blank">&nbsp;</td>
-                <td colSpan="2" className="total-line">Total</td>
-                <td className="total-value">
-                  <div id="total">
-                    $
-                    {total}
-                    .00
-                  </div>
-                </td>
+                <td className="meta-head">Date</td>
+                <td><textarea onChange={handleChange('date')} value={date} /></td>
               </tr>
-
               <tr>
-                <td colSpan="2" className="blank">&nbsp;</td>
-                <td colSpan="2" className="total-line">Amount Paid</td>
-                <td className="total-value"><textarea onChange={this.handleChange('paid')} value={paid} /></td>
-              </tr>
-
-              <tr>
-                <td colSpan="2" className="blank-last">&nbsp;</td>
-                <td colSpan="2" className="total-line balance">Balance Due</td>
-                <td className="total-value balance">
+                <td className="meta-head">Amount Due</td>
+                <td>
                   <div className="due">
                     $
-                    {total - paid}
+                    {getTotal() - paid}
                   </div>
                 </td>
               </tr>
             </tbody>
           </table>
 
-          <div id="terms">
-            <h5>Terms</h5>
-            <textarea onChange={this.handleChange('note')} value={note} />
-          </div>
+        </div>
+
+        <table id="items">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Description</th>
+              <th>Unit Cost</th>
+              <th>Quantity</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {getRow(dataTable)}
+            <tr id="hiderow">
+              <td colSpan="5"><a id="addrow" href="#" onClick={(e) => handleAddRow(e)} title="Add a row">[+] Add a row</a></td>
+            </tr>
+
+            <tr>
+              <td colSpan="2" className="blank">&nbsp;</td>
+              <td colSpan="2" className="total-line">Subtotal</td>
+              <td className="total-value">
+                <div id="subtotal">
+                  $
+                  {getTotal()}
+                    .00
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td colSpan="2" className="blank">&nbsp;</td>
+              <td colSpan="2" className="total-line">Total</td>
+              <td className="total-value">
+                <div id="total">
+                  $
+                  {getTotal()}
+                    .00
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td colSpan="2" className="blank">&nbsp;</td>
+              <td colSpan="2" className="total-line">Amount Paid</td>
+              <td className="total-value"><textarea onChange={handleChange('paid')} value={paid} /></td>
+            </tr>
+
+            <tr>
+              <td colSpan="2" className="blank-last">&nbsp;</td>
+              <td colSpan="2" className="total-line balance">Balance Due</td>
+              <td className="total-value balance">
+                <div className="due">
+                  $
+                  {getTotal() - paid}
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div id="terms">
+          <h5>Terms</h5>
+          <textarea onChange={handleChange('note')} value={note} />
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+});
 
 CommercialInvoice.propTypes = {
   classes: PropTypes.object.isRequired,

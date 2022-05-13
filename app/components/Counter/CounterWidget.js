@@ -1,5 +1,5 @@
-import React, { PureComponent } from 'react';
-import { fade } from '@material-ui/core/styles/colorManipulator';
+import React from 'react';
+import { alpha } from '@material-ui/core/styles/colorManipulator';
 import PropTypes from 'prop-types';
 import CountUp from 'react-countup';
 import classNames from 'classnames';
@@ -48,7 +48,7 @@ const styles = theme => ({
     }
   },
   primaryMain: {
-    border: `1px solid ${fade(theme.palette.primary.main, 0.7)}`,
+    border: `1px solid ${alpha(theme.palette.primary.main, 0.7)}`,
     '& $title, $counter': {
       color: theme.palette.primary.main,
     },
@@ -72,7 +72,7 @@ const styles = theme => ({
     }
   },
   secondaryMain: {
-    border: `1px solid ${fade(theme.palette.secondary.main, 0.7)}`,
+    border: `1px solid ${alpha(theme.palette.secondary.main, 0.7)}`,
     '& $title, $counter': {
       color: theme.palette.secondary.main,
     },
@@ -91,53 +91,51 @@ const styles = theme => ({
   }
 });
 
-class CounterWidget extends PureComponent {
-  render() {
-    const {
-      classes,
-      color,
-      start,
-      end,
-      duration,
-      title,
-      children,
-      unitBefore,
-      unitAfter
-    } = this.props;
+function CounterWidget(props) {
+  const {
+    classes,
+    color,
+    start,
+    end,
+    duration,
+    title,
+    children,
+    unitBefore,
+    unitAfter
+  } = props;
 
-    const bgColor = clr => {
-      switch (clr) {
-        case 'primary-light':
-          return classes.primaryLight;
-        case 'primary-dark':
-          return classes.primaryDark;
-        case 'secondary-light':
-          return classes.secondaryLight;
-        case 'secondary-main':
-          return classes.secondaryMain;
-        case 'secondary-dark':
-          return classes.secondaryDark;
-        default:
-          return classes.primaryMain;
-      }
-    };
+  const bgColor = clr => {
+    switch (clr) {
+      case 'primary-light':
+        return classes.primaryLight;
+      case 'primary-dark':
+        return classes.primaryDark;
+      case 'secondary-light':
+        return classes.secondaryLight;
+      case 'secondary-main':
+        return classes.secondaryMain;
+      case 'secondary-dark':
+        return classes.secondaryDark;
+      default:
+        return classes.primaryMain;
+    }
+  };
 
-    return (
-      <Paper className={classNames(classes.root, bgColor(color))}>
-        <div>
-          <Typography className={classes.counter}>
-            { unitBefore }
-            <CountUp start={start} end={end} duration={duration} useEasing />
-            { unitAfter }
-          </Typography>
-          <Typography className={classes.title} variant="subtitle1">{title}</Typography>
-        </div>
-        <div className={classes.customContent}>
-          {children}
-        </div>
-      </Paper>
-    );
-  }
+  return (
+    <Paper className={classNames(classes.root, bgColor(color))}>
+      <div>
+        <Typography className={classes.counter}>
+          { unitBefore }
+          <CountUp start={start} end={end} duration={duration} useEasing />
+          { unitAfter }
+        </Typography>
+        <Typography className={classes.title} variant="subtitle1">{title}</Typography>
+      </div>
+      <div className={classes.customContent}>
+        {children}
+      </div>
+    </Paper>
+  );
 }
 
 CounterWidget.propTypes = {

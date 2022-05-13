@@ -39,7 +39,7 @@ function PinnedList(props) {
     <Grid
       container
       alignItems="center"
-      justify="center"
+      justifyContent="center"
       direction="row"
     >
       <List className={classes.root} subheader={<li />}>

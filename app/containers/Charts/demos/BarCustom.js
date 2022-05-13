@@ -62,7 +62,7 @@ function BarCustom(props) {
   const { classes } = props;
   return (
     <div className={classes.chartFluid}>
-      <ResponsiveContainer>
+      <ResponsiveContainer width={800} height="80%">
         <BarChart
           width={800}
           height={450}

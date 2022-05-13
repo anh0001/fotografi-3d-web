@@ -42,33 +42,30 @@ const styles = ({
   }
 });
 
-
-class Quote extends React.Component {
-  render() {
-    const {
-      align,
-      content,
-      footnote,
-      classes
-    } = this.props;
-    return (
-      <div
-        className={
-          classNames(
-            classes.quoteWrap,
-            align === 'right' ? classes.quoteRight : classes.quoteLeft
-          )
-        }
-      >
-        <Typography variant="subtitle1" className={classes.quoteBody} gutterBottom>
-          {content}
-        </Typography>
-        <Typography variant="caption">
-          {footnote}
-        </Typography>
-      </div>
-    );
-  }
+function Quote(props) {
+  const {
+    align,
+    content,
+    footnote,
+    classes
+  } = props;
+  return (
+    <div
+      className={
+        classNames(
+          classes.quoteWrap,
+          align === 'right' ? classes.quoteRight : classes.quoteLeft
+        )
+      }
+    >
+      <Typography variant="subtitle1" className={classes.quoteBody} gutterBottom>
+        {content}
+      </Typography>
+      <Typography variant="caption">
+        {footnote}
+      </Typography>
+    </div>
+  );
 }
 
 Quote.propTypes = {

@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionActions from '@material-ui/core/AccordionActions';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Chip from '@material-ui/core/Chip';
@@ -53,16 +53,16 @@ function AdvancedAccordion(props) {
   const { classes } = props;
   return (
     <div className={classes.root}>
-      <ExpansionPanel defaultExpanded>
-        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+      <Accordion defaultExpanded>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <div className={classes.column}>
             <Typography className={classes.heading}>Location</Typography>
           </div>
           <div className={classes.column}>
             <Typography className={classes.secondaryHeading}>Select trip destination</Typography>
           </div>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails className={classes.details}>
+        </AccordionSummary>
+        <AccordionDetails className={classes.details}>
           <div className={classes.column} />
           <div className={classes.column}>
             <Chip label="Barbados" className={classes.chip} onDelete={() => {}} />
@@ -76,15 +76,15 @@ function AdvancedAccordion(props) {
               </a>
             </Typography>
           </div>
-        </ExpansionPanelDetails>
+        </AccordionDetails>
         <Divider />
-        <ExpansionPanelActions>
+        <AccordionActions>
           <Button size="small">Cancel</Button>
           <Button size="small" color="secondary">
             Save
           </Button>
-        </ExpansionPanelActions>
-      </ExpansionPanel>
+        </AccordionActions>
+      </Accordion>
     </div>
   );
 }

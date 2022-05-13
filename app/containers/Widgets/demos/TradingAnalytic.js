@@ -1,14 +1,12 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { CryptoChartWidget } from 'enl-components';
 
-class TradingAnalytic extends PureComponent {
-  render() {
-    return (
-      <div>
-        <CryptoChartWidget />
-      </div>
-    );
-  }
+function TradingAnalytic() {
+  return (
+    <div>
+      <CryptoChartWidget />
+    </div>
+  );
 }
 
 export default TradingAnalytic;

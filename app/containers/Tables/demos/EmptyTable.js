@@ -22,7 +22,7 @@ function EmptyTable(props) {
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
-            <TableCell>Dessert (100g serving)</TableCell>
+            <TableCell padding="normal">Dessert (100g serving)</TableCell>
             <TableCell align="right">Calories</TableCell>
             <TableCell align="right">Fat (g)</TableCell>
             <TableCell align="right">Carbs (g)</TableCell>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
@@ -25,8 +25,7 @@ const styles = theme => ({
     display: 'flex',
   },
   flexwrap: {
-    display: 'flex',
-    padding: theme.direction === 'rtl' ? `0 ${theme.spacing(2)}px 0 0` : `0 0 0 ${theme.spacing(2)}px`
+    display: 'flex'
   },
   flex: {
     flex: 1
@@ -39,19 +38,20 @@ const styles = theme => ({
     }),
   },
   appBarShift: {
+    marginRight: 0,
     width: '100%',
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
     [theme.breakpoints.up('md')]: {
-      margin: theme.direction === 'rtl' ? `0 0 0 ${drawerWidth}px` : `0 ${drawerWidth}px 0 0`,
+      marginRight: drawerWidth,
       width: `calc(100% - ${drawerWidth}px)`,
     },
   },
   menuButton: {
-    marginLeft: theme.direction === 'rtl' ? 16 : 0,
-    marginRight: theme.direction === 'rtl' ? 0 : 16,
+    marginRight: 0,
+    marginLeft: 36,
   },
   drawerPaper: {
     width: drawerWidth,
@@ -88,91 +88,85 @@ const styles = theme => ({
   },
 });
 
-class SidebarLayoutRight extends React.Component {
-  state = {
-    open: true,
+function SidebarLayoutRight(props) {
+  const [open, setOpen] = useState(true);
+
+  const resize = () => {
+    setOpen(window.innerWidth >= 760);
   };
 
-  componentDidMount() {
-    window.addEventListener('resize', this.resize.bind(this));
-    this.resize();
-  }
+  useEffect(() => {
+    window.addEventListener('resize', resize.bind(this));
+    resize();
+  }, []);
 
-  handleDrawerToggle = () => {
-    const { open } = this.state;
-    this.setState({ open: !open });
+  const handleDrawerToggle = () => {
+    setOpen(!open);
   };
 
-  resize() {
-    this.setState({ open: window.innerWidth >= 760 });
-  }
-
-  render() {
-    const { classes } = this.props;
-    const { open } = this.state;
-    const drawer = (
-      <div>
+  const { classes } = props;
+  const drawer = (
+    <div>
+      <div className={classes.toolbar} />
+      <Divider />
+      <List>{mailFolderListItems}</List>
+      <Divider />
+      <List>{otherMailFolderListItems}</List>
+    </div>
+  );
+  return (
+    <div className={classes.root}>
+      <AppBar
+        position="absolute"
+        className={classNames(classes.appBar, open && classes.appBarShift)}
+      >
+        <Toolbar className={classes.flexwrap}>
+          <Typography variant="h6" color="inherit" className={classes.flex} noWrap>
+            App Layout with Right Sidebar
+          </Typography>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={() => handleDrawerToggle()}
+            className={classNames(classes.menuButton)}
+          >
+            <MenuIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+      <main className={classes.content}>
         <div className={classes.toolbar} />
-        <Divider />
-        <List>{mailFolderListItems}</List>
-        <Divider />
-        <List>{otherMailFolderListItems}</List>
-      </div>
-    );
-    return (
-      <div className={classes.root}>
-        <AppBar
-          position="absolute"
-          className={classNames(classes.appBar, open && classes.appBarShift)}
+        <Typography noWrap>Your App Content</Typography>
+      </main>
+      <Hidden mdUp>
+        <Drawer
+          variant="temporary"
+          anchor="right"
+          open={open}
+          onClick={() => handleDrawerToggle()}
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
         >
-          <Toolbar className={classes.flexwrap}>
-            <Typography variant="h6" color="inherit" className={classes.flex} noWrap>
-              App Layout with Right Sidebar
-            </Typography>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={this.handleDrawerToggle}
-              className={classNames(classes.menuButton)}
-            >
-              <MenuIcon />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-        <main className={classes.content}>
-          <div className={classes.toolbar} />
-          <Typography noWrap>Your App Content</Typography>
-        </main>
-        <Hidden mdUp>
-          <Drawer
-            variant="temporary"
-            anchor="right"
-            open={open}
-            onClose={this.handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden smDown implementation="css">
-          <Drawer
-            variant="permanent"
-            classes={{
-              paper: classNames(classes.drawerPaper, !open && classes.drawerPaperClose),
-            }}
-            open={open}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-      </div>
-    );
-  }
+          {drawer}
+        </Drawer>
+      </Hidden>
+      <Hidden smDown implementation="css">
+        <Drawer
+          variant="permanent"
+          classes={{
+            paper: classNames(classes.drawerPaper, !open && classes.drawerPaperClose),
+          }}
+          open={open}
+        >
+          {drawer}
+        </Drawer>
+      </Hidden>
+    </div>
+  );
 }
 
 SidebarLayoutRight.propTypes = {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MobileStepper from '@material-ui/core/MobileStepper';
@@ -69,117 +69,104 @@ const styles = theme => ({
   }
 });
 
-class StepperCarousel extends React.Component {
-  state = {
-    activeStep: 0,
-    activeStepSwipe: 0,
+function StepperCarousel(props) {
+  const [activeStep, setActiveStep] = useState(0);
+  const [activeStepSwipe, setActiveStepSwipe] = useState(0);
+
+  const handleNext = () => {
+    setActiveStep(activeStep + 1);
   };
 
-  handleNext = () => {
-    this.setState(prevState => ({
-      activeStep: prevState.activeStep + 1,
-    }));
+  const handleBack = () => {
+    setActiveStep(activeStep - 1);
   };
 
-  handleBack = () => {
-    this.setState(prevState => ({
-      activeStep: prevState.activeStep - 1,
-    }));
+  const handleNextSwipe = () => {
+    setActiveStepSwipe(activeStepSwipe + 1);
   };
 
-  handleNextSwipe = () => {
-    this.setState(prevState => ({
-      activeStepSwipe: prevState.activeStepSwipe + 1,
-    }));
+  const handleBackSwipe = () => {
+    setActiveStepSwipe(activeStepSwipe - 1);
   };
 
-  handleBackSwipe = () => {
-    this.setState(prevState => ({
-      activeStepSwipe: prevState.activeStepSwipe - 1,
-    }));
+  const handleStepChangeSwipe = step => {
+    setActiveStepSwipe(step);
   };
 
-  handleStepChangeSwipe = activeStepSwipe => {
-    this.setState({ activeStepSwipe });
-  };
+  const { classes, theme } = props;
 
-  render() {
-    const { classes, theme } = this.props;
-    const { activeStep, activeStepSwipe } = this.state;
+  const maxSteps = tutorialSteps.length;
+  const maxStepsSwipe = tutorialSteps.length;
 
-    const maxSteps = tutorialSteps.length;
-    const maxStepsSwipe = tutorialSteps.length;
-
-    return (
-      <Grid container spacing={2}>
-        <Grid item container justify="center" direction="column" md={6}>
-          <Paper square elevation={0} className={classes.header}>
-            <Typography>{tutorialSteps[activeStep].label}</Typography>
-          </Paper>
-          <img
-            className={classes.img}
-            src={tutorialSteps[activeStep].imgPath}
-            alt={tutorialSteps[activeStep].label}
-          />
-          <MobileStepper
-            variant="text"
-            steps={maxSteps}
-            position="static"
-            activeStep={activeStep}
-            className={classes.mobileStepper}
-            nextButton={(
-              <Button size="small" onClick={this.handleNext} disabled={activeStep === maxSteps - 1}>
-                Next
-                {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-              </Button>
-            )}
-            backButton={(
-              <Button size="small" onClick={this.handleBack} disabled={activeStep === 0}>
-                {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-                Back
-              </Button>
-            )}
-          />
-        </Grid>
-        <Grid item container justify="center" direction="column" md={6}>
-          <Paper square elevation={0} className={classes.header}>
-            <Typography>{tutorialSteps[activeStepSwipe].label}</Typography>
-          </Paper>
-          <SwipeableViews
-            axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-            index={activeStepSwipe}
-            onChangeIndex={this.handleStepChangeSwipe}
-            enableMouseEvents
-          >
-            {tutorialSteps.map((step, index) => (
-              <div className={classes.figure} key={index.toString()}>
-                <img key={step.label} className={classes.img} src={step.imgPath} alt={step.label} />
-              </div>
-            ))}
-          </SwipeableViews>
-          <MobileStepper
-            variant="text"
-            steps={maxStepsSwipe}
-            position="static"
-            activeStep={activeStepSwipe}
-            className={classes.mobileStepper}
-            nextButton={(
-              <Button size="small" onClick={this.handleNextSwipe} disabled={activeStepSwipe === maxStepsSwipe - 1}>
-                Next
-                {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-              </Button>
-            )}
-            backButton={(
-              <Button size="small" onClick={this.handleBackSwipe} disabled={activeStepSwipe === 0}>
-                {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-                Back
-              </Button>
-            )}
-          />
-        </Grid>
+  return (
+    <Grid container spacing={2}>
+      <Grid item container justifyContent="center" direction="column" md={6}>
+        <Paper square elevation={0} className={classes.header}>
+          <Typography>{tutorialSteps[activeStep].label}</Typography>
+        </Paper>
+        <img
+          className={classes.img}
+          src={tutorialSteps[activeStep].imgPath}
+          alt={tutorialSteps[activeStep].label}
+        />
+        <MobileStepper
+          variant="text"
+          steps={maxSteps}
+          position="static"
+          activeStep={activeStep}
+          className={classes.mobileStepper}
+          nextButton={(
+            <Button size="small" onClick={() => handleNext()} disabled={activeStep === maxSteps - 1}>
+              Next
+              {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+            </Button>
+          )}
+          backButton={(
+            <Button size="small" onClick={() => handleBack()} disabled={activeStep === 0}>
+              {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+              Back
+            </Button>
+          )}
+        />
       </Grid>
-    );
-  }
+      <Grid item container justifyContent="center" direction="column" md={6}>
+        <Paper square elevation={0} className={classes.header}>
+          <Typography>{tutorialSteps[activeStepSwipe].label}</Typography>
+        </Paper>
+        <SwipeableViews
+          axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+          index={activeStepSwipe}
+          onChangeIndex={handleStepChangeSwipe}
+          enableMouseEvents
+        >
+          {tutorialSteps.map((step, index) => (
+            <div className={classes.figure} key={index.toString()}>
+              <img key={step.label} className={classes.img} src={step.imgPath} alt={step.label} />
+            </div>
+          ))}
+        </SwipeableViews>
+        <MobileStepper
+          variant="text"
+          steps={maxStepsSwipe}
+          position="static"
+          activeStep={activeStepSwipe}
+          className={classes.mobileStepper}
+          nextButton={(
+            <Button size="small" onClick={() => handleNextSwipe()} disabled={activeStepSwipe === maxStepsSwipe - 1}>
+              Next
+              {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+            </Button>
+          )}
+          backButton={(
+            <Button size="small" onClick={() => handleBackSwipe()} disabled={activeStepSwipe === 0}>
+              {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+              Back
+            </Button>
+          )}
+        />
+      </Grid>
+    </Grid>
+  );
 }
 
 StepperCarousel.propTypes = {

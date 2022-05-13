@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -9,8 +9,11 @@ import CloseIcon from '@material-ui/icons/Close';
 import Grid from '@material-ui/core/Grid';
 
 const styles = theme => ({
+  close: {
+    width: theme.spacing(4),
+    height: theme.spacing(4),
+  },
   divider: {
-    display: 'block',
     margin: `${theme.spacing(3)}px 0`,
   },
   button: {
@@ -18,118 +21,130 @@ const styles = theme => ({
   }
 });
 
-class SimpleNotif extends React.Component {
-  state = {
+function SimpleNotif(props) {
+  const [notifState, setNotif] = useState({
     open: false,
     open2: false,
     vertical: 'bottom',
     horizontal: 'left',
+  });
+
+  const handleClick = () => {
+    setNotif({
+      ...notifState,
+      open: true
+    });
   };
 
-  handleClick = () => {
-    this.setState({ open: true });
-  };
-
-  handleClose = (event, reason) => {
+  const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
 
-    this.setState({ open: false });
+    setNotif({
+      ...notifState,
+      open: false
+    });
   };
 
-  handleClick2 = state => () => {
-    this.setState({ open2: true, ...state });
+  const handleClick2 = state => {
+    setNotif({
+      ...notifState,
+      open2: true,
+      ...state
+    });
   };
 
-  handleClose2 = () => {
-    this.setState({ open2: false });
+  const handleClose2 = () => {
+    setNotif({
+      ...notifState,
+      open2: false
+    });
   };
 
-  render() {
-    const { classes } = this.props;
-    const {
-      vertical,
-      horizontal,
-      open,
-      open2
-    } = this.state;
-    return (
-      <Grid
-        container
-        alignItems="flex-start"
-        justify="flex-start"
-        direction="row"
-        spacing={2}
-      >
-        <Grid item md={6}>
-          <Typography variant="button" className={classes.divider}>Simple Notification</Typography>
-          <div>
-            <Button variant="contained" onClick={this.handleClick}>Open simple snackbar</Button>
-            <Snackbar
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              open={open}
-              autoHideDuration={6000}
-              onClose={this.handleClose}
-              ContentProps={{
-                'aria-describedby': 'message-id',
-              }}
-              message={<span id="message-id">Note archived</span>}
-              action={[
-                <Button key="undo" color="secondary" size="small" onClick={this.handleClose}>
-                  UNDO
-                </Button>,
-                <IconButton
-                  key="close"
-                  aria-label="Close"
-                  color="inherit"
-                  className={classes.close}
-                  onClick={this.handleClose}
-                >
-                  <CloseIcon />
-                </IconButton>,
-              ]}
-            />
-          </div>
-        </Grid>
-        <Grid item md={6}>
-          <Typography variant="button" className={classes.divider}>Positioning</Typography>
-          <div>
-            <Button className={classes.button} variant="contained" onClick={this.handleClick2({ vertical: 'top', horizontal: 'center' })}>
-              Top-Center
-            </Button>
-            <Button className={classes.button} variant="contained" onClick={this.handleClick2({ vertical: 'top', horizontal: 'right' })}>
-              Top-Right
-            </Button>
-            <Button className={classes.button} variant="contained" onClick={this.handleClick2({ vertical: 'bottom', horizontal: 'right' })}>
-              Bottom-Right
-            </Button>
-            <Button className={classes.button} variant="contained" onClick={this.handleClick2({ vertical: 'bottom', horizontal: 'center' })}>
-              Bottom-Center
-            </Button>
-            <Button className={classes.button} variant="contained" onClick={this.handleClick2({ vertical: 'bottom', horizontal: 'left' })}>
-              Bottom-Left
-            </Button>
-            <Button className={classes.button} variant="contained" onClick={this.handleClick2({ vertical: 'top', horizontal: 'left' })}>
-              Top-Left
-            </Button>
-            <Snackbar
-              anchorOrigin={{ vertical, horizontal }}
-              open={open2}
-              onClose={this.handleClose2}
-              ContentProps={{
-                'aria-describedby': 'message-id',
-              }}
-              message={<span id="message-id">I love snacks</span>}
-            />
-          </div>
-        </Grid>
+  const { classes } = props;
+  const {
+    vertical,
+    horizontal,
+    open,
+    open2
+  } = notifState;
+
+  return (
+    <Grid
+      container
+      alignItems="flex-start"
+      justifyContent="flex-start"
+      direction="row"
+      spacing={2}
+    >
+      <Grid item md={6}>
+        <Typography variant="button" className={classes.divider}>Simple Notification</Typography>
+        <div>
+          <Button variant="contained" onClick={() => handleClick()}>Open simple snackbar</Button>
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            open={open}
+            autoHideDuration={6000}
+            onClose={() => handleClose()}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+            message={<span id="message-id">Note archived</span>}
+            action={[
+              <Button key="undo" color="secondary" size="small" onClick={() => handleClose()}>
+                UNDO
+              </Button>,
+              <IconButton
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                className={classes.close}
+                onClick={() => handleClose()}
+              >
+                <CloseIcon />
+              </IconButton>,
+            ]}
+          />
+        </div>
       </Grid>
-    );
-  }
+      <Grid item md={6}>
+        <Typography variant="button" className={classes.divider}>Positioning</Typography>
+        <div>
+          <Button className={classes.button} variant="contained" onClick={() => handleClick2({ vertical: 'top', horizontal: 'center' })}>
+            Top-Center
+          </Button>
+          <Button className={classes.button} variant="contained" onClick={() => handleClick2({ vertical: 'top', horizontal: 'right' })}>
+            Top-Right
+          </Button>
+          <Button className={classes.button} variant="contained" onClick={() => handleClick2({ vertical: 'bottom', horizontal: 'right' })}>
+            Bottom-Right
+          </Button>
+          <Button className={classes.button} variant="contained" onClick={() => handleClick2({ vertical: 'bottom', horizontal: 'center' })}>
+            Bottom-Center
+          </Button>
+          <Button className={classes.button} variant="contained" onClick={() => handleClick2({ vertical: 'bottom', horizontal: 'left' })}>
+            Bottom-Left
+          </Button>
+          <Button className={classes.button} variant="contained" onClick={() => handleClick2({ vertical: 'top', horizontal: 'left' })}>
+            Top-Left
+          </Button>
+          <Snackbar
+            anchorOrigin={{ vertical, horizontal }}
+            open={open2}
+            onClose={() => handleClose2()}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+            message={<span id="message-id">I love snacks</span>}
+          />
+        </div>
+      </Grid>
+    </Grid>
+  );
 }
 
 SimpleNotif.propTypes = {

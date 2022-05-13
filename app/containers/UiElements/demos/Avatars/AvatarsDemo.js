@@ -1,4 +1,4 @@
-import React, { Fragment, PureComponent } from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
@@ -48,64 +48,62 @@ const styles = ({
   },
 });
 
-class AvatarsDemo extends PureComponent {
-  render() {
-    const { classes } = this.props;
-    return (
-      <Fragment>
+function AvatarsDemo(props) {
+  const { classes } = props;
+  return (
+    <Fragment>
+      <Grid
+        container
+        alignItems="flex-start"
+        justifyContent="flex-start"
+        direction="row"
+        spacing={2}
+      >
         <Grid
-          container
-          alignItems="flex-start"
-          justify="flex-start"
-          direction="row"
-          spacing={2}
+          item
+          md={4}
         >
-          <Grid
-            item
-            md={4}
-          >
-            <Typography variant="button" className={classes.divider}>Image Avatars</Typography>
-            <div className={classes.row}>
-              <Avatar alt="Remy Sharp" src={avatarApi[7]} className={classes.avatar} />
-              <Avatar
-                alt="Adelle Charles"
-                src={avatarApi[5]}
-                className={classNames(classes.avatar, classes.bigAvatar)}
-              />
-            </div>
-          </Grid>
-          <Grid
-            item
-            md={4}
-          >
-            <Typography variant="button" className={classes.divider}>Icon Avatars</Typography>
-            <div className={classes.row}>
-              <Avatar className={classes.avatar}>
-                <FolderIcon />
-              </Avatar>
-              <Avatar className={classes.pinkAvatar}>
-                <PageviewIcon />
-              </Avatar>
-              <Avatar className={classes.greenAvatar}>
-                <AssignmentIcon />
-              </Avatar>
-            </div>
-          </Grid>
-          <Grid
-            item
-            md={4}
-          >
-            <Typography variant="button" className={classes.divider}>Icon Avatars</Typography>
-            <div className={classes.row}>
-              <Avatar className={classes.avatar}>H</Avatar>
-              <Avatar className={classes.orangeAvatar}>N</Avatar>
-              <Avatar className={classes.purpleAvatar}>OP</Avatar>
-            </div>
-          </Grid>
+          <Typography variant="button" className={classes.divider}>Image Avatars</Typography>
+          <div className={classes.row}>
+            <Avatar alt="Remy Sharp" src={avatarApi[7]} className={classes.avatar} />
+            <Avatar
+              alt="Adelle Charles"
+              src={avatarApi[5]}
+              className={classNames(classes.avatar, classes.bigAvatar)}
+            />
+          </div>
         </Grid>
-      </Fragment>
-    );
-  }
+        <Grid
+          item
+          md={4}
+        >
+          <Typography variant="button" className={classes.divider}>Icon Avatars</Typography>
+          <div className={classes.row}>
+            <Avatar className={classes.avatar}>
+              <FolderIcon />
+            </Avatar>
+            <Avatar className={classes.pinkAvatar}>
+              <PageviewIcon />
+            </Avatar>
+            <Avatar className={classes.greenAvatar}>
+              <AssignmentIcon />
+            </Avatar>
+          </div>
+        </Grid>
+        <Grid
+          item
+          md={4}
+        >
+          <Typography variant="button" className={classes.divider}>Icon Avatars</Typography>
+          <div className={classes.row}>
+            <Avatar className={classes.avatar}>H</Avatar>
+            <Avatar className={classes.orangeAvatar}>N</Avatar>
+            <Avatar className={classes.purpleAvatar}>OP</Avatar>
+          </div>
+        </Grid>
+      </Grid>
+    </Fragment>
+  );
 }
 
 AvatarsDemo.propTypes = {

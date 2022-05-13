@@ -1,9 +1,9 @@
-import { darken, fade } from '@material-ui/core/styles/colorManipulator';
+import { darken, alpha } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 
 const gradient = theme => ({
   backgroundColor: darken(theme.palette.background.default, 0.05),
-  backgroundImage: `linear-gradient(to right, ${darken(theme.palette.background.default, 0.05)} 0%, ${fade(theme.palette.divider, 0.05)} 50%, ${fade(theme.palette.divider, 0.05)} 70%, ${darken(theme.palette.background.default, 0.05)} 100%)`,
+  backgroundImage: `linear-gradient(to right, ${darken(theme.palette.background.default, 0.05)} 0%, ${alpha(theme.palette.divider, 0.05)} 50%, ${alpha(theme.palette.divider, 0.05)} 70%, ${darken(theme.palette.background.default, 0.05)} 100%)`,
   backgroundRepeat: 'no-repeat',
 });
 
@@ -45,7 +45,6 @@ const styles = theme => ({
   hint: {
     opacity: 0.6,
     marginRight: theme.spacing(2),
-    marginTop: theme.spacing(4),
     [theme.breakpoints.down('sm')]: {
       display: 'none'
     }
@@ -100,7 +99,7 @@ const styles = theme => ({
     whiteSpace: 'nowrap',
     display: 'inline-block',
     '&$completed': {
-      color: fade(theme.palette.text.primary, 0.3),
+      color: alpha(theme.palette.text.primary, 0.3),
       '&:after': {
         position: 'absolute',
         left: 0,
@@ -139,14 +138,14 @@ const styles = theme => ({
       height: 40,
       borderRadius: '50%',
       display: 'block',
-      animation: '2s placeHolderImg linear infinite',
+      animation: '2s $placeHolderImg linear infinite',
     },
     '& $title': {
       width: 700,
       height: 20,
       borderRadius: 8,
       display: 'block',
-      animation: '2s placeHolderTitle linear infinite',
+      animation: '2s $placeHolderTitle linear infinite',
     },
   },
   '@keyframes placeHolderImg': {

@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-import { lighten, darken } from '@material-ui/core/styles/colorManipulator';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -11,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
 import ShoppingCart from '@material-ui/icons/ShoppingCart';
 import imgApi from 'enl-api/images/photos';
-import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import messages from './messages';
 
 const dataCart = [
@@ -58,7 +57,7 @@ const styles = theme => ({
     },
   },
   paper: {
-    background: theme.palette.type === 'dark' ? darken(theme.palette.secondary.main, 0.5) : lighten(theme.palette.primary.light, 0.5),
+    border: `2px solid ${theme.palette.primary.main}`,
     padding: theme.spacing(2),
     height: 550,
     overflow: 'auto',
@@ -133,7 +132,7 @@ function SideReview(props) {
 
 SideReview.propTypes = {
   classes: PropTypes.object.isRequired,
-  intl: intlShape.isRequired
+  intl: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(injectIntl(SideReview));

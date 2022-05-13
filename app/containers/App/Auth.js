@@ -10,27 +10,24 @@ import {
   Maintenance, TermsConditions
 } from '../pageListAsync';
 
-class Auth extends React.Component {
-  render() {
-    return (
-      <Outer>
-        <Switch>
-          <Route path="/login" component={Login} />
-          <Route path="/register" component={Register} />
-          <Route path="/reset-password" component={ResetPassword} />
-          <Route path="/login-firebase" component={LoginFullstack} />
-          <Route path="/register-firebase" component={RegisterFullstack} />
-          <Route path="/reset-firebase" component={ResetPasswordFullstack} />
-          <Route path="/reset-password" component={ResetPassword} />
-          <Route path="/lock-screen" component={LockScreen} />
-          <Route path="/maintenance" component={Maintenance} />
-          <Route path="/coming-soon" component={ComingSoon} />
-          <Route path="/terms-conditions" component={TermsConditions} />
-          <Route component={NotFound} />
-        </Switch>
-      </Outer>
-    );
-  }
+function Auth() {
+  return (
+    <Outer>
+      <Switch>
+        <Route path="/login" component={Login} />
+        <Route path="/register" component={Register} />
+        <Route path="/reset-password" component={ResetPassword} />
+        <Route path="/login-firebase" component={LoginFullstack} />
+        <Route path="/register-firebase" component={RegisterFullstack} />
+        <Route path="/reset-firebase" component={ResetPasswordFullstack} />
+        <Route path="/lock-screen" component={LockScreen} />
+        <Route path="/maintenance" component={Maintenance} />
+        <Route path="/coming-soon" component={ComingSoon} />
+        <Route path="/terms-conditions" component={TermsConditions} />
+        <Route component={NotFound} />
+      </Switch>
+    </Outer>
+  );
 }
 
 export default Auth;

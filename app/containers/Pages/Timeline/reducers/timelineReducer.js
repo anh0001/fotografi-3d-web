@@ -1,18 +1,18 @@
-import { fromJS, List, Map } from 'immutable';
+import produce from 'immer';
 import notif from 'enl-api/ui/notifMessage';
 import dummy from 'enl-api/dummy/dummyContents';
-import { getDate, getTime } from 'enl-components/helpers/dateTimeHelper';
 import { CLOSE_NOTIF } from 'enl-redux/constants/notifConstants';
+import { getDate, getTime } from 'enl-components/helpers/dateTimeHelper';
 import {
   FETCH_TIMELINE_DATA,
   POST,
   TOGGLE_LIKE,
   FETCH_COMMENT_DATA,
-  POST_COMMENT,
+  POST_COMMENT
 } from './timelineConstants';
 
 const initialState = {
-  dataTimeline: List([]),
+  dataTimeline: [],
   commentIndex: 0,
   notifMsg: '',
 };
@@ -30,10 +30,10 @@ const icon = privacyType => {
 
 const buildTimeline = (text, image, privacy) => {
   const id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
-  const imageSrc = image !== undefined ? URL.createObjectURL(image[0]) : '';
-  return Map({
+  const imageSrc = image.length > 0 ? URL.createObjectURL(image[0]) : '';
+  return {
     id,
-    name: 'Guest',
+    name: 'John Doe',
     date: getDate(),
     time: getTime(),
     icon: icon(privacy),
@@ -41,70 +41,55 @@ const buildTimeline = (text, image, privacy) => {
     image: imageSrc,
     content: text,
     liked: false,
-    comments: List([])
-  });
+    comments: []
+  };
 };
 
-const buildComment = (message, curData) => {
+const buildComment = message => {
   const id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
-  const newData = Map({
+  return {
     id,
-    from: 'Guest',
+    from: 'John Doe',
     avatar: dummy.user.avatar,
     date: getDate(),
-    message,
-  });
-  return curData.push(newData);
+    message
+  };
 };
 
-const initialImmutableState = fromJS(initialState);
-
-export default function reducer(state = initialImmutableState, action = {}) {
+/* eslint-disable default-case, no-param-reassign */
+const timelineReducer = (state = initialState, action = {}) => produce(state, draft => {
   switch (action.type) {
     case FETCH_TIMELINE_DATA:
-      return state.withMutations((mutableState) => {
-        const items = fromJS(action.items);
-        mutableState.set('dataTimeline', items);
-      });
+      draft.dataTimeline = action.items;
+      break;
     case POST:
-      return state.withMutations((mutableState) => {
-        mutableState
-          .update(
-            'dataTimeline',
-            dataTimeline => dataTimeline.unshift(
-              buildTimeline(action.text, action.media, action.privacy)
-            )
-          )
-          .set('notifMsg', notif.posted);
-      });
-    case TOGGLE_LIKE:
-      return state.withMutations((mutableState) => {
-        const index = state.get('dataTimeline').indexOf(action.item);
-        mutableState.update('dataTimeline', dataTimeline => dataTimeline
-          .setIn([index, 'liked'], !state.getIn(['dataTimeline', index, 'liked']))
-        );
-      });
-    case FETCH_COMMENT_DATA:
-      return state.withMutations((mutableState) => {
-        const index = state.get('dataTimeline').indexOf(action.item);
-        mutableState.set('commentIndex', index);
-      });
-    case POST_COMMENT:
-      return state.withMutations((mutableState) => {
-        mutableState
-          .update('dataTimeline',
-            dataTimeline => dataTimeline.setIn(
-              [state.get('commentIndex'), 'comments'],
-              buildComment(action.comment, state.getIn(['dataTimeline', state.get('commentIndex'), 'comments']))
-            )
-          )
-          .set('notifMsg', notif.commented);
-      });
+      draft.dataTimeline.unshift(buildTimeline(action.text, action.media, action.privacy));
+      draft.notifMsg = notif.posted;
+      break;
+    case TOGGLE_LIKE: {
+      const index = draft.dataTimeline.findIndex((obj) => obj.id === action.item.id);
+      draft.dataTimeline[index].liked = !draft.dataTimeline[index].liked;
+      break;
+    }
+    case FETCH_COMMENT_DATA: {
+      const index = draft.dataTimeline.findIndex((obj) => obj.id === action.item.id);
+      if (index !== -1) {
+        draft.commentIndex = index;
+      }
+      break;
+    }
+    case POST_COMMENT: {
+      const comment = buildComment(action.comment);
+      draft.dataTimeline[draft.commentIndex].comments.unshift(comment);
+      draft.notifMsg = notif.commented;
+      break;
+    }
     case CLOSE_NOTIF:
-      return state.withMutations((mutableState) => {
-        mutableState.set('notifMsg', '');
-      });
+      draft.notifMsg = '';
+      break;
     default:
-      return state;
+      break;
   }
-}
+});
+
+export default timelineReducer;

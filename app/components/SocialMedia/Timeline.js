@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -28,136 +28,133 @@ const optionsOpt = [
 
 const ITEM_HEIGHT = 48;
 
-class Timeline extends React.Component {
-  state = {
-    anchorElOpt: null,
-    openComment: false,
+function Timeline(props) {
+  const [anchorElOpt, setAnchorElOpt] = useState(null);
+  const [openComment, setOpenComment] = useState(false);
+  const {
+    classes,
+    dataTimeline,
+    onlike,
+    commentIndex,
+    submitComment,
+    fetchComment
+  } = props;
+
+  const handleClickOpt = event => {
+    setAnchorElOpt(event.currentTarget);
   };
 
-  handleClickOpt = event => {
-    this.setState({ anchorElOpt: event.currentTarget });
+  const handleCloseOpt = () => {
+    setAnchorElOpt(null);
   };
 
-  handleCloseOpt = () => {
-    this.setState({ anchorElOpt: null });
-  };
-
-  handleOpenComment = (data) => {
-    const { fetchComment } = this.props;
+  const handleOpenComment = (data) => {
     fetchComment(data);
-    this.setState({ openComment: true });
+    setOpenComment(true);
   };
 
-  handleCloseComment = () => {
-    this.setState({ openComment: false });
+  const handleCloseComment = () => {
+    setOpenComment(false);
   };
 
-  render() {
-    const {
-      classes,
-      dataTimeline,
-      onlike,
-      commentIndex,
-      submitComment,
-    } = this.props;
-    const { anchorElOpt, openComment } = this.state;
-    const getItem = dataArray => dataArray.map(data => (
-      <li key={data.get('id')}>
-        <div className={classes.iconBullet}>
-          <Tooltip id={'tooltip-icon-' + data.get('id')} title={data.get('time')}>
-            <Icon className={classes.icon}>
-              {data.get('icon')}
-            </Icon>
-          </Tooltip>
-        </div>
-        <Card className={classes.cardSocmed}>
-          <CardHeader
-            avatar={
-              <Avatar alt="avatar" src={data.get('avatar')} className={classes.avatar} />
-            }
-            action={(
-              <IconButton
-                aria-label="More"
-                aria-owns={anchorElOpt ? 'long-menu' : null}
-                aria-haspopup="true"
-                className={classes.button}
-                onClick={this.handleClickOpt}
-              >
-                <MoreVertIcon />
-              </IconButton>
-            )}
-            title={data.get('name')}
-            subheader={data.get('date')}
-          />
-          { data.get('image') !== '' && (
-            <CardMedia
-              className={classes.media}
-              image={data.get('image')}
-              title={data.get('name')}
-            />
+  const getItem = dataArray => dataArray.map(data => (
+    <li key={data.id}>
+      <div className={classes.iconBullet}>
+        <Tooltip id={'tooltip-icon-' + data.id} title={data.time}>
+          <Icon className={classes.icon}>
+            {data.icon}
+          </Icon>
+        </Tooltip>
+      </div>
+      <Card className={classes.cardSocmed}>
+        <CardHeader
+          avatar={
+            <Avatar alt="avatar" src={data.avatar} className={classes.avatar} />
+          }
+          action={(
+            <IconButton
+              aria-label="More"
+              aria-owns={anchorElOpt ? 'long-menu' : null}
+              aria-haspopup="true"
+              className={classes.button}
+              onClick={handleClickOpt}
+            >
+              <MoreVertIcon />
+            </IconButton>
           )}
-          <CardContent>
-            <Typography component="p">
-              {data.get('content')}
+          title={data.name}
+          subheader={data.date}
+        />
+        {data.image !== '' && (
+          <CardMedia
+            className={classes.media}
+            image={data.image}
+            title={data.name}
+          />
+        )}
+        <CardContent>
+          <Typography component="p">
+            {data.content}
+          </Typography>
+        </CardContent>
+        <CardActions className={classes.actions}>
+          <IconButton aria-label="Like this" onClick={() => onlike(data)}>
+            <FavoriteIcon className={data.liked ? classes.liked : ''} />
+          </IconButton>
+          <IconButton aria-label="Share">
+            <ShareIcon />
+          </IconButton>
+          <div className={classes.rightIcon}>
+            <Typography variant="caption" component="span">
+              {data.comments !== undefined ? data.comments.length : 0}
             </Typography>
-          </CardContent>
-          <CardActions className={classes.actions}>
-            <IconButton aria-label="Like this" onClick={() => onlike(data)}>
-              <FavoriteIcon className={data.get('liked') ? classes.liked : ''} />
+            <IconButton aria-label="Comment" onClick={() => handleOpenComment(data)}>
+              <CommentIcon />
             </IconButton>
-            <IconButton aria-label="Share">
-              <ShareIcon />
-            </IconButton>
-            <div className={classes.rightIcon}>
-              <Typography variant="caption" component="span">
-                {data.get('comments') !== undefined ? data.get('comments').size : 0}
-              </Typography>
-              <IconButton aria-label="Comment" onClick={() => this.handleOpenComment(data)}>
-                <CommentIcon />
-              </IconButton>
-            </div>
-          </CardActions>
-        </Card>
-      </li>
-    ));
-    return (
-      <Fragment>
-        <Menu
-          id="long-menu"
-          anchorEl={anchorElOpt}
-          open={Boolean(anchorElOpt)}
-          onClose={this.handleCloseOpt}
-          PaperProps={{
-            style: {
-              maxHeight: ITEM_HEIGHT * 4.5,
-              width: 200,
-            },
-          }}
-        >
-          {optionsOpt.map(option => (
-            <MenuItem key={option} onClick={this.handleCloseOpt}>
-              {option}
-            </MenuItem>
-          ))}
-        </Menu>
+          </div>
+        </CardActions>
+      </Card>
+    </li>
+  ));
+  return (
+    <Fragment>
+      <Menu
+        id="long-menu"
+        anchorEl={anchorElOpt}
+        open={Boolean(anchorElOpt)}
+        onClose={handleCloseOpt}
+        PaperProps={{
+          style: {
+            maxHeight: ITEM_HEIGHT * 4.5,
+            width: 200,
+          },
+        }}
+      >
+        {optionsOpt.map(option => (
+          <MenuItem key={option} onClick={handleCloseOpt}>
+            {option}
+          </MenuItem>
+        ))}
+      </Menu>
+      {dataTimeline.length > 0 && (
         <Comments
           open={openComment}
-          handleClose={this.handleCloseComment}
+          handleClose={handleCloseComment}
           submitComment={submitComment}
-          dataComment={dataTimeline.getIn([commentIndex, 'comments'])}
+          dataComment={dataTimeline[commentIndex].comments}
         />
-        <ul className={classes.timeline}>
-          {getItem(dataTimeline)}
-        </ul>
-      </Fragment>
-    );
-  }
+      )}
+      <ul className={classes.timeline}>
+        {dataTimeline.length > 0 && getItem(dataTimeline)}
+      </ul>
+    </Fragment>
+  );
 }
 
 Timeline.propTypes = {
   classes: PropTypes.object.isRequired,
   onlike: PropTypes.func,
-  dataTimeline: PropTypes.object.isRequired,
+  dataTimeline: PropTypes.array.isRequired,
   fetchComment: PropTypes.func,
   submitComment: PropTypes.func,
   commentIndex: PropTypes.number,
@@ -165,8 +162,8 @@ Timeline.propTypes = {
 
 Timeline.defaultProps = {
   onlike: () => (false),
-  fetchComment: () => {},
-  submitComment: () => {},
+  fetchComment: () => { },
+  submitComment: () => { },
   commentIndex: 0,
 };
 

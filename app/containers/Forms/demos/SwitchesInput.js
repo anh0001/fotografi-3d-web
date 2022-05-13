@@ -1,4 +1,4 @@
-import React, { Fragment, PureComponent } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import Switch from '@material-ui/core/Switch';
 import green from '@material-ui/core/colors/green';
@@ -16,7 +16,6 @@ const styles = theme => ({
     height: 'auto',
   },
   divider: {
-    display: 'block',
     margin: `${theme.spacing(3)}px 0`,
   },
   field: {
@@ -48,164 +47,157 @@ const styles = theme => ({
   },
 });
 
-class RadioButton extends PureComponent {
-  state = {
+function RadioButton(props) {
+  const { classes } = props;
+  const [dataState, setDataState] = useState({
     checkedA: true,
     checkedB: true,
     checkedF: true,
     gilad: true,
     jason: false,
-    antonie: true,
+    antonie: true
+  });
+
+  const handleChange = name => event => {
+    setDataState({
+      ...dataState,
+      [name]: event.target.checked
+    });
   };
 
-  handleChange = name => event => {
-    this.setState({ [name]: event.target.checked });
-  };
-
-  render() {
-    const { classes } = this.props;
-    const {
-      checkedA,
-      checkedB,
-      checkedF,
-      gilad,
-      jason,
-      antonie
-    } = this.state;
-    return (
-      <Fragment>
+  return (
+    <Fragment>
+      <Grid
+        container
+        alignItems="flex-start"
+        justifyContent="space-around"
+        direction="row"
+        spacing={3}
+      >
         <Grid
-          container
-          alignItems="flex-start"
-          justify="space-around"
-          direction="row"
-          spacing={3}
+          item
+          md={3}
+          className={classes.demo}
         >
-          <Grid
-            item
-            md={3}
-            className={classes.demo}
-          >
-            <Typography variant="button" className={classes.divider}>Basic usage</Typography>
-            <div>
-              <Switch
-                checked={checkedA}
-                onChange={this.handleChange('checkedA')}
-                value="checkedA"
+          <Typography variant="button" className={classes.divider}>Basic usage</Typography>
+          <div>
+            <Switch
+              checked={dataState.checkedA}
+              onChange={handleChange('checkedA')}
+              value="checkedA"
+            />
+            <Switch
+              checked={dataState.checkedB}
+              onChange={handleChange('checkedB')}
+              value="checkedB"
+              color="primary"
+            />
+            <Switch value="checkedC" />
+            <Switch disabled value="checkedD" />
+            <Switch disabled checked value="checkedE" />
+            <Switch defaultChecked value="checkedF" color="default" />
+          </div>
+        </Grid>
+        <Grid
+          item
+          md={4}
+          className={classes.demo}
+        >
+          <Typography variant="button" className={classes.divider}>Switch with label</Typography>
+          <Typography className={classes.divider}>Switch can also be used with a label description thanks to the FormControlLabel component.</Typography>
+          <div>
+            <FormGroup row>
+              <FormControlLabel
+                control={(
+                  <Switch
+                    checked={dataState.checkedA}
+                    onChange={handleChange('checkedA')}
+                    value="checkedA"
+                  />
+                )}
+                label="Secondary"
               />
-              <Switch
-                checked={checkedB}
-                onChange={this.handleChange('checkedB')}
-                value="checkedB"
-                color="primary"
+              <FormControlLabel
+                control={(
+                  <Switch
+                    checked={dataState.checkedB}
+                    onChange={handleChange('checkedB')}
+                    value="checkedB"
+                    color="primary"
+                  />
+                )}
+                label="Primary"
               />
-              <Switch value="checkedC" />
-              <Switch disabled value="checkedD" />
-              <Switch disabled checked value="checkedE" />
-              <Switch defaultChecked value="checkedF" color="default" />
-            </div>
-          </Grid>
-          <Grid
-            item
-            md={4}
-            className={classes.demo}
-          >
-            <Typography variant="button" className={classes.divider}>Switch with label</Typography>
-            <Typography className={classes.divider}>Switch can also be used with a label description thanks to the FormControlLabel component.</Typography>
-            <div>
-              <FormGroup row>
+              <FormControlLabel control={<Switch value="checkedC" />} label="Uncontrolled" />
+              <FormControlLabel disabled control={<Switch value="checkedD" />} label="Disabled" />
+              <FormControlLabel disabled control={<Switch checked value="checkedE" />} label="Disabled" />
+              <FormControlLabel
+                control={(
+                  <Switch
+                    checked={dataState.checkedF}
+                    onChange={handleChange('checkedF')}
+                    value="checkedF"
+                    classes={{
+                      switchBase: classes.switchBase,
+                      checked: classes.checked,
+                      track: classes.bar,
+                    }}
+                  />
+                )}
+                label="Custom color"
+              />
+            </FormGroup>
+          </div>
+        </Grid>
+        <Grid
+          item
+          md={5}
+          className={classes.demo}
+        >
+          <Typography variant="button" className={classes.divider}>Switch in Form Group</Typography>
+          <Typography className={classes.divider}>FormGroup is a helpful wrapper used to group selection controls components that provides an easier API. However, we encourage you to use a Checkbox instead.</Typography>
+          <div>
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Assign responsibility</FormLabel>
+              <FormGroup>
                 <FormControlLabel
                   control={(
                     <Switch
-                      checked={checkedA}
-                      onChange={this.handleChange('checkedA')}
-                      value="checkedA"
+                      checked={dataState.gilad}
+                      onChange={handleChange('gilad')}
+                      value="gilad"
                     />
                   )}
-                  label="Secondary"
+                  label="Gilad Gray"
                 />
                 <FormControlLabel
                   control={(
                     <Switch
-                      checked={checkedB}
-                      onChange={this.handleChange('checkedB')}
-                      value="checkedB"
-                      color="primary"
+                      checked={dataState.jason}
+                      onChange={handleChange('jason')}
+                      value="jason"
                     />
                   )}
-                  label="Primary"
+                  label="Jason Killian"
                 />
-                <FormControlLabel control={<Switch value="checkedC" />} label="Uncontrolled" />
-                <FormControlLabel disabled control={<Switch value="checkedD" />} label="Disabled" />
-                <FormControlLabel disabled control={<Switch checked value="checkedE" />} label="Disabled" />
                 <FormControlLabel
                   control={(
                     <Switch
-                      checked={checkedF}
-                      onChange={this.handleChange('checkedF')}
-                      value="checkedF"
-                      classes={{
-                        switchBase: classes.switchBase,
-                        checked: classes.checked,
-                        track: classes.bar,
-                      }}
+                      checked={dataState.antonie}
+                      onChange={handleChange('antonie')}
+                      value="antonie"
                     />
                   )}
-                  label="Custom color"
+                  label="Antoine Llorca"
                 />
               </FormGroup>
-            </div>
-          </Grid>
-          <Grid
-            item
-            md={5}
-            className={classes.demo}
-          >
-            <Typography variant="button" className={classes.divider}>Switch in Form Group</Typography>
-            <Typography className={classes.divider}>FormGroup is a helpful wrapper used to group selection controls components that provides an easier API. However, we encourage you to use a Checkbox instead.</Typography>
-            <div>
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Assign responsibility</FormLabel>
-                <FormGroup>
-                  <FormControlLabel
-                    control={(
-                      <Switch
-                        checked={gilad}
-                        onChange={this.handleChange('gilad')}
-                        value="gilad"
-                      />
-                    )}
-                    label="Gilad Gray"
-                  />
-                  <FormControlLabel
-                    control={(
-                      <Switch
-                        checked={jason}
-                        onChange={this.handleChange('jason')}
-                        value="jason"
-                      />
-                    )}
-                    label="Jason Killian"
-                  />
-                  <FormControlLabel
-                    control={(
-                      <Switch
-                        checked={antonie}
-                        onChange={this.handleChange('antonie')}
-                        value="antonie"
-                      />
-                    )}
-                    label="Antoine Llorca"
-                  />
-                </FormGroup>
-                <FormHelperText>Be careful</FormHelperText>
-              </FormControl>
-            </div>
-          </Grid>
+              <FormHelperText>Be careful</FormHelperText>
+            </FormControl>
+          </div>
         </Grid>
-      </Fragment>
-    );
-  }
+      </Grid>
+    </Fragment>
+  );
 }
 
 RadioButton.propTypes = {

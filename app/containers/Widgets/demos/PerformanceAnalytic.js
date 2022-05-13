@@ -1,14 +1,12 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { PerformanceChartWidget } from 'enl-components';
 
-class PerformanceAnalytic extends PureComponent {
-  render() {
-    return (
-      <div>
-        <PerformanceChartWidget />
-      </div>
-    );
-  }
+function PerformanceAnalytic() {
+  return (
+    <div>
+      <PerformanceChartWidget />
+    </div>
+  );
 }
 
 export default PerformanceAnalytic;

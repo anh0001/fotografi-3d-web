@@ -1,12 +1,10 @@
 const firebaseConfig = {
-    apiKey: "AIzaSyAieIxxEzyd9Wg-ksJcFTuO0Q44D0oleM8",
-    authDomain: "ngelabs.firebaseapp.com",
-    databaseURL: "https://ngelabs.firebaseio.com",
-    projectId: "ngelabs",
-    storageBucket: "ngelabs.appspot.com",
-    messagingSenderId: "364311086386",
-    appId: "1:364311086386:web:e7ff146c216bff4495832b",
-    measurementId: "G-4HXHNCB9GM"
-  };
+  apiKey: 'ccraSyBT9MFsTOdDG5Cx0skAOtef8uzIBLJQ2xA',
+  authDomain: 'yourapp-1234e.firebaseapp.com',
+  databaseURL: 'https://youreapp-1234e.firebaseio.com',
+  projectId: 'youreapp-1234e',
+  storageBucket: 'youreapp-1234e.appspot.com',
+  messagingSenderId: '37325684805'
+};
 
 export default firebaseConfig;

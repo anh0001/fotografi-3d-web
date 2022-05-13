@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Axios from 'axios';
 import { connect } from 'react-redux';
-import SyntaxHighlighter, { registerLanguage } from 'react-syntax-highlighter/prism-light';
-import jsx from 'react-syntax-highlighter/languages/prism/jsx';
-import lightStyle from 'react-syntax-highlighter/styles/prism/prism';
-import darkStyle from 'react-syntax-highlighter/styles/prism/xonokai';
+import SyntaxHighlighter from 'react-syntax-highlighter/dist/esm/prism-light';
+import jsx from 'react-syntax-highlighter/dist/esm/languages/prism/jsx';
+import lightStyle from 'react-syntax-highlighter/dist/esm/styles/prism/coy';
+import darkStyle from 'react-syntax-highlighter/dist/esm/styles/prism/atom-dark';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -78,88 +78,89 @@ const styles = theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    '& button': {
+      background: 'rgba(255, 255, 255, 0.4)',
+      color: '#000 !important',
+      '&:hover': {
+        background: 'rgba(255, 255, 255, 0.4) !important',
+      }
+    },
   },
 });
 
-class SourceReader extends Component {
-  state = {
-    raws: [],
-    open: false,
-    loading: false,
-    style: this.props.mode // eslint-disable-line
+function SourceReader(props) {
+  const {
+    classes,
+    componentName,
+    mode
+  } = props;
+  const [raws, setRaws] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [style, setStyle] = useState(mode);
+
+  const sourceOpen = () => {
+    setLoading(true);
   };
 
-  sourceOpen = () => {
-    const { componentName } = this.props;
-    const { open } = this.state;
-    const name = componentName;
-    this.setState({ loading: true }, () => {
-      Axios.get(url + name).then(result => this.setState({
-        raws: result.data.records,
-        loading: false
-      }));
-      this.setState({ open: !open });
-    });
+  const handleStyle = (event, value) => {
+    setStyle(value);
   };
 
-  handleStyle = (event, value) => {
-    this.setState({ style: value });
-  };
+  useEffect(() => {
+    if (loading) {
+      Axios.get(url + componentName).then(result => {
+        setRaws(result.data.records);
+        setLoading(false);
+      });
 
-  render() {
-    const {
-      raws,
-      open,
-      loading,
-      style
-    } = this.state;
-    const { classes, componentName } = this.props;
-    registerLanguage('jsx', jsx);
-    if (codePreview.enable) {
-      return (
-        <div>
-          <Button onClick={this.sourceOpen} color="secondary" className={classes.button} size="small">
-            { open ? (
-              <Close className={classNames(classes.leftIcon, classes.iconSmall)} />
-            ) : (
-              <Code className={classNames(classes.leftIcon, classes.iconSmall)} />
-            )}
-            { open ? 'Hide Code' : 'Show Code' }
-          </Button>
-          <section dir="ltr" className={classNames(classes.source, open ? classes.open : '')}>
-            <div className={classes.src}>
-              <p>
-                <Icon className="description">description</Icon>
-                src/app/
-                {componentName}
-              </p>
-              <div className={classes.toggleContainer}>
-                <ToggleButtonGroup value={style} exclusive onChange={this.handleStyle}>
-                  <ToggleButton value="light">
-                    Light
-                  </ToggleButton>
-                  <ToggleButton value="dark">
-                    Dark
-                  </ToggleButton>
-                </ToggleButtonGroup>
-              </div>
-            </div>
-            {loading && (
-              <LinearProgress color="secondary" className={classes.preloader} />
-            )}
-            {raws.map((raw, index) => ([
-              <div key={index.toString()}>
-                <SyntaxHighlighter language="jsx" style={style === 'dark' ? darkStyle : lightStyle} showLineNumbers="true">
-                  {raw.source.toString()}
-                </SyntaxHighlighter>
-              </div>
-            ]))}
-          </section>
-        </div>
-      );
+      setOpen(!open);
     }
-    return false;
-  }
+  }, [loading]);
+
+  SyntaxHighlighter.registerLanguage('jsx', jsx);
+  if (!codePreview.enable) { return false; }
+  return (
+    <div>
+      <Button onClick={sourceOpen} color="secondary" className={classes.button} size="small">
+        { open ? (
+          <Close className={classNames(classes.leftIcon, classes.iconSmall)} />
+        ) : (
+          <Code className={classNames(classes.leftIcon, classes.iconSmall)} />
+        )}
+        { open ? 'Hide Code' : 'Show Code' }
+      </Button>
+      <section dir="ltr" className={classNames(classes.source, open ? classes.open : '')}>
+        <div className={classes.src}>
+          <p>
+            <Icon className="description">description</Icon>
+            src/app/
+            {componentName}
+          </p>
+          <div className={classes.toggleContainer}>
+            <ToggleButtonGroup value={style} exclusive onChange={handleStyle}>
+              <ToggleButton value="light">
+                Light
+              </ToggleButton>
+              <ToggleButton value="dark">
+                Dark
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </div>
+        </div>
+        {loading && (
+          <LinearProgress color="secondary" className={classes.preloader} />
+        )}
+        {raws.map((raw, index) => ([
+          <div key={index.toString()}>
+            <SyntaxHighlighter language="jsx" style={style === 'dark' ? darkStyle : lightStyle} showLineNumbers="true">
+              {raw.source.toString()}
+            </SyntaxHighlighter>
+          </div>
+        ]))}
+      </section>
+    </div>
+  );
 }
 
 SourceReader.propTypes = {
@@ -168,9 +169,8 @@ SourceReader.propTypes = {
   mode: PropTypes.string.isRequired,
 };
 
-const reducer = 'ui';
 const mapStateToProps = state => ({
-  mode: state.getIn([reducer, 'type']),
+  mode: state.ui.type
 });
 
 const AppMapped = connect(

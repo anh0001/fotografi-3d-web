@@ -1,14 +1,12 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { SalesChartWidget } from 'enl-components';
 
-class SalesAnalytic extends PureComponent {
-  render() {
-    return (
-      <div>
-        <SalesChartWidget />
-      </div>
-    );
-  }
+function SalesAnalytic() {
+  return (
+    <div>
+      <SalesChartWidget />
+    </div>
+  );
 }
 
 export default SalesAnalytic;

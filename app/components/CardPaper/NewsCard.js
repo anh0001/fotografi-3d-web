@@ -8,36 +8,34 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import styles from './cardStyle-jss';
 
-class NewsCard extends React.Component {
-  render() {
-    const {
-      classes,
-      children,
-      title,
-      image,
-      ...rest
-    } = this.props;
-    return (
-      <Card className={classes.cardMedia} {...rest}>
-        <CardMedia
-          className={classes.media}
-          image={image}
-          title={title}
-        />
-        <CardContent>
-          {children}
-        </CardContent>
-        <CardActions>
-          <Button size="small" color="primary">
-            Share
-          </Button>
-          <Button size="small" color="primary">
-            Learn More
-          </Button>
-        </CardActions>
-      </Card>
-    );
-  }
+function NewsCard(props) {
+  const {
+    classes,
+    children,
+    title,
+    image,
+    ...rest
+  } = props;
+  return (
+    <Card className={classes.cardMedia} {...rest}>
+      <CardMedia
+        className={classes.media}
+        image={image}
+        title={title}
+      />
+      <CardContent>
+        {children}
+      </CardContent>
+      <CardActions>
+        <Button size="small" color="primary">
+          Share
+        </Button>
+        <Button size="small" color="primary">
+          Learn More
+        </Button>
+      </CardActions>
+    </Card>
+  );
 }
 
 NewsCard.propTypes = {

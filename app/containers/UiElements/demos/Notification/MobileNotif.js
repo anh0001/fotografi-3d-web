@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
@@ -56,63 +56,58 @@ const styles = theme => ({
   },
 });
 
-class MobileNotif extends React.Component {
-  state = {
-    open: false,
+function MobileNotif(props) {
+  const [open, setOpen] = useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
   };
 
-  handleClick = () => {
-    this.setState({ open: true });
+  const handleClose = () => {
+    setOpen(false);
   };
 
-  handleClose = () => {
-    this.setState({ open: false });
-  };
+  const { classes } = props;
+  const fabClassName = classNames(classes.fab, open ? classes.fabMoveUp : classes.fabMoveDown);
 
-  render() {
-    const { classes } = this.props;
-    const { open } = this.state;
-    const fabClassName = classNames(classes.fab, open ? classes.fabMoveUp : classes.fabMoveDown);
-
-    return (
-      <div className={classes.root}>
-        <Button className={classes.button} variant="outlined" color="primary" onClick={this.handleClick}>
-          Open snackbar
-        </Button>
-        <div className={classes.appFrame}>
-          <AppBar position="static" color="primary">
-            <Toolbar>
-              <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" color="inherit">
-                Out of my way!
-              </Typography>
-            </Toolbar>
-          </AppBar>
-          <Fab color="secondary" className={fabClassName}>
-            <AddIcon />
-          </Fab>
-          <Snackbar
-            open={open}
-            autoHideDuration={4000}
-            onClose={this.handleClose}
-            ContentProps={{
-              'aria-describedby': 'snackbar-fab-message-id',
-              className: classes.snackbarContent,
-            }}
-            message={<span id="snackbar-fab-message-id">Archived</span>}
-            action={(
-              <Button color="inherit" size="small" onClick={this.handleClose}>
-                Undo
-              </Button>
-            )}
-            className={classes.snackbar}
-          />
-        </div>
+  return (
+    <div className={classes.root}>
+      <Button className={classes.button} variant="outlined" color="primary" onClick={() => handleClick()}>
+        Open snackbar
+      </Button>
+      <div className={classes.appFrame}>
+        <AppBar position="static" color="primary">
+          <Toolbar>
+            <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" color="inherit">
+              Out of my way!
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Fab color="secondary" className={fabClassName}>
+          <AddIcon />
+        </Fab>
+        <Snackbar
+          open={open}
+          autoHideDuration={4000}
+          onClose={() => handleClose()}
+          ContentProps={{
+            'aria-describedby': 'snackbar-fab-message-id',
+            className: classes.snackbarContent,
+          }}
+          message={<span id="snackbar-fab-message-id">Archived</span>}
+          action={(
+            <Button color="inherit" size="small" onClick={() => handleClose()}>
+              Undo
+            </Button>
+          )}
+          className={classes.snackbar}
+        />
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 MobileNotif.propTypes = {

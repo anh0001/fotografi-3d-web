@@ -56,65 +56,63 @@ SamplePrevArrow.defaultProps = {
   onClick: undefined,
 };
 
-class CarouselWidget extends React.Component {
-  render() {
-    const { classes } = this.props;
-    const settings = {
-      dots: true,
-      infinite: true,
-      centerMode: false,
-      speed: 500,
-      autoplaySpeed: 5000,
-      pauseOnHover: true,
-      autoplay: true,
-      slidesToShow: 1,
-      slidesToScroll: 1,
-      responsive: [
-        {
-          breakpoint: 960,
-          settings: {
-            slidesToShow: 2,
-            slidesToScroll: 1,
-            infinite: true,
-            dots: true
-          }
-        },
-        {
-          breakpoint: 600,
-          settings: {
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            infinite: true,
-            dots: true
-          }
-        },
-      ],
-      cssEase: 'ease-out',
-      nextArrow: <SampleNextArrow />,
-      prevArrow: <SamplePrevArrow />
-    };
-    return (
-      <div className="container custom-arrow">
-        <Slider {...settings}>
-          {carouselData.map((item, index) => (
-            <div key={index.toString()}>
-              <div style={{ backgroundColor: item.background }} className={classes.carouselItem}>
-                <Icon className={classes.iconBg}>{item.icon}</Icon>
-                <Typography className={classes.carouselTitle} variant="subtitle1">
-                  <Icon>{item.icon}</Icon>
-                  {item.title}
-                </Typography>
-                <Typography className={classes.carouselDesc}>{item.desc}</Typography>
-                <Button variant="outlined" size="small" className={classes.buttonReadMore}>
-                  <FormattedMessage {...messages.read_more} />
-                </Button>
-              </div>
+function CarouselWidget(props) {
+  const { classes } = props;
+  const settings = {
+    dots: true,
+    infinite: true,
+    centerMode: false,
+    speed: 500,
+    autoplaySpeed: 5000,
+    pauseOnHover: true,
+    autoplay: true,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    responsive: [
+      {
+        breakpoint: 960,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true
+        }
+      },
+    ],
+    cssEase: 'ease-out',
+    nextArrow: <SampleNextArrow />,
+    prevArrow: <SamplePrevArrow />
+  };
+  return (
+    <div className="container custom-arrow">
+      <Slider {...settings}>
+        {carouselData.map((item, index) => (
+          <div key={index.toString()}>
+            <div style={{ backgroundColor: item.background }} className={classes.carouselItem}>
+              <Icon className={classes.iconBg}>{item.icon}</Icon>
+              <Typography className={classes.carouselTitle} variant="subtitle1">
+                <Icon>{item.icon}</Icon>
+                {item.title}
+              </Typography>
+              <Typography className={classes.carouselDesc}>{item.desc}</Typography>
+              <Button variant="outlined" size="small" className={classes.buttonReadMore}>
+                <FormattedMessage {...messages.read_more} />
+              </Button>
             </div>
-          ))}
-        </Slider>
-      </div>
-    );
-  }
+          </div>
+        ))}
+      </Slider>
+    </div>
+  );
 }
 
 CarouselWidget.propTypes = {

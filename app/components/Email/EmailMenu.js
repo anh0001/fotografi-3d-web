@@ -15,88 +15,86 @@ import People from '@material-ui/icons/People';
 import QuestionAnswer from '@material-ui/icons/QuestionAnswer';
 import LabelIcon from '@material-ui/icons/Label';
 import Divider from '@material-ui/core/Divider';
-import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import messages from './messages';
 import styles from './email-jss';
 
-class EmailMenu extends React.Component {
-  gotoPage = (page) => {
-    const { goto, onClose } = this.props;
+function EmailMenu(props) {
+  const {
+    classes,
+    compose,
+    selected,
+    intl,
+    goto, onClose
+  } = props;
+
+  const gotoPage = (page) => {
     goto(page);
     onClose();
   };
 
-  render() {
-    const {
-      classes,
-      compose,
-      selected,
-      intl
-    } = this.props;
-
-    return (
-      <Fragment>
-        <div className={classes.toolbar}>
-          <Button variant="contained" onClick={compose} fullWidth color="secondary">
-            <FormattedMessage {...messages.compose} />
-          </Button>
-        </div>
-        <List className={classes.nav}>
-          <ListItem button className={selected === 'inbox' ? classes.selected : ''} onClick={() => this.gotoPage('inbox')}>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary={intl.formatMessage(messages.inbox)} />
-          </ListItem>
-          <ListItem button className={selected === 'stared' ? classes.selected : ''} onClick={() => this.gotoPage('stared')}>
-            <ListItemIcon>
-              <StarIcon />
-            </ListItemIcon>
-            <ListItemText primary={intl.formatMessage(messages.stared)} />
-          </ListItem>
-          <ListItem button className={selected === 'sent' ? classes.selected : ''} onClick={() => this.gotoPage('sent')}>
-            <ListItemIcon>
-              <SendIcon />
-            </ListItemIcon>
-            <ListItemText primary={intl.formatMessage(messages.sent)} />
-          </ListItem>
-          <ListItem button className={selected === 'spam' ? classes.selected : ''} onClick={() => this.gotoPage('spam')}>
-            <ListItemIcon>
-              <ReportIcon />
-            </ListItemIcon>
-            <ListItemText primary={intl.formatMessage(messages.spam)} />
-          </ListItem>
-        </List>
-        <Divider className={classes.divider} />
-        <List className={classes.nav}>
-          <ListItem button className={selected === 'updates' ? classes.selected : ''} onClick={() => this.gotoPage('updates')}>
-            <ListItemIcon>
-              <Flag className={classes.iconOrange} />
-            </ListItemIcon>
-            <ListItemText primary={intl.formatMessage(messages.updates)} />
-          </ListItem>
-          <ListItem button className={selected === 'social' ? classes.selected : ''} onClick={() => this.gotoPage('social')}>
-            <ListItemIcon>
-              <People className={classes.iconRed} />
-            </ListItemIcon>
-            <ListItemText primary={intl.formatMessage(messages.social)} />
-          </ListItem>
-          <ListItem button className={selected === 'promos' ? classes.selected : ''} onClick={() => this.gotoPage('promos')}>
-            <ListItemIcon>
-              <LabelIcon className={classes.iconBlue} />
-            </ListItemIcon>
-            <ListItemText primary={intl.formatMessage(messages.promos)} />
-          </ListItem>
-          <ListItem button className={selected === 'forums' ? classes.selected : ''} onClick={() => this.gotoPage('forums')}>
-            <ListItemIcon>
-              <QuestionAnswer className={classes.iconCyan} />
-            </ListItemIcon>
-            <ListItemText primary={intl.formatMessage(messages.forums)} />
-          </ListItem>
-        </List>
-      </Fragment>
-    );
-  }
+  return (
+    <Fragment>
+      <div className={classes.toolbar}>
+        <Button variant="contained" onClick={compose} fullWidth color="secondary">
+          <FormattedMessage {...messages.compose} />
+        </Button>
+      </div>
+      <List className={classes.nav}>
+        <ListItem button className={selected === 'inbox' ? classes.selected : ''} onClick={() => gotoPage('inbox')}>
+          <ListItemIcon>
+            <InboxIcon />
+          </ListItemIcon>
+          <ListItemText primary={intl.formatMessage(messages.inbox)} />
+        </ListItem>
+        <ListItem button className={selected === 'stared' ? classes.selected : ''} onClick={() => gotoPage('stared')}>
+          <ListItemIcon>
+            <StarIcon />
+          </ListItemIcon>
+          <ListItemText primary={intl.formatMessage(messages.stared)} />
+        </ListItem>
+        <ListItem button className={selected === 'sent' ? classes.selected : ''} onClick={() => gotoPage('sent')}>
+          <ListItemIcon>
+            <SendIcon />
+          </ListItemIcon>
+          <ListItemText primary={intl.formatMessage(messages.sent)} />
+        </ListItem>
+        <ListItem button className={selected === 'spam' ? classes.selected : ''} onClick={() => gotoPage('spam')}>
+          <ListItemIcon>
+            <ReportIcon />
+          </ListItemIcon>
+          <ListItemText primary={intl.formatMessage(messages.spam)} />
+        </ListItem>
+      </List>
+      <Divider className={classes.divider} />
+      <List className={classes.nav}>
+        <ListItem button className={selected === 'updates' ? classes.selected : ''} onClick={() => gotoPage('updates')}>
+          <ListItemIcon>
+            <Flag className={classes.iconOrange} />
+          </ListItemIcon>
+          <ListItemText primary={intl.formatMessage(messages.updates)} />
+        </ListItem>
+        <ListItem button className={selected === 'social' ? classes.selected : ''} onClick={() => gotoPage('social')}>
+          <ListItemIcon>
+            <People className={classes.iconRed} />
+          </ListItemIcon>
+          <ListItemText primary={intl.formatMessage(messages.social)} />
+        </ListItem>
+        <ListItem button className={selected === 'promos' ? classes.selected : ''} onClick={() => gotoPage('promos')}>
+          <ListItemIcon>
+            <LabelIcon className={classes.iconBlue} />
+          </ListItemIcon>
+          <ListItemText primary={intl.formatMessage(messages.promos)} />
+        </ListItem>
+        <ListItem button className={selected === 'forums' ? classes.selected : ''} onClick={() => gotoPage('forums')}>
+          <ListItemIcon>
+            <QuestionAnswer className={classes.iconCyan} />
+          </ListItemIcon>
+          <ListItemText primary={intl.formatMessage(messages.forums)} />
+        </ListItem>
+      </List>
+    </Fragment>
+  );
 }
 
 EmailMenu.propTypes = {
@@ -105,7 +103,7 @@ EmailMenu.propTypes = {
   goto: PropTypes.func.isRequired,
   onClose: PropTypes.func,
   selected: PropTypes.string.isRequired,
-  intl: intlShape.isRequired
+  intl: PropTypes.object.isRequired
 };
 
 EmailMenu.defaultProps = {

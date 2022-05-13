@@ -6,7 +6,6 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Ionicon from 'react-ionicons';
 
 const styles = theme => ({
   root: {
@@ -27,8 +26,12 @@ const styles = theme => ({
     top: -2,
     position: 'relative',
     left: -5,
-    '& svg': {
-      fill: theme.palette.text.primary
+    marginRight: theme.spacing(1),
+    '& i': {
+      position: 'relative',
+      top: 4,
+      fontSize: 22,
+      color: theme.palette.text.primary,
     }
   }
 });
@@ -54,13 +57,13 @@ let RenderRow = props => {
     if (iconName !== 'arrow') {
       return (
         <span className={classes.icon}>
-          <Ionicon icon={iconName} />
+          <i className={iconName} />
         </span>
       );
     }
     return (
       <span className={classes.icon}>
-        <Ionicon icon="ios-arrow-down" />
+        <i className="ion-ios-arrow-down" />
       </span>
     );
   };
@@ -69,13 +72,13 @@ let RenderRow = props => {
     if (iconName !== 'arrow') {
       return (
         <span className={classes.icon}>
-          <Ionicon icon={iconName} />
+          <i className={iconName} />
         </span>
       );
     }
     return (
       <span className={classes.icon}>
-        <Ionicon icon="ios-arrow-forward" />
+        <i className="ion-ios-arrow-forward" />
       </span>
     );
   };
@@ -97,7 +100,7 @@ let RenderRow = props => {
 
     if (itemCell !== 'child') {
       return (
-        <TableCell padding="default" key={index.toString()}>{dataBodyVal[index]}</TableCell>
+        <TableCell padding="normal" key={index.toString()}>{dataBodyVal[index]}</TableCell>
       );
     }
 
@@ -129,8 +132,8 @@ RenderRow.propTypes = {
   item: PropTypes.object.isRequired,
   parent: PropTypes.bool.isRequired,
   toggleTree: PropTypes.func.isRequired,
-  treeOpen: PropTypes.object.isRequired,
-  arrowMore: PropTypes.object.isRequired,
+  treeOpen: PropTypes.array.isRequired,
+  arrowMore: PropTypes.array.isRequired,
   branch: PropTypes.string.isRequired,
   expandIcon: PropTypes.string.isRequired,
   collapseIcon: PropTypes.string.isRequired
@@ -138,74 +141,72 @@ RenderRow.propTypes = {
 
 RenderRow = withStyles(styles)(RenderRow);
 
-class TreeTable extends React.Component {
-  render() {
-    const {
-      classes,
-      dataTable,
-      expandIcon,
-      collapseIcon,
-      treeOpen,
-      arrowMore,
-      toggleTree,
-      branch
-    } = this.props;
-    const parentRow = true;
-    const getData = dataArray => dataArray.map((item, index) => {
-      if (item.child) {
-        return [
-          <RenderRow
-            expandIcon={expandIcon}
-            collapseIcon={collapseIcon}
-            treeOpen={treeOpen}
-            arrowMore={arrowMore}
-            toggleTree={toggleTree}
-            item={item}
-            key={index.toString()}
-            parent={parentRow}
-            branch={branch}
-          />,
-          getData(item.child)
-        ];
-      }
-      return (
+function TreeTable(props) {
+  const {
+    classes,
+    dataTable,
+    expandIcon,
+    collapseIcon,
+    treeOpen,
+    arrowMore,
+    toggleTree,
+    branch
+  } = props;
+  const parentRow = true;
+  const getData = dataArray => dataArray.map((item, index) => {
+    if (item.child) {
+      return [
         <RenderRow
           expandIcon={expandIcon}
           collapseIcon={collapseIcon}
-          item={item}
           treeOpen={treeOpen}
           arrowMore={arrowMore}
           toggleTree={toggleTree}
+          item={item}
           key={index.toString()}
+          parent={parentRow}
           branch={branch}
-          parent={false}
-        />
-      );
-    });
-
-    const getHead = dataArray => dataArray.map((item, index) => <TableCell padding="default" key={index.toString()}>{item.label}</TableCell>);
-
+        />,
+        getData(item.child)
+      ];
+    }
     return (
-      <Table className={classes.table}>
-        <TableHead>
-          <TableRow>
-            { getHead(dataTable.head) }
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          { getData(dataTable.body) }
-        </TableBody>
-      </Table>
+      <RenderRow
+        expandIcon={expandIcon}
+        collapseIcon={collapseIcon}
+        item={item}
+        treeOpen={treeOpen}
+        arrowMore={arrowMore}
+        toggleTree={toggleTree}
+        key={index.toString()}
+        branch={branch}
+        parent={false}
+      />
     );
-  }
+  });
+
+  const getHead = dataArray => dataArray.map((item, index) => <TableCell padding="normal" key={index.toString()}>{item.label}</TableCell>);
+
+  return (
+    <Table className={classes.table}>
+      <TableHead>
+        <TableRow>
+          { getHead(dataTable.head) }
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        { getData(dataTable.body) }
+      </TableBody>
+    </Table>
+  );
 }
 
 TreeTable.propTypes = {
   classes: PropTypes.object.isRequired,
   dataTable: PropTypes.object.isRequired,
-  treeOpen: PropTypes.object.isRequired,
+  treeOpen: PropTypes.array.isRequired,
   toggleTree: PropTypes.func.isRequired,
-  arrowMore: PropTypes.object.isRequired,
+  arrowMore: PropTypes.array.isRequired,
   branch: PropTypes.string.isRequired,
   expandIcon: PropTypes.string,
   collapseIcon: PropTypes.string

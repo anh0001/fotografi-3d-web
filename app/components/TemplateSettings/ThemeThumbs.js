@@ -47,9 +47,8 @@ ThemeThumb.propTypes = {
 };
 
 // Redux
-const reducer = 'ui';
 const mapStateToProps = state => ({
-  theme: state.getIn([reducer, 'theme']),
+  theme: state.ui.theme
 });
 
 const ThumbsMapped = connect(

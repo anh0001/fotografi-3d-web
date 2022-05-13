@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -8,56 +8,57 @@ import TableCell from '@material-ui/core/TableCell';
 import css from 'enl-styles/Table.scss';
 
 const styles = {
-  dateButton: {
+  datepicker: {
     '& button': {
-      top: 2
+      top: 0
     }
   }
 };
 
-class DatePickerCell extends React.Component {
-  state = {
+function DatePickerCell(props) {
+  const {
+    edited,
+    cellData,
+    theme,
+    classes,
+    branch,
+    updateRow
+  } = props;
+
+  const [state] = useState({
     event: {
       target: {
-        name: this.props.cellData.type, // eslint-disable-line
-        value: this.props.cellData.value, // eslint-disable-line
+        name: cellData.type, // eslint-disable-line
+        value: cellData.value, // eslint-disable-line
       }
     }
-  }
+  });
 
-  handleDateChange = date => {
-    const { event } = this.state;
-    const { branch, updateRow } = this.props;
+  const handleDateChange = useCallback(date => {
+    const { event } = state;
     event.target.value = date;
     updateRow(event, branch);
-  }
+  }, [updateRow, branch]);
 
-  render() {
-    const {
-      edited,
-      cellData,
-      theme,
-      classes
-    } = this.props;
-    const { event } = this.state;
-    return (
-      <TableCell padding="none" className={classNames('text-center', classes.dateButton)} textalign="center">
-        <MuiPickersUtilsProvider utils={MomentUtils}>
-          <KeyboardDatePicker
-            clearable
-            name={cellData.type}
-            className={classNames(css.crudInput, theme.palette.type === 'dark' ? css.lightTxt : css.darkTxt)}
-            format="DD/MM/YYYY"
-            placeholder="10/10/2018"
-            value={event.target.value}
-            disabled={!edited}
-            onChange={this.handleDateChange}
-            animateYearScrolling={false}
-          />
-        </MuiPickersUtilsProvider>
-      </TableCell>
-    );
-  }
+  const { event } = state;
+  return (
+    <TableCell textalign="center" className={classes.datepicker}>
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <KeyboardDatePicker
+          clearable
+          name={cellData.type}
+          className={classNames(css.crudInput, theme.palette.type === 'dark' ? css.lightTxt : css.darkTxt)}
+          format="DD/MM/YYYY"
+          placeholder="10/10/2018"
+          mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
+          value={event.target.value}
+          disabled={!edited}
+          onChange={handleDateChange}
+          animateYearScrolling={false}
+        />
+      </MuiPickersUtilsProvider>
+    </TableCell>
+  );
 }
 
 DatePickerCell.propTypes = {
@@ -68,6 +69,5 @@ DatePickerCell.propTypes = {
   branch: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
 };
-
 
 export default withStyles(styles, { withTheme: true })(DatePickerCell);

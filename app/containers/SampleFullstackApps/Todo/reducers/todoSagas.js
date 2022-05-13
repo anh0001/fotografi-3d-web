@@ -27,7 +27,6 @@ const taskList = new TodoModels({
   onRemove: removeTaskFulfilled
 }, Init);
 
-
 function subscribe() {
   return eventChannel(emit => taskList.subscribe(emit));
 }
@@ -51,7 +50,6 @@ function* write(context, method, onError, ...params) {
 const createTask = write.bind(null, taskList, taskList.push, createTaskFailed);
 const removeTask = write.bind(null, taskList, taskList.remove, removeTaskFailed);
 const updateTask = write.bind(null, taskList, taskList.update, updateTaskFailed);
-
 
 //= ====================================
 //  WATCHERS
@@ -87,7 +85,6 @@ function* watchUpdateTask() {
     yield fork(updateTask, payload.task.key, payload.changes);
   }
 }
-
 
 //= ====================================
 //  TASK SAGAS

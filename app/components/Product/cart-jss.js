@@ -25,6 +25,7 @@ const styles = theme => ({
       height: 70,
       overflow: 'hidden',
       borderRadius: theme.rounded.small,
+      marginRight: theme.spacing(2),
       '& img': {
         maxWidth: '100%'
       }

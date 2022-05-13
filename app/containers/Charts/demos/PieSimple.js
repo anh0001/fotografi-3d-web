@@ -1,5 +1,5 @@
 import React from 'react';
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 import ThemePallete from 'enl-api/palette/themePalette';
 import {
   PieChart,
@@ -8,7 +8,7 @@ import {
 } from 'recharts';
 import { data4, data5 } from './sampleData';
 
-const theme = createMuiTheme(ThemePallete.purpleTheme);
+const theme = createTheme(ThemePallete.purpleTheme);
 const color = ({
   primary: theme.palette.primary.main,
   secondary: theme.palette.secondary.main,

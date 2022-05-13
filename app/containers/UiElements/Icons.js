@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import brand from 'enl-api/dummy/brand';
 import PropTypes from 'prop-types';
@@ -9,10 +9,8 @@ import Icon from '@material-ui/core/Icon';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
 import { PapperBlock } from 'enl-components';
-import { injectIntl, intlShape } from 'react-intl';
 import DetailIcon from './IconGallery/DetailIcon';
 import SearchIcons from './IconGallery/SearchIcons';
-import messages from './messages';
 
 const url = '/api/icons?src=';
 
@@ -53,117 +51,95 @@ const styles = theme => ({
   },
 });
 
-class Icons extends React.Component {
-  state = {
-    raws: [],
-    loading: false,
-    openDetail: false,
-    iconName: '',
-    iconCode: '',
-    filterText: ''
-  };
+function Icons(props) {
+  const [raws, setRaws] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [openDetail, setOpenDetail] = useState(false);
+  const [iconName, setIconName] = useState('');
+  const [iconCode, setIconCode] = useState('');
+  const [filterText, setFilterText] = useState('');
 
-  componentDidMount = () => {
+  useEffect(() => {
     const name = 'material-icon.txt';
-    this.setState({ loading: true }, () => {
-      Axios.get(url + name)
-        .then(response => response.data.records[0].source)
-        .then(data => {
-          const namesAndCodes = data.split('\n');
-          const icons = namesAndCodes.map(nameAndCode => {
-            const parts = nameAndCode.split(' ');
-            return {
-              name: parts[0],
-              code: parts[1]
-            };
-          });
-          return icons;
-        })
-        .then(icons => {
-          this.setState({
-            raws: icons,
-            loading: false
-          });
+    setLoading(true);
+    Axios.get(url + name)
+      .then(response => response.data.records[0].source)
+      .then(data => {
+        const namesAndCodes = data.split('\n');
+        const icons = namesAndCodes.map(nameAndCode => {
+          const parts = nameAndCode.split(' ');
+          return {
+            name: parts[0],
+            code: parts[1]
+          };
         });
-    });
-  }
+        return icons;
+      })
+      .then(icons => {
+        setRaws(icons);
+        setLoading(false);
+      });
+  }, []);
 
-  handleOpenDetail = (name, code) => {
-    this.setState({
-      openDetail: true,
-      iconName: name,
-      iconCode: code,
-    });
+  const handleOpenDetail = (name, code) => {
+    setOpenDetail(true);
+    setIconName(name);
+    setIconCode(code);
   };
 
-  handleCloseDetail = () => {
-    this.setState({ openDetail: false });
+  const handleCloseDetail = () => {
+    setOpenDetail(false);
   };
 
-  handleSearch = (event) => {
+  const handleSearch = event => {
     event.persist();
     // Show result base on keyword
-    this.setState({ filterText: event.target.value.toLowerCase() });
-  }
+    setFilterText(event.target.value.toLowerCase());
+  };
 
-  render() {
-    const title = brand.name + ' - UI Elements';
-    const description = brand.desc;
-    const {
-      raws,
-      loading,
-      openDetail,
-      iconName,
-      iconCode,
-      filterText
-    } = this.state;
-    const { classes, intl } = this.props;
-    return (
-      <div>
-        <Helmet>
-          <title>{title}</title>
-          <meta name="description" content={description} />
-          <meta property="og:title" content={title} />
-          <meta property="og:description" content={description} />
-          <meta property="twitter:title" content={title} />
-          <meta property="twitter:description" content={description} />
-        </Helmet>
-        <PapperBlock
-          title={intl.formatMessage(messages.iconsMaterialTitle)}
-          icon="bookmark"
-          desc={intl.formatMessage(messages.iconsMaterialDesc)}
-        >
-          <div>
-            {loading && (
-              <LinearProgress color="secondary" className={classes.preloader} />
-            )}
-            <SearchIcons filterText={filterText} handleSearch={(event) => this.handleSearch(event)} />
-            <div className={classes.iconsList}>
-              {raws.map((raw, index) => {
-                if (raw.name.toLowerCase().indexOf(filterText) === -1) {
-                  return false;
-                }
-                return (
-                  <div className={classes.iconWrap} key={index.toString()}>
-                    <IconButton title="Click to see detail" onClick={() => this.handleOpenDetail(raw.name, raw.code)} className={classes.btn}>
-                      <Icon className={classes.icon}>{raw.name}</Icon>
-                    </IconButton>
-                    <Typography gutterBottom noWrap>{raw.name}</Typography>
-                  </div>
-                );
-              })}
-              <DetailIcon closeDetail={this.handleCloseDetail} isOpenDetail={openDetail} iconName={iconName} iconCode={iconCode} />
-            </div>
+  const title = brand.name + ' - UI Elements';
+  const description = brand.desc;
+  const { classes } = props;
+  return (
+    <div>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="twitter:title" content={title} />
+        <meta property="twitter:description" content={description} />
+      </Helmet>
+      <PapperBlock title="Material Icons" icon="ion-ios-flag-outline" desc="Material icons are delightful, beautifully crafted symbols for common actions and items. System icons are designed to be simple, modern, friendly, and sometimes quirky. Each icon is reduced to its minimal form, expressing essential characteristics.">
+        <div>
+          {loading && (
+            <LinearProgress color="secondary" className={classes.preloader} />
+          )}
+          <SearchIcons filterText={filterText} handleSearch={(event) => handleSearch(event)} />
+          <div className={classes.iconsList}>
+            {raws.map((raw, index) => {
+              if (raw.name.toLowerCase().indexOf(filterText) === -1) {
+                return false;
+              }
+              return (
+                <div className={classes.iconWrap} key={index.toString()}>
+                  <IconButton title="Click to see detail" onClick={() => handleOpenDetail(raw.name, raw.code)} className={classes.btn}>
+                    <Icon className={classes.icon}>{raw.name}</Icon>
+                  </IconButton>
+                  <Typography gutterBottom noWrap>{raw.name}</Typography>
+                </div>
+              );
+            })}
+            <DetailIcon closeDetail={() => handleCloseDetail()} isOpenDetail={openDetail} iconName={iconName} iconCode={iconCode} />
           </div>
-        </PapperBlock>
-      </div>
-    );
-  }
+        </div>
+      </PapperBlock>
+    </div>
+  );
 }
 
 Icons.propTypes = {
   classes: PropTypes.object.isRequired,
-  intl: intlShape.isRequired
 };
 
-export default withStyles(styles)(injectIntl(Icons));
+export default withStyles(styles)(Icons);

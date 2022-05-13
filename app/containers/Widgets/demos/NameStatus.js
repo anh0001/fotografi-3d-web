@@ -1,14 +1,12 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { ProfileWidget } from 'enl-components';
 
-class NameStatus extends PureComponent {
-  render() {
-    return (
-      <div>
-        <ProfileWidget />
-      </div>
-    );
-  }
+function NameStatus() {
+  return (
+    <div>
+      <ProfileWidget />
+    </div>
+  );
 }
 
 export default NameStatus;

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { createMuiTheme, withStyles } from '@material-ui/core/styles';
+import { createTheme, withStyles } from '@material-ui/core/styles';
 import ThemePallete from 'enl-api/palette/themePalette';
 import {
   AreaChart,
@@ -15,7 +15,7 @@ import {
 import { data3 } from './sampleData';
 import styles from './fluidChart-jss';
 
-const theme = createMuiTheme(ThemePallete.brownTheme);
+const theme = createTheme(ThemePallete.brownTheme);
 const color = ({
   primary: theme.palette.primary.main,
   secondary: theme.palette.secondary.main,
@@ -40,7 +40,7 @@ function AreaNegativePositive(props) {
   const { classes } = props;
   return (
     <div className={classes.chartFluid}>
-      <ResponsiveContainer>
+      <ResponsiveContainer width={800} height="80%">
         <AreaChart
           width={800}
           height={450}

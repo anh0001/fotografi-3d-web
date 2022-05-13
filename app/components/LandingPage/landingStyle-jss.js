@@ -1,4 +1,4 @@
-import { fade, darken } from '@material-ui/core/styles/colorManipulator';
+import { alpha, darken } from '@material-ui/core/styles';
 import controlScreen from 'enl-images/screen/control_screen.png';
 
 const sectionSpace = 120;
@@ -11,6 +11,9 @@ const screenPreview = {
 };
 
 const styles = theme => ({
+  flex: {
+    display: 'flex'
+  },
   landingWrap: {
     backgroundImage:
       `linear-gradient(${theme.palette.background.paper} 0%, ${theme.palette.type === 'dark' ? darken(theme.palette.primary.dark, 0.75) : theme.palette.primary.light} 80%);`,
@@ -27,6 +30,7 @@ const styles = theme => ({
   spaceContainer: {
     display: 'flex',
     justifyContent: 'space-between',
+    alignItems: 'center',
     '& nav': {
       display: 'flex',
       alignItems: 'center'
@@ -46,7 +50,6 @@ const styles = theme => ({
   lang: {
     display: 'inline-block',
     position: 'relative',
-    top: -6,
     marginRight: theme.spacing(2),
     paddingRight: theme.spacing(2),
     borderRight: `1px ${theme.palette.divider} solid`,
@@ -293,10 +296,10 @@ const styles = theme => ({
     overflow: 'hidden',
     boxShadow: theme.shadows[2],
     borderRadius: theme.rounded.medium,
-    background: fade(theme.palette.background.paper, 0.9),
+    background: alpha(theme.palette.background.paper, 0.9),
     padding: theme.spacing(1),
     paddingTop: theme.spacing(3),
-    borderBottom: `${theme.spacing(1)}px solid ${fade(theme.palette.background.paper, 0.9)}`,
+    borderBottom: `${theme.spacing(1)}px solid ${alpha(theme.palette.background.paper, 0.9)}`,
     '&:before': {
       content: '""',
       position: 'absolute',
@@ -321,7 +324,7 @@ const styles = theme => ({
     },
     '& $icon': {
       borderRadius: '50%',
-      background: fade(theme.palette.text.disabled, 0.05),
+      background: alpha(theme.palette.text.disabled, 0.05),
       width: 96,
       height: 96,
       lineHeight: '110px',
@@ -463,13 +466,18 @@ const styles = theme => ({
   },
   contactFieldRoot: {
     '& label': {
-      color: `${fade(theme.palette.primary.light, 0.8)} !important`
+      color: `${alpha(theme.palette.primary.light, 0.8)} !important`
     },
     '& > div': {
       borderColor: theme.palette.secondary.light,
       '& input, textarea': {
         color: theme.palette.primary.light
       }
+    }
+  },
+  textarea: {
+    '& textarea': {
+      height: 85
     }
   },
   footer: {

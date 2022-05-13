@@ -1,82 +1,51 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 
-const styles = theme => ({
+const useStyles = makeStyles((theme) => ({
   typography: {
-    margin: theme.spacing(2),
+    padding: theme.spacing(2),
   },
-  divider: {
-    margin: `${theme.spacing(3)}px 0`,
-    textAlign: 'center',
-    display: 'block',
-  },
-  button: {
-    margin: theme.spacing(1),
-  },
-});
+}));
 
-class SimplePopover extends React.Component {
-  state = {
-    anchorEl: null,
+export default function SimplePopover() {
+  const classes = useStyles();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
   };
 
-  handleClick = event => {
-    this.setState({
-      anchorEl: event.currentTarget,
-    });
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
-  handleClose = () => {
-    this.setState({
-      anchorEl: null,
-    });
-  };
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
-  render() {
-    const { classes } = this.props;
-    const { anchorEl } = this.state;
-    return (
-      <div>
-        <Grid
-          container
-          alignItems="center"
-          justify="center"
-          direction="row"
-          spacing={2}
-        >
-          <Grid item md={6}>
-            <Button className={classes.button} variant="contained" onClick={this.handleClick}>
-              Open Simple Popover
-            </Button>
-            <Popover
-              open={Boolean(anchorEl)}
-              anchorEl={anchorEl}
-              onClose={this.handleClose}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'center',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'center',
-              }}
-            >
-              <Typography className={classes.typography}>The content of the Popover.</Typography>
-            </Popover>
-          </Grid>
-        </Grid>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <Button aria-describedby={id} variant="contained" color="primary" onClick={handleClick}>
+        Open Popover
+      </Button>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+      >
+        <Typography className={classes.typography}>The content of the Popover.</Typography>
+      </Popover>
+    </div>
+  );
 }
-
-SimplePopover.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(SimplePopover);

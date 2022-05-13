@@ -1,4 +1,4 @@
-import React, { Fragment, PureComponent } from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -10,7 +10,6 @@ const styles = theme => ({
     height: 'auto',
   },
   divider: {
-    display: 'block',
     margin: `${theme.spacing(3)}px 0`,
   },
   root: {
@@ -106,46 +105,44 @@ const images = [
   },
 ];
 
-class ComplexButtons extends PureComponent {
-  render() {
-    const { classes } = this.props;
-    return (
-      <Fragment>
-        <div className={classes.root}>
-          {images.map(image => (
-            <ButtonBase
-              focusRipple
-              key={image.id}
-              className={classes.image}
-              focusVisibleClassName={classes.focusVisible}
+function ComplexButtons(props) {
+  const { classes } = props;
+  return (
+    <Fragment>
+      <div className={classes.root}>
+        {images.map(image => (
+          <ButtonBase
+            focusRipple
+            key={image.id}
+            className={classes.image}
+            focusVisibleClassName={classes.focusVisible}
+            style={{
+              width: image.width,
+            }}
+          >
+            <span
+              className={classes.imageSrc}
               style={{
-                width: image.width,
+                backgroundImage: `url(${image.url})`,
               }}
-            >
-              <span
-                className={classes.imageSrc}
-                style={{
-                  backgroundImage: `url(${image.url})`,
-                }}
-              />
-              <span className={classes.imageBackdrop} />
-              <span className={classes.imageButton}>
-                <Typography
-                  component="span"
-                  variant="subtitle1"
-                  color="inherit"
-                  className={classes.imageTitle}
-                >
-                  {image.title}
-                  <span className={classes.imageMarked} />
-                </Typography>
-              </span>
-            </ButtonBase>
-          ))}
-        </div>
-      </Fragment>
-    );
-  }
+            />
+            <span className={classes.imageBackdrop} />
+            <span className={classes.imageButton}>
+              <Typography
+                component="span"
+                variant="subtitle1"
+                color="inherit"
+                className={classes.imageTitle}
+              >
+                {image.title}
+                <span className={classes.imageMarked} />
+              </Typography>
+            </span>
+          </ButtonBase>
+        ))}
+      </div>
+    </Fragment>
+  );
 }
 
 ComplexButtons.propTypes = {

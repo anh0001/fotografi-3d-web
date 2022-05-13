@@ -108,22 +108,11 @@ export Timeline from './SocialMedia/Timeline';
 export SideSection from './SocialMedia/SideSection';
 export WritePost from './SocialMedia/WritePost';
 export Comments from './SocialMedia/Comments';
-// Project
-export ProjectsTimeline from './Project/Timeline';
-export WriteProject from './Project/WriteProject';
-export AddNewProject from './Project/AddNewProject';
-export RequestConfirmationProject from './Project/RequestConfirmationProject';
-// Article
-export ArticlesTimeline from './Article/Timeline';
-export WriteArticle from './Article/WriteArticle';
-export AddNewArticle from './Article/AddNewArticle';
-export RequestConfirmationArticle from './Article/RequestConfirmationArticle';
 // Product
 export ProductGallery from './Product/ProductGallery';
 export SearchProduct from './Search/SearchProduct';
 export ProductDesc from './Product/ProductDesc';
-export AddNewProduct from './Product/AddNewProduct';
-export DynamicInvoice from './Invoice';
+export Invoice from './Invoice';
 export AddressForm from './Forms/AddressForm';
 export PaymentForm from './Forms/PaymentForm';
 export Review from './Forms/Review';

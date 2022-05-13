@@ -4,62 +4,55 @@ import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
-class TriggersTooltips extends React.Component {
-  state = {
-    open: false,
+export default function TriggersTooltips() {
+  const [open, setOpen] = React.useState(false);
+
+  const handleTooltipClose = () => {
+    setOpen(false);
   };
 
-  handleTooltipClose = () => {
-    this.setState({ open: false });
+  const handleTooltipOpen = () => {
+    setOpen(true);
   };
 
-  handleTooltipOpen = () => {
-    this.setState({ open: true });
-  };
-
-  render() {
-    const { open } = this.state;
-    return (
-      <div>
-        <Grid container justify="center">
-          <Grid item>
-            <Tooltip disableFocusListener title="Add">
-              <Button>Hover or touch</Button>
-            </Tooltip>
-          </Grid>
-          <Grid item>
-            <Tooltip disableHoverListener title="Add">
-              <Button>Focus or touch</Button>
-            </Tooltip>
-          </Grid>
-          <Grid item>
-            <Tooltip disableFocusListener disableTouchListener title="Add">
-              <Button>Hover</Button>
-            </Tooltip>
-          </Grid>
-          <Grid item>
-            <ClickAwayListener onClickAway={this.handleTooltipClose}>
-              <div>
-                <Tooltip
-                  PopperProps={{
-                    disablePortal: true,
-                  }}
-                  onClose={this.handleTooltipClose}
-                  open={open}
-                  disableFocusListener
-                  disableHoverListener
-                  disableTouchListener
-                  title="Add"
-                >
-                  <Button onClick={this.handleTooltipOpen}>Click</Button>
-                </Tooltip>
-              </div>
-            </ClickAwayListener>
-          </Grid>
+  return (
+    <div>
+      <Grid container justifyContent="center">
+        <Grid item>
+          <Tooltip disableFocusListener title="Add">
+            <Button>Hover or touch</Button>
+          </Tooltip>
         </Grid>
-      </div>
-    );
-  }
+        <Grid item>
+          <Tooltip disableHoverListener title="Add">
+            <Button>Focus or touch</Button>
+          </Tooltip>
+        </Grid>
+        <Grid item>
+          <Tooltip disableFocusListener disableTouchListener title="Add">
+            <Button>Hover</Button>
+          </Tooltip>
+        </Grid>
+        <Grid item>
+          <ClickAwayListener onClickAway={handleTooltipClose}>
+            <div>
+              <Tooltip
+                PopperProps={{
+                  disablePortal: true,
+                }}
+                onClose={handleTooltipClose}
+                open={open}
+                disableFocusListener
+                disableHoverListener
+                disableTouchListener
+                title="Add"
+              >
+                <Button onClick={handleTooltipOpen}>Click</Button>
+              </Tooltip>
+            </div>
+          </ClickAwayListener>
+        </Grid>
+      </Grid>
+    </div>
+  );
 }
-
-export default TriggersTooltips;

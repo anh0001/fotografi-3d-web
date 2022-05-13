@@ -1,11 +1,9 @@
 /**
  * Combine all reducers in this file and export the combined reducers.
  */
-import { reducer as form } from 'redux-form/immutable';
-import { combineReducers } from 'redux-immutable';
-import { connectRouter } from 'connected-react-router/immutable';
-import history from 'utils/history';
-
+import { reducer as form } from 'redux-form';
+import { combineReducers } from 'redux';
+import { connectRouter } from 'connected-react-router';
 import languageProviderReducer from 'containers/LanguageProvider/reducer';
 import contact from 'enl-containers/SampleApps/Contact/reducers/contactReducer';
 import contactFullstack from 'enl-containers/SampleFullstackApps/Contact/reducers/contactReducer';
@@ -14,10 +12,11 @@ import emailFullstack from 'enl-containers/SampleFullstackApps/Email/reducers/em
 import todo from 'enl-containers/SampleApps/Todo/reducers/todoReducer';
 import todoFullstack from 'enl-containers/SampleFullstackApps/Todo/reducers/todoReducer';
 import crudTable from 'enl-containers/Tables/reducers/crudTbReducer';
-import timeline from 'enl-containers/Pages/Timeline/reducers/timelineReducer';
+import socmed from 'enl-containers/Pages/Timeline/reducers/timelineReducer';
 import chat from 'enl-containers/Pages/Chat/reducers/chatReducers';
-import ecommerceReducer from 'enl-containers/Pages/Ecommerce/reducers/ecommerceReducers';
+import ecommerce from 'enl-containers/Pages/Ecommerce/reducers/ecommerceReducers';
 import treeTable from 'enl-containers/Tables/reducers/treeTbReducers';
+import history from '../utils/history';
 
 // Global Reducers
 import authReducer from './modules/authReducer';
@@ -47,16 +46,16 @@ export default function createReducer(injectedReducers = {}) {
     form,
     ui: uiReducer,
     initval,
+    authReducer,
     contact,
     contactFullstack,
     email,
     emailFullstack,
     todo,
     todoFullstack,
-    authReducer,
-    timeline,
+    socmed,
+    ecommerce,
     chat,
-    ecommerceReducer,
     crudTableDemo: branchReducer(crudTable, 'crudTableDemo'),
     treeTableArrow: branchReducer(treeTable, 'treeTableArrow'),
     treeTablePM: branchReducer(treeTable, 'treeTablePM'),

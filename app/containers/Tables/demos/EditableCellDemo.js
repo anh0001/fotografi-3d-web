@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { CrudTable, Notification } from 'enl-components';
 import styles from 'enl-components/Tables/tableStyle-jss';
 import {
@@ -14,9 +13,6 @@ import {
   saveAction,
   closeNotifAction,
 } from '../reducers/crudTbActions';
-
-// Reducer Branch
-const branch = 'crudTableDemo';
 
 const anchorTable = [
   {
@@ -140,75 +136,47 @@ const dataApi = [
   }
 ];
 
-class CrudTableDemo extends Component {
-  render() {
-    const {
-      classes,
-      fetchData,
-      addEmptyRow,
-      dataTable,
-      removeRow,
-      updateRow,
-      editRow,
-      finishEditRow,
-      closeNotif,
-      messageNotif,
-    } = this.props;
-    return (
-      <div>
-        <Notification close={() => closeNotif(branch)} message={messageNotif} />
-        <div className={classes.rootTable}>
-          <CrudTable
-            dataInit={dataApi}
-            anchor={anchorTable}
-            title="Inventory Data"
-            dataTable={dataTable}
-            fetchData={fetchData}
-            addEmptyRow={addEmptyRow}
-            removeRow={removeRow}
-            updateRow={updateRow}
-            editRow={editRow}
-            finishEditRow={finishEditRow}
-            branch={branch}
-          />
-        </div>
+function CrudTableDemo(props) {
+  const { classes } = props;
+
+  // Redux State
+  const branch = 'crudTableDemo';
+  const dataTable = useSelector(state => state.crudTableDemo.dataTable);
+  const messageNotif = useSelector(state => state.crudTableDemo.notifMsg);
+
+  // Dispatcher
+  const fetchData = useDispatch();
+  const addEmptyRow = useDispatch();
+  const removeRow = useDispatch();
+  const updateRow = useDispatch();
+  const editRow = useDispatch();
+  const finishEditRow = useDispatch();
+  const closeNotif = useDispatch();
+
+  return (
+    <div>
+      <Notification close={() => closeNotif(closeNotifAction(branch))} message={messageNotif} />
+      <div className={classes.rootTable}>
+        <CrudTable
+          dataInit={dataApi}
+          anchor={anchorTable}
+          title="Inventory Data"
+          dataTable={dataTable}
+          fetchData={(payload) => fetchData(fetchAction(payload, branch))}
+          addEmptyRow={(payload) => addEmptyRow(addAction(payload, branch))}
+          removeRow={(payload) => removeRow(removeAction(payload, branch))}
+          updateRow={(e, payload) => updateRow(updateAction(e, payload, branch))}
+          editRow={(payload) => editRow(editAction(payload, branch))}
+          finishEditRow={(payload) => finishEditRow(saveAction(payload, branch))}
+          branch={branch}
+        />
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 CrudTableDemo.propTypes = {
-  classes: PropTypes.object.isRequired,
-  fetchData: PropTypes.func.isRequired,
-  dataTable: PropTypes.object.isRequired,
-  addEmptyRow: PropTypes.func.isRequired,
-  removeRow: PropTypes.func.isRequired,
-  updateRow: PropTypes.func.isRequired,
-  editRow: PropTypes.func.isRequired,
-  finishEditRow: PropTypes.func.isRequired,
-  closeNotif: PropTypes.func.isRequired,
-  messageNotif: PropTypes.string.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
-const mapStateToProps = state => ({
-  force: state, // force state from reducer
-  dataTable: state.getIn([branch, 'dataTable']),
-  messageNotif: state.getIn([branch, 'notifMsg']),
-});
-
-const mapDispatchToProps = dispatch => ({
-  fetchData: bindActionCreators(fetchAction, dispatch),
-  addEmptyRow: bindActionCreators(addAction, dispatch),
-  removeRow: bindActionCreators(removeAction, dispatch),
-  updateRow: bindActionCreators(updateAction, dispatch),
-  editRow: bindActionCreators(editAction, dispatch),
-  finishEditRow: bindActionCreators(saveAction, dispatch),
-  closeNotif: bindActionCreators(closeNotifAction, dispatch),
-});
-
-const CrudTableMapped = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CrudTableDemo);
-
-export default withStyles(styles)(CrudTableMapped);
+export default withStyles(styles)(CrudTableDemo);

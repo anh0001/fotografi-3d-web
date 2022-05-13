@@ -1,62 +1,42 @@
 import React from 'react';
-import { compose, withProps } from 'recompose';
-import {
-  withScriptjs,
-  withGoogleMap,
-  GoogleMap,
-  StreetViewPanorama,
-  OverlayView,
-} from 'react-google-maps';
+import { GoogleMap, StreetViewPanorama } from '@react-google-maps/api';
+import GoogleMapWrapper from './GoogleMapWrapper';
 
-const getPixelPositionOffset = (width, height) => ({
-  x: -(width / 2),
-  y: -(height / 2),
-});
+const containerStyle = {
+  height: '400px'
+};
 
-const MapWithAMarker = compose(
-  withProps({
-    googleMapURL: 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places',
-    loadingElement: <div style={{ height: '100%' }} />,
-    containerElement: <div style={{ height: '400px' }} />,
-    mapElement: <div style={{ height: '100%' }} />,
-    center: { lat: 49.2853171, lng: -123.1119202 },
-  }),
-  withScriptjs,
-  withGoogleMap
-)(props => (
-  <GoogleMap defaultZoom={8} defaultCenter={props.center}>
-    <StreetViewPanorama defaultPosition={props.center} visible>
-      <OverlayView
-        position={{ lat: 49.28590291211115, lng: -123.11248166065218 }}
-        mapPaneName={OverlayView.OVERLAY_LAYER}
-        getPixelPositionOffset={getPixelPositionOffset}
+const MapWithStreetView = props => {
+  const center = {
+    lat: 51.5320665,
+    lng: -0.177203
+  };
+
+  return (
+    <GoogleMapWrapper>
+      <GoogleMap
+        {...props}
+        id="bicycling-example"
+        zoom={14}
+        center={center}
       >
-        <div
-          style={{
-            background: 'red',
-            color: 'white',
-            padding: 5,
-            borderRadius: '50%'
-          }}
-        >
-        OverlayView
-        </div>
-      </OverlayView>
-    </StreetViewPanorama>
-  </GoogleMap>
-));
+        <StreetViewPanorama
+          position={center}
+          visible
+        />
+      </GoogleMap>
+    </GoogleMapWrapper>
+  );
+};
 
-class StreetView extends React.Component {
-  render() {
-    return (
-      <MapWithAMarker
-        googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
-        loadingElement={<div style={{ height: '100%' }} />}
-        containerElement={<div style={{ height: '400px' }} />}
-        mapElement={<div style={{ height: '100%' }} />}
-      />
-    );
-  }
+function StreetView() {
+  return (
+    <MapWithStreetView
+      loadingElement={<div style={{ height: '100%' }} />}
+      mapContainerStyle={containerStyle}
+      mapElement={<div style={{ height: '100%' }} />}
+    />
+  );
 }
 
 export default StreetView;

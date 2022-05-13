@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import TableCell from '@material-ui/core/TableCell';
 import classNames from 'classnames';
@@ -6,41 +6,38 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import css from 'enl-styles/Table.scss';
 
-class ToggleCell extends React.Component {
-  state = {
-    isChecked: this.props.cellData.value // eslint-disable-line
-  };
+function ToggleCell(props) {
+  const {
+    cellData,
+    edited,
+    updateRow,
+    branch
+  } = props;
 
-  handleChange = event => {
-    const { updateRow, branch } = this.props;
-    this.setState({ isChecked: event.target.checked });
+  const [isChecked, setIsChecked] = useState(cellData.value);
+
+  const handleChange = useCallback(event => {
+    setIsChecked(event.target.checked);
     updateRow(event, branch);
-  };
+  }, [updateRow, branch]);
 
-  render() {
-    const {
-      cellData,
-      edited,
-    } = this.props;
-    const { isChecked } = this.state;
-    return (
-      <TableCell className={css.toggleCell} padding="none" textalign="center">
-        <div className={classNames(css.coverReadonly, !edited ? css.show : '')} />
-        <FormControlLabel
-          control={(
-            <Switch
-              name={cellData.type}
-              id={cellData.id.toString()}
-              className={css.crudInput}
-              checked={isChecked}
-              onChange={this.handleChange}
-              value={cellData.value.toString()}
-            />
-          )}
-        />
-      </TableCell>
-    );
-  }
+  return (
+    <TableCell className={css.toggleCell} padding="none" textalign="center">
+      <div className={classNames(css.coverReadonly, !edited ? css.show : '')} />
+      <FormControlLabel
+        control={(
+          <Switch
+            name={cellData.type}
+            id={cellData.id.toString()}
+            className={css.crudInput}
+            checked={isChecked}
+            onChange={handleChange}
+            value={cellData.value.toString()}
+          />
+        )}
+      />
+    </TableCell>
+  );
 }
 
 ToggleCell.propTypes = {

@@ -1,4 +1,4 @@
-import { fade } from '@material-ui/core/styles/colorManipulator';
+import { alpha } from '@material-ui/core/styles';
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -17,7 +17,7 @@ const styles = theme => ({
     background: theme.palette.type === 'dark' ? theme.palette.grey[800] : theme.palette.background.paper,
     [theme.breakpoints.up('md')]: {
       marginTop: 100,
-      background: theme.palette.type === 'dark' ? fade(theme.palette.grey[800], 0.75) : fade(theme.palette.background.paper, 0.95),
+      background: theme.palette.type === 'dark' ? alpha(theme.palette.grey[800], 0.75) : alpha(theme.palette.background.paper, 0.95),
     },
     '& li': {
       marginBottom: theme.spacing(6),

@@ -1,81 +1,57 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
+import { makeStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
 import Paper from '@material-ui/core/Paper';
 import TagFacesIcon from '@material-ui/icons/TagFaces';
 
-const styles = theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     justifyContent: 'center',
     flexWrap: 'wrap',
+    listStyle: 'none',
     padding: theme.spacing(0.5),
+    margin: 0,
   },
   chip: {
     margin: theme.spacing(0.5),
   },
-});
+}));
 
-class ArrayTags extends React.Component {
-  state = {
-    chipData: [
-      { key: 0, label: 'Angular' },
-      { key: 1, label: 'jQuery' },
-      { key: 2, label: 'Polymer' },
-      { key: 3, label: 'React' },
-      { key: 4, label: 'Vue.js' },
-    ],
+export default function ChipsArray() {
+  const classes = useStyles();
+  const [chipData, setChipData] = React.useState([
+    { key: 0, label: 'Angular' },
+    { key: 1, label: 'jQuery' },
+    { key: 2, label: 'Polymer' },
+    { key: 3, label: 'React' },
+    { key: 4, label: 'Vue.js' },
+  ]);
+
+  const handleDelete = (chipToDelete) => () => {
+    setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
   };
 
-  handleDelete = data => () => {
-    const { chipData } = this.state;
-    if (data.label === 'React') {
-      alert('Why would you want to delete React?! :)'); // eslint-disable-line no-alert
-      return;
-    }
+  return (
+    <Paper component="ul" className={classes.root}>
+      {chipData.map((data) => {
+        let icon;
 
-    const chipDataConst = [...chipData];
-    const chipToDelete = chipDataConst.indexOf(data);
-    chipDataConst.splice(chipToDelete, 1);
-    this.setState({ chipData: chipDataConst });
-  };
+        if (data.label === 'React') {
+          icon = <TagFacesIcon />;
+        }
 
-  render() {
-    const { classes } = this.props;
-    const { chipData } = this.state;
-
-    return (
-      <Paper className={classes.root}>
-        {chipData.map(data => {
-          let avatar = null;
-
-          if (data.label === 'React') {
-            avatar = (
-              <Avatar>
-                <TagFacesIcon className={classes.svgIcon} />
-              </Avatar>
-            );
-          }
-
-          return (
+        return (
+          <li key={data.key}>
             <Chip
-              key={data.key}
-              avatar={avatar}
+              icon={icon}
               label={data.label}
-              onDelete={this.handleDelete(data)}
+              onDelete={data.label === 'React' ? undefined : handleDelete(data)}
               className={classes.chip}
             />
-          );
-        })}
-      </Paper>
-    );
-  }
+          </li>
+        );
+      })}
+    </Paper>
+  );
 }
-
-ArrayTags.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(ArrayTags);

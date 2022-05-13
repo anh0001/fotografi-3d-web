@@ -1,111 +1,88 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import ProductCard from '../CardPaper/ProductCard';
 import ProductDetail from './ProductDetail';
 
-class ProductGallery extends React.Component {
-  state = {
-    open: false,
-  }
+function ProductGallery(props) {
+  const [open, setOpen] = useState(false);
+  const {
+    dataProduct,
+    handleAddToCart,
+    productIndex,
+    keyword,
+    listView,
+    showDetail
+  } = props;
 
-  handleDetailOpen = (product) => {
-    const { showDetail } = this.props;
-    this.setState({ open: true });
+  const handleDetailOpen = (product) => {
+    setOpen(true);
     showDetail(product);
   };
 
-  handleClose = () => {
-    this.setState({ open: false });
+  const handleClose = () => {
+    setOpen(false);
   };
 
-
-  render() {
-    const { open } = this.state;
-    const {
-      dataProduct,
-      handleAddToCart,
-      handleClickEditButton,
-      productIndex,
-      keyword,
-      listView,
-      noCart,
-      noEditButton,
-    } = this.props;
-
-    // console.log('dataproduct: ', dataProduct);
-
-    return (
-      <div>
+  return (
+    <div>
+      {dataProduct.length > 0 && (
         <ProductDetail
           open={open}
-          close={this.handleClose}
+          close={handleClose}
           detailContent={dataProduct}
           productIndex={productIndex}
           handleAddToCart={handleAddToCart}
-          noCart={noCart}
         />
-        <Grid
-          container
-          alignItems="flex-start"
-          justify="flex-start"
-          direction="row"
-          spacing={3}
-        >
-          {
-            dataProduct.map((product, index) => {
-              if (product.get('productName').toLowerCase().indexOf(keyword) === -1) {
-                return false;
-              }
-              const itemAttr = {
-                id: product.get('productId'),
-                name: product.get('productName'),
-                thumbnail: product.get('thumbnail'),
-                price: product.get('productPrice'),
-                quantity: 1
-              };
-              return (
-                <Grid item md={listView === 'list' ? 12 : 4} sm={listView === 'list' ? 12 : 6} xs={12} key={index.toString()}>
-                  <ProductCard
-                    list={listView === 'list'}
-                    name={product.get('productName')}
-                    thumbnail={product.get('thumbnail')}
-                    desc={product.get('productDescription')}
-                    price={product.get('productPrice')}
-                    prevPrice={product.get('productPrevPrice')}
-                    discount={product.get('discount')}
-                    soldout={product.get('availableQty') == 0}
-                    detailOpen={() => this.handleDetailOpen(product)}
-                    addToCart={() => handleAddToCart(itemAttr)}
-                    noCart={noCart}
-                    noEditButton={noEditButton}
-                    handleClickEditButton={() => handleClickEditButton(product)}
-                  />
-                </Grid>
-              );
-            })
+      )}
+      <Grid
+        container
+        alignItems="flex-start"
+        justifyContent="flex-start"
+        direction="row"
+        spacing={3}
+      >
+        {dataProduct.length > 0 && dataProduct.map((product, index) => {
+          if (product.name.toLowerCase().indexOf(keyword) === -1) {
+            return false;
           }
-        </Grid>
-      </div>
-    );
-  }
+          const itemAttr = {
+            id: product.id,
+            name: product.name,
+            thumbnail: product.thumbnail,
+            price: product.price,
+            quantity: 1
+          };
+          return (
+            <Grid item md={listView === 'list' ? 12 : 4} sm={listView === 'list' ? 12 : 6} xs={12} key={index.toString()}>
+              <ProductCard
+                list={listView === 'list'}
+                name={product.name}
+                thumbnail={product.thumbnail}
+                desc={product.desc}
+                rating={product.rating}
+                price={product.price}
+                prevPrice={product.prevPrice}
+                discount={product.discount}
+                soldout={product.soldout}
+                detailOpen={() => handleDetailOpen(product)}
+                addToCart={() => handleAddToCart(itemAttr)}
+              />
+            </Grid>
+          );
+        })}
+      </Grid>
+    </div>
+  );
 }
 
 ProductGallery.propTypes = {
-  dataProduct: PropTypes.object.isRequired,
-  handleAddToCart: PropTypes.func,
-  handleClickEditButton: PropTypes.func,
+  dataProduct: PropTypes.array.isRequired,
+  handleAddToCart: PropTypes.func.isRequired,
   showDetail: PropTypes.func.isRequired,
   productIndex: PropTypes.number.isRequired,
   keyword: PropTypes.string.isRequired,
-  listView: PropTypes.string.isRequired,
-  noCart: PropTypes.bool,
-  noEditButton: PropTypes.bool,
-};
-
-ProductGallery.defaultProps = {
-  noCart: false,
-  noEditButton: true,
+  listView: PropTypes.string.isRequired
 };
 
 export default ProductGallery;

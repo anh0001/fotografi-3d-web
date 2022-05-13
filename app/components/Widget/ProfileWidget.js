@@ -10,7 +10,7 @@ import DateRange from '@material-ui/icons/DateRange';
 import LocationOn from '@material-ui/icons/LocationOn';
 import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import messages from './messages';
 import PapperBlock from '../PapperBlock/PapperBlock';
 import styles from './widget-jss';
@@ -52,7 +52,7 @@ function ProfileWidget(props) {
 
 ProfileWidget.propTypes = {
   classes: PropTypes.object.isRequired,
-  intl: intlShape.isRequired
+  intl: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(injectIntl(ProfileWidget));

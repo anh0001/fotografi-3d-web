@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MobileStepper from '@material-ui/core/MobileStepper';
@@ -22,97 +22,80 @@ const styles = theme => ({
   },
 });
 
-class MobileSteppers extends React.Component {
-  state = {
-    activeStepDots: 0,
-    activeStepLine: 0,
+function MobileSteppers(props) {
+  const [activeStepDots, setDots] = useState(0);
+  const [activeStepLine, setLine] = useState(0);
+
+  const handleNextDots = () => {
+    setDots(activeStepDots + 1);
   };
 
-  handleNextDots = () => {
-    const { activeStepDots } = this.state;
-    this.setState({
-      activeStepDots: activeStepDots + 1,
-    });
+  const handleBackDots = () => {
+    setDots(activeStepDots - 1);
   };
 
-  handleBackDots = () => {
-    const { activeStepDots } = this.state;
-    this.setState({
-      activeStepDots: activeStepDots - 1,
-    });
+  const handleNextLine = () => {
+    setLine(activeStepLine + 1);
   };
 
-  handleNextLine = () => {
-    const { activeStepLine } = this.state;
-    this.setState({
-      activeStepLine: activeStepLine + 1,
-    });
+  const handleBackLine = () => {
+    setLine(activeStepLine - 1);
   };
 
-  handleBackLine = () => {
-    const { activeStepLine } = this.state;
-    this.setState({
-      activeStepLine: activeStepLine - 1,
-    });
-  };
+  const { classes, theme } = props;
 
-  render() {
-    const { classes, theme } = this.props;
-    const { activeStepDots, activeStepLine } = this.state;
-
-    return (
-      <Grid container spacing={2}>
-        <Grid item container justify="center" direction="column" md={6}>
-          <Typography variant="button" className={classes.title}>
-            Mobile Stepper - Dots
-          </Typography>
-          <MobileStepper
-            variant="dots"
-            steps={6}
-            position="static"
-            activeStep={activeStepDots}
-            className={classes.root}
-            nextButton={(
-              <Button size="small" onClick={this.handleNextDots} disabled={activeStepDots === 5}>
-                Next
-                {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-              </Button>
-            )}
-            backButton={(
-              <Button size="small" onClick={this.handleBackDots} disabled={activeStepDots === 0}>
-                {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-                Back
-              </Button>
-            )}
-          />
-        </Grid>
-        <Grid item container justify="center" direction="column" md={6}>
-          <Typography variant="button" className={classes.title}>
-            Mobile Stepper - Progress
-          </Typography>
-          <MobileStepper
-            variant="progress"
-            steps={6}
-            position="static"
-            activeStep={activeStepLine}
-            className={classes.root}
-            nextButton={(
-              <Button size="small" onClick={this.handleNextLine} disabled={activeStepLine === 5}>
-                Next
-                {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-              </Button>
-            )}
-            backButton={(
-              <Button size="small" onClick={this.handleBackLine} disabled={activeStepLine === 0}>
-                {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-                Back
-              </Button>
-            )}
-          />
-        </Grid>
+  return (
+    <Grid container spacing={2}>
+      <Grid item container justifyContent="center" direction="column" md={6}>
+        <Typography variant="button" className={classes.title}>
+          Mobile Stepper - Dots
+        </Typography>
+        <MobileStepper
+          variant="dots"
+          steps={6}
+          position="static"
+          activeStep={activeStepDots}
+          className={classes.root}
+          nextButton={(
+            <Button size="small" onClick={() => handleNextDots()} disabled={activeStepDots === 5}>
+              Next
+              {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+            </Button>
+          )}
+          backButton={(
+            <Button size="small" onClick={() => handleBackDots()} disabled={activeStepDots === 0}>
+              {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+              Back
+            </Button>
+          )}
+        />
       </Grid>
-    );
-  }
+      <Grid item container justifyContent="center" direction="column" md={6}>
+        <Typography variant="button" className={classes.title}>
+          Mobile Stepper - Progress
+        </Typography>
+        <MobileStepper
+          variant="progress"
+          steps={6}
+          position="static"
+          activeStep={activeStepLine}
+          className={classes.root}
+          nextButton={(
+            <Button size="small" onClick={() => handleNextLine()} disabled={activeStepLine === 5}>
+              Next
+              {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+            </Button>
+          )}
+          backButton={(
+            <Button size="small" onClick={() => handleBackLine()} disabled={activeStepLine === 0}>
+              {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+              Back
+            </Button>
+          )}
+        />
+      </Grid>
+    </Grid>
+  );
 }
 
 MobileSteppers.propTypes = {

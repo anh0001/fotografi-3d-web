@@ -115,6 +115,10 @@ const styles = theme => ({
       height: 24
     }
   },
+  emptyRating: {
+    display: 'block',
+    height: 26,
+  },
   status: {
     position: 'absolute',
     right: 0,

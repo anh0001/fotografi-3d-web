@@ -59,31 +59,29 @@ const styles = ({
   }
 });
 
-class CustomCarousel extends React.Component {
-  render() {
-    const { classes } = this.props;
-    const settings = {
-      dots: true,
-      infinite: true,
-      centerMode: true,
-      speed: 500,
-      slidesToShow: 3,
-      slidesToScroll: 1,
-      nextArrow: <SampleNextArrow />,
-      prevArrow: <SamplePrevArrow />
-    };
-    return (
-      <div className="container custom-arrow">
-        <Slider {...settings}>
-          {imgData.map((item, index) => (
-            <div key={index.toString()} className={classes.item}>
-              <img src={item.img} alt={item.title} />
-            </div>
-          ))}
-        </Slider>
-      </div>
-    );
-  }
+function CustomCarousel(props) {
+  const { classes } = props;
+  const settings = {
+    dots: true,
+    infinite: true,
+    centerMode: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    nextArrow: <SampleNextArrow />,
+    prevArrow: <SamplePrevArrow />
+  };
+  return (
+    <div className="container custom-arrow">
+      <Slider {...settings}>
+        {imgData.map((item, index) => (
+          <div key={index.toString()} className={classes.item}>
+            <img src={item.img} alt={item.title} />
+          </div>
+        ))}
+      </Slider>
+    </div>
+  );
 }
 
 CustomCarousel.propTypes = {

@@ -24,6 +24,9 @@ export FloatingButtons from './FloatingButtons';
 export CustomButtons from './CustomButtons';
 export ComplexButtons from './ComplexButtons';
 export ToggleBtn from './ToggleBtn';
+export DialCustomClose from './DialCustomClose';
+export DialSimple from './DialSimple';
+export DialTooltip from './DialTooltip';
 // Textfield
 export TextFields from './TextFields';
 export TextFieldsLayout from './TextFieldsLayout';

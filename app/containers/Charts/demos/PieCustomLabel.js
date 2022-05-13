@@ -54,36 +54,34 @@ renderCustomizedLabel.defaultProps = {
   percent: 0,
 };
 
-class PieCustomLabel extends React.Component {
-  render() {
-    return (
-      <PieChart
-        width={800}
-        height={400}
-        margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5
-        }}
+function PieCustomLabel() {
+  return (
+    <PieChart
+      width={800}
+      height={400}
+      margin={{
+        top: 5,
+        right: 30,
+        left: 20,
+        bottom: 5
+      }}
+    >
+      <Pie
+        dataKey="value"
+        data={data6}
+        cx={200}
+        cy={200}
+        labelLine={false}
+        label={renderCustomizedLabel}
+        outerRadius={160}
+        fill="#8884d8"
       >
-        <Pie
-          dataKey="value"
-          data={data6}
-          cx={200}
-          cy={200}
-          labelLine={false}
-          label={renderCustomizedLabel}
-          outerRadius={160}
-          fill="#8884d8"
-        >
-          {
-            data6.map((entry, index) => <Cell key={index.toString()} fill={colors[index % colors.length]} />)
-          }
-        </Pie>
-      </PieChart>
-    );
-  }
+        {
+          data6.map((entry, index) => <Cell key={index.toString()} fill={colors[index % colors.length]} />)
+        }
+      </Pie>
+    </PieChart>
+  );
 }
 
 export default PieCustomLabel;

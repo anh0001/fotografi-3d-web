@@ -6,30 +6,28 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import styles from './contact-jss';
 
-class PlaceLoader extends React.Component {
-  render() {
-    const { loop, classes } = this.props;
-    const renderElm = [...Array(loop)].map((e, i) => (
-      <ListItem
-        component="div"
-        key={i.toString()}
-        role={undefined}
-        dense
-        className={classNames(classes.listItem, classes.placeLoader)}
-      >
-        <figure className={classNames(classes.img, classes.avatar)} />
-        <div className={classes.textContent}>
-          <span className={classes.title} />
-          <span className={classes.subtitle} />
-        </div>
-      </ListItem>
-    ));
-    return (
-      <List className={classes.contactList}>
-        {renderElm}
-      </List>
-    );
-  }
+function PlaceLoader(props) {
+  const { loop, classes } = props;
+  const renderElm = [...Array(loop)].map((e, i) => (
+    <ListItem
+      component="div"
+      key={i.toString()}
+      role={undefined}
+      dense
+      className={classNames(classes.listItem, classes.placeLoader)}
+    >
+      <figure className={classNames(classes.img, classes.avatar)} />
+      <div className={classes.textContent}>
+        <span className={classes.title} />
+        <span className={classes.subtitle} />
+      </div>
+    </ListItem>
+  ));
+  return (
+    <List className={classes.contactList}>
+      {renderElm}
+    </List>
+  );
 }
 
 PlaceLoader.propTypes = {

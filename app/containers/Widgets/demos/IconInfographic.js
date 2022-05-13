@@ -6,64 +6,62 @@ import OndemandVideo from '@material-ui/icons/OndemandVideo';
 import SupervisorAccount from '@material-ui/icons/SupervisorAccount';
 import CollectionsBookmark from '@material-ui/icons/CollectionsBookmark';
 import Edit from '@material-ui/icons/Edit';
+import colorfull from 'enl-api/palette/colorfull';
 import { CounterWidget } from 'enl-components';
 import styles from 'enl-components/Widget/widget-jss';
 
-
-class IconInfographic extends React.Component {
-  render() {
-    const { classes } = this.props;
-    return (
-      <div className={classes.rootCounterFull}>
-        <Grid container spacing={2}>
-          <Grid item xs={6} md={3}>
-            <CounterWidget
-              color="primary-main"
-              start={0}
-              end={207}
-              duration={3}
-              title="Subscribers"
-            >
-              <OndemandVideo className={classes.counterIcon} />
-            </CounterWidget>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <CounterWidget
-              color="secondary-main"
-              start={0}
-              end={300}
-              duration={3}
-              title="Followers"
-            >
-              <SupervisorAccount className={classes.counterIcon} />
-            </CounterWidget>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <CounterWidget
-              color="primary-dark"
-              start={0}
-              end={67}
-              duration={3}
-              title="Total Posts"
-            >
-              <Edit className={classes.counterIcon} />
-            </CounterWidget>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <CounterWidget
-              color="secondary-dark"
-              start={0}
-              end={70}
-              duration={3}
-              title="Total Articles"
-            >
-              <CollectionsBookmark className={classes.counterIcon} />
-            </CounterWidget>
-          </Grid>
+function IconInfographic(props) {
+  const { classes } = props;
+  return (
+    <div className={classes.rootCounterFull}>
+      <Grid container spacing={2}>
+        <Grid item xs={6} md={3}>
+          <CounterWidget
+            color={colorfull[0]}
+            start={0}
+            end={207}
+            duration={3}
+            title="Subscribers"
+          >
+            <OndemandVideo className={classes.counterIcon} />
+          </CounterWidget>
         </Grid>
-      </div>
-    );
-  }
+        <Grid item xs={6} md={3}>
+          <CounterWidget
+            color={colorfull[1]}
+            start={0}
+            end={300}
+            duration={3}
+            title="Followers"
+          >
+            <SupervisorAccount className={classes.counterIcon} />
+          </CounterWidget>
+        </Grid>
+        <Grid item xs={6} md={3}>
+          <CounterWidget
+            color={colorfull[2]}
+            start={0}
+            end={67}
+            duration={3}
+            title="Total Posts"
+          >
+            <Edit className={classes.counterIcon} />
+          </CounterWidget>
+        </Grid>
+        <Grid item xs={6} md={3}>
+          <CounterWidget
+            color={colorfull[3]}
+            start={0}
+            end={70}
+            duration={3}
+            title="Total Articles"
+          >
+            <CollectionsBookmark className={classes.counterIcon} />
+          </CounterWidget>
+        </Grid>
+      </Grid>
+    </div>
+  );
 }
 
 IconInfographic.propTypes = {

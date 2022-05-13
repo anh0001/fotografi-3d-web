@@ -24,28 +24,26 @@ const styles = theme => ({
   }
 });
 
-class SearchIcons extends React.Component {
-  render() {
-    const { filterText, classes, handleSearch } = this.props;
-    return (
-      <FormControl fullWidth className={classes.search}>
-        <Input
-          id="search_filter"
-          type="text"
-          placeholder="Search more than 800 icons"
-          value={filterText}
-          onChange={handleSearch}
-          endAdornment={(
-            <InputAdornment position="end">
-              <IconButton aria-label="Search filter">
-                <SearchIcon />
-              </IconButton>
-            </InputAdornment>
-          )}
-        />
-      </FormControl>
-    );
-  }
+function SearchIcons(props) {
+  const { filterText, classes, handleSearch } = props;
+  return (
+    <FormControl fullWidth className={classes.search}>
+      <Input
+        id="search_filter"
+        type="text"
+        placeholder="Search more than 800 icons"
+        value={filterText}
+        onChange={handleSearch}
+        endAdornment={(
+          <InputAdornment position="end">
+            <IconButton aria-label="Search filter">
+              <SearchIcon />
+            </IconButton>
+          </InputAdornment>
+        )}
+      />
+    </FormControl>
+  );
 }
 
 SearchIcons.propTypes = {

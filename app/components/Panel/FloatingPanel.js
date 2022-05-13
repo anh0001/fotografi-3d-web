@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import withWidth, { isWidthDown } from '@material-ui/core/withWidth';
@@ -10,79 +10,57 @@ import ExpandIcon from '@material-ui/icons/CallMade';
 import MinimizeIcon from '@material-ui/icons/CallReceived';
 import styles from './panel-jss';
 
-class FloatingPanel extends React.Component {
-  state = {
-    expanded: false
-  }
+function FloatingPanel(props) {
+  const {
+    classes,
+    openForm,
+    closeForm,
+    children,
+    branch,
+    title,
+    extraSize,
+    width
+  } = props;
 
-  componentDidMount() {
-    const { setFullScreen } = this.props;
-    if (setFullScreen)
-      this.setState({ expanded: true });
-  }
+  const [expanded, setExpanded] = useState(false);
+  const toggleExpand = () => setExpanded(!expanded);
 
-  toggleExpand() {
-    const { expanded } = this.state;
-    const { setFullScreen } = this.props;
-
-    if (setFullScreen)
-      this.setState({ expanded: true });
-    else
-      this.setState({ expanded: !expanded });
-  }
-
-  render() {
-    const {
-      classes,
-      openForm,
-      closeForm,
-      children,
-      branch,
-      title,
-      extraSize,
-      width,
-      setFullScreen
-    } = this.props;
-    const { expanded } = this.state;
-    return (
-      <div>
-        <div className={
-          classNames(
-            classes.formOverlay,
-            openForm && (isWidthDown('sm', width) || expanded) ? classes.showForm : classes.hideForm
-          )}
-        />
-        <section className={
-          classNames(
-            !openForm ? classes.hideForm : classes.showForm,
-            expanded ? classes.expanded : '',
-            classes.floatingForm,
-            classes.formTheme,
-            extraSize && classes.large
-          )}
-        >
-          <header>
-            {title}
-            <div className={classes.btnOpt}>
-              {!setFullScreen ?
-                <Tooltip title={expanded ? 'Exit Full Screen' : 'Full Screen'}>
-                  <IconButton className={classes.expandButton} onClick={() => this.toggleExpand()} aria-label="Expand">
-                    {expanded ? <MinimizeIcon /> : <ExpandIcon />}
-                  </IconButton>
-                </Tooltip>
-                : null}
-              <Tooltip title="Close">
-                <IconButton className={classes.closeButton} onClick={() => closeForm(branch)} aria-label="Close">
-                  <CloseIcon />
-                </IconButton>
-              </Tooltip>
-            </div>
-          </header>
-          {children}
-        </section>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <div className={
+        classNames(
+          classes.formOverlay,
+          openForm && (isWidthDown('sm', width) || expanded) ? classes.showForm : classes.hideForm
+        )}
+      />
+      <section className={
+        classNames(
+          !openForm ? classes.hideForm : classes.showForm,
+          expanded ? classes.expanded : '',
+          classes.floatingForm,
+          classes.formTheme,
+          extraSize && classes.large
+        )}
+      >
+        <header>
+          { title }
+          <div className={classes.btnOpt}>
+            <Tooltip title={expanded ? 'Exit Full Screen' : 'Full Screen'}>
+              <IconButton className={classes.expandButton} onClick={() => toggleExpand()} aria-label="Expand">
+                {expanded ? <MinimizeIcon /> : <ExpandIcon />}
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Close">
+              <IconButton className={classes.closeButton} onClick={() => closeForm(branch)} aria-label="Close">
+                <CloseIcon />
+              </IconButton>
+            </Tooltip>
+          </div>
+        </header>
+        {children}
+      </section>
+    </div>
+  );
 }
 
 FloatingPanel.propTypes = {
@@ -94,13 +72,11 @@ FloatingPanel.propTypes = {
   width: PropTypes.string.isRequired,
   title: PropTypes.string,
   extraSize: PropTypes.bool,
-  setFullScreen: PropTypes.bool,
 };
 
 FloatingPanel.defaultProps = {
   title: 'Add New Item',
   extraSize: false,
-  setFullScreen: false,
 };
 
 const FloatingPanelResponsive = withWidth()(FloatingPanel);

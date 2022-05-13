@@ -2,13 +2,13 @@ import red from '@material-ui/core/colors/red';
 import orange from '@material-ui/core/colors/orange';
 import blue from '@material-ui/core/colors/indigo';
 import cyan from '@material-ui/core/colors/cyan';
-import { darken, fade } from '@material-ui/core/styles/colorManipulator';
+import { darken, alpha } from '@material-ui/core/styles';
 
 const drawerWidth = 240;
 
 const gradient = theme => ({
   backgroundColor: darken(theme.palette.background.default, 0.05),
-  backgroundImage: `linear-gradient(to right, ${darken(theme.palette.background.default, 0.05)} 0%, ${fade(theme.palette.divider, 0.05)} 50%, ${fade(theme.palette.divider, 0.05)} 70%, ${darken(theme.palette.background.default, 0.05)} 100%)`,
+  backgroundImage: `linear-gradient(to right, ${darken(theme.palette.background.default, 0.05)} 0%, ${alpha(theme.palette.divider, 0.05)} 50%, ${alpha(theme.palette.divider, 0.05)} 70%, ${darken(theme.palette.background.default, 0.05)} 100%)`,
   backgroundRepeat: 'no-repeat',
 });
 
@@ -119,7 +119,7 @@ const styles = theme => ({
     minHeight: '100%',
   },
   selected: {
-    background: fade(theme.palette.type === 'dark' ? theme.palette.primary.dark : theme.palette.background.paper, 0.8),
+    background: alpha(theme.palette.type === 'dark' ? theme.palette.primary.dark : theme.palette.background.paper, 0.8),
     '& span': {
       color: theme.palette.type === 'dark' ? theme.palette.primary.light : theme.palette.primary.dark
     },
@@ -127,7 +127,7 @@ const styles = theme => ({
       fill: theme.palette.type === 'dark' ? theme.palette.primary.light : theme.palette.primary.dark
     },
     '&:focus, &:hover': {
-      background: fade(theme.palette.type === 'dark' ? theme.palette.primary.dark : theme.palette.background.paper, 0.8),
+      background: alpha(theme.palette.type === 'dark' ? theme.palette.primary.dark : theme.palette.background.paper, 0.8),
     }
   },
   content: {
@@ -285,6 +285,7 @@ const styles = theme => ({
     minHeight: 200,
     border: `1px solid ${theme.palette.divider}`,
     padding: '0 10px',
+    cursor: 'text',
     color: theme.palette.text.primary
   },
   toolbarEditor: {
@@ -338,7 +339,7 @@ const styles = theme => ({
       marginBottom: theme.spacing(1),
       borderRadius: '50%',
       display: 'block',
-      animation: '2s placeHolderImg linear infinite',
+      animation: '2s $placeHolderImg linear infinite',
       [theme.breakpoints.up('sm')]: {
         marginLeft: theme.spacing(3),
       }
@@ -348,7 +349,7 @@ const styles = theme => ({
       height: 20,
       borderRadius: 8,
       display: 'block',
-      animation: '2s placeHolderTitle linear infinite',
+      animation: '2s $placeHolderTitle linear infinite',
     },
     '& $subtitle': {
       [theme.breakpoints.up('sm')]: {
@@ -358,7 +359,7 @@ const styles = theme => ({
       borderRadius: 8,
       marginTop: theme.spacing(1),
       display: 'block',
-      animation: '2s placeHolderTitle linear infinite',
+      animation: '2s $placeHolderTitle linear infinite',
     },
   },
   '@keyframes placeHolderImg': {

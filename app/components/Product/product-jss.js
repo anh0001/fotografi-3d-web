@@ -1,5 +1,4 @@
 import dark from '@material-ui/core/colors/blueGrey';
-import { darken } from '@material-ui/core/styles/colorManipulator';
 import deepOrange from '@material-ui/core/colors/deepOrange';
 import deepPurple from '@material-ui/core/colors/deepPurple';
 import pink from '@material-ui/core/colors/pink';
@@ -13,8 +12,6 @@ import amber from '@material-ui/core/colors/amber';
 import brown from '@material-ui/core/colors/brown';
 import purple from '@material-ui/core/colors/purple';
 
-const gradientBgLight = (theme) => `linear-gradient(-45deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.main} 33%, ${theme.palette.secondary.main} 100%);`;
-const gradientBgDark = (theme) => `linear-gradient(-45deg, ${darken(theme.palette.primary.main, 0.4)} 0%, ${darken(theme.palette.primary.main, 0.4)} 33%, ${darken(theme.palette.secondary.main, 0.4)} 100%);`;
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -32,23 +29,6 @@ const styles = theme => ({
     overflow: 'hidden',
     marginTop: theme.spacing(6),
   },
-  addBtn: {
-    position: 'fixed',
-    bottom: 30,
-    right: 30,
-    zIndex: 100
-  },
-  buttonClose: {
-    position: 'absolute',
-    top: 20,
-    right: 20
-  },
-  inputUpload: {
-    display: 'none',
-  },
-  progress: {
-    margin: theme.spacing(2),
-  },
   item: {
     textAlign: 'center',
     '& img': {
@@ -56,10 +36,12 @@ const styles = theme => ({
     }
   },
   appBar: {
+    background: 'none',
     position: 'relative',
-    backgroundImage: theme.palette.type === 'dark' ? gradientBgDark(theme) : gradientBgLight(theme),
-    backgroundAttachment: 'fixed',
-    textAlign: 'center'
+    color: theme.palette.text.primary,
+    '& > *': {
+      justifyContent: 'flex-end'
+    }
   },
   flex: {
     flex: 1,
@@ -94,7 +76,8 @@ const styles = theme => ({
     padding: theme.spacing(2)
   },
   title: {
-    marginBottom: 30
+    marginBottom: 30,
+    fontWeight: theme.typography.fontWeightBold
   },
   subtitle: {
     margin: `${theme.spacing(6)}px ${theme.spacing(2)}px ${theme.spacing(2)}px`

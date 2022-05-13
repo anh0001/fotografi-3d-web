@@ -1,6 +1,5 @@
 import { Record } from 'immutable';
 
-
 const Init = new Record({
   key: null,
   address: null,

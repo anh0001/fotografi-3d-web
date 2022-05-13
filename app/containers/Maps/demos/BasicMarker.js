@@ -1,38 +1,39 @@
 import React from 'react';
-import { compose } from 'recompose';
-import {
-  withScriptjs,
-  withGoogleMap,
-  GoogleMap,
-  Marker,
-} from 'react-google-maps';
+import { GoogleMap, Marker } from '@react-google-maps/api';
+import GoogleMapWrapper from './GoogleMapWrapper';
 
-const MapWithAMarker = compose(
-  withScriptjs,
-  withGoogleMap
-)(props => (
-  <GoogleMap
-    {...props}
-    defaultZoom={8}
-    defaultCenter={{ lat: -34.397, lng: 150.644 }}
-  >
-    <Marker
-      position={{ lat: -34.397, lng: 150.644 }}
-    />
-  </GoogleMap>
-));
+const containerStyle = {
+  height: '400px'
+};
 
-class BasicMarker extends React.Component {
-  render() {
-    return (
-      <MapWithAMarker
-        googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
-        loadingElement={<div style={{ height: '100%' }} />}
-        containerElement={<div style={{ height: '400px' }} />}
-        mapElement={<div style={{ height: '100%' }} />}
+const MapWithAMarker = props => (
+  <GoogleMapWrapper>
+    <GoogleMap
+      {...props}
+      zoom={7}
+      center={{
+        lat: -34.300,
+        lng: 119.344
+      }}
+    >
+      <Marker
+        position={{
+          lat: -34.300,
+          lng: 119.344
+        }}
       />
-    );
-  }
+    </GoogleMap>
+  </GoogleMapWrapper>
+);
+
+function BasicMarker() {
+  return (
+    <MapWithAMarker
+      loadingElement={<div style={{ height: '100%' }} />}
+      mapContainerStyle={containerStyle}
+      mapElement={<div style={{ height: '100%' }} />}
+    />
+  );
 }
 
 export default BasicMarker;

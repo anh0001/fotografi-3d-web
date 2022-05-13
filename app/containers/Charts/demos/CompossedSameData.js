@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { createMuiTheme, withStyles } from '@material-ui/core/styles';
+import { createTheme, withStyles } from '@material-ui/core/styles';
 import ThemePallete from 'enl-api/palette/themePalette';
 import {
   ComposedChart,
@@ -17,7 +17,7 @@ import {
 import { data1 } from './sampleData';
 import styles from './fluidChart-jss';
 
-const theme = createMuiTheme(ThemePallete.cyanTheme);
+const theme = createTheme(ThemePallete.cyanTheme);
 const color = ({
   main: theme.palette.primary.main,
   mainDark: theme.palette.primary.dark,
@@ -28,7 +28,7 @@ function CompossedSameData(props) {
   const { classes } = props;
   return (
     <div className={classes.chartFluid}>
-      <ResponsiveContainer>
+      <ResponsiveContainer width={800} height="80%">
         <ComposedChart
           width={800}
           height={450}

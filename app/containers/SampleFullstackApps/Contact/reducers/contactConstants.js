@@ -17,9 +17,9 @@ export const DELETE_CONTACT_FAILED = 'DELETE_CONTACT_FAILED';
 /*---------------------*/
 /* UI constant */
 /*---------------------*/
-export const SHOW_DETAIL_CONTACT = 'SHOW_DETAIL_CONTACT';
+export const SHOW_DETAIL_CONTACT_FIREBASE = 'SHOW_DETAIL_CONTACT_FIREBASE';
 export const HIDE_DETAIL = 'HIDE_DETAIL';
 export const ADD_CONTACT = 'ADD_CONTACT';
-export const EDIT_CONTACT = 'EDIT_CONTACT';
+export const EDIT_CONTACT_FIREBASE = 'EDIT_CONTACT_FIREBASE';
 export const CLOSE_CONTACT_FORM = 'CLOSE_CONTACT_FORM';
 export const SEARCH_CONTACT = 'SEARCH_CONTACT';

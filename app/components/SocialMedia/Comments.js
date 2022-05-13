@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Typography from '@material-ui/core/Typography';
@@ -19,9 +19,8 @@ import Slide from '@material-ui/core/Slide';
 import Divider from '@material-ui/core/Divider';
 import CommentIcon from '@material-ui/icons/Comment';
 import CloseIcon from '@material-ui/icons/Close';
-import withMobileDialog from '@material-ui/core/withMobileDialog';
 import dummy from 'enl-api/dummy/dummyContents';
-import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import messages from './messages';
 import styles from './jss/socialMedia-jss';
 
@@ -29,95 +28,90 @@ const Transition = React.forwardRef(function Transition(props, ref) { // eslint-
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-class Comment extends React.Component { // eslint-disable-line
-  state = {
-    comment: ''
+// eslint-disable-next-line
+function Comment(props) {
+  const [comment, setComment] = useState('');
+  const {
+    open,
+    handleClose,
+    classes,
+    dataComment,
+    submitComment,
+    intl
+  } = props;
+
+  const handleChange = event => {
+    setComment(event.target.value);
   };
 
-  handleChange = event => {
-    this.setState({ comment: event.target.value });
+  const handleSubmit = commentParam => {
+    submitComment(commentParam);
+    setComment('');
   };
 
-  handleSubmit = comment => {
-    const { submitComment } = this.props;
-    submitComment(comment);
-    this.setState({ comment: '' });
-  }
-
-  render() {
-    const {
-      open,
-      handleClose,
-      classes,
-      dataComment,
-      fullScreen,
-      intl
-    } = this.props;
-    const { comment } = this.state;
-    const getItem = dataArray => dataArray.map(data => (
-      <Fragment key={data.get('id')}>
-        <ListItem>
-          <div className={classes.commentContent}>
-            <div className={classes.commentHead}>
-              <Avatar alt="avatar" src={data.get('avatar')} className={classes.avatarComment} />
-              <section>
-                <Typography variant="subtitle1">{data.get('from')}</Typography>
-                <Typography variant="caption"><span className={classNames(Type.light, Type.textGrey)}>{data.get('date')}</span></Typography>
-              </section>
-            </div>
-            <Typography className={classes.commentText}>{data.get('message')}</Typography>
+  const getItem = dataArray => dataArray.map(data => (
+    <Fragment key={data.id}>
+      <ListItem>
+        <div className={classes.commentContent}>
+          <div className={classes.commentHead}>
+            <Avatar alt="avatar" src={data.avatar} className={classes.avatarComment} />
+            <section>
+              <Typography variant="subtitle1">{data.from}</Typography>
+              <Typography variant="caption"><span className={classNames(Type.light, Type.textGrey)}>{data.date}</span></Typography>
+            </section>
           </div>
-        </ListItem>
-        <Divider />
-      </Fragment>
-    ));
+          <Typography className={classes.commentText}>{data.message}</Typography>
+        </div>
+      </ListItem>
+      <Divider className={classes.divider} />
+    </Fragment>
+  ));
 
-    return (
-      <div>
-        <Dialog
-          fullScreen={fullScreen}
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="form-dialog-title"
-          TransitionComponent={Transition}
-          maxWidth="md"
-        >
-          <DialogTitle id="form-dialog-title">
-            <CommentIcon />
+  return (
+    <div>
+      <Dialog
+        open={open}
+        aria-labelledby="form-dialog-title"
+        TransitionComponent={Transition}
+        maxWidth="md"
+        onClose={handleClose}
+      >
+        <DialogTitle id="form-dialog-title">
+          <CommentIcon />
             &nbsp;
-            {dataComment !== undefined && dataComment.size}
+          {dataComment !== undefined && dataComment.length}
             &nbsp;
-            <FormattedMessage {...messages.comments} />
-            <IconButton onClick={handleClose} className={classes.buttonClose} aria-label="Close">
-              <CloseIcon />
-            </IconButton>
-          </DialogTitle>
-          <DialogContent>
-            <List>
-              {dataComment !== undefined && getItem(dataComment)}
-            </List>
-          </DialogContent>
-          <DialogActions className={classes.commentAction}>
-            <div className={classes.commentForm}>
-              <Avatar alt="avatar" src={dummy.user.avatar} className={classes.avatarMini} />
-              <Input
-                placeholder={intl.formatMessage(messages.write_comments)}
-                onChange={this.handleChange}
-                value={comment}
-                className={classes.input}
-                inputProps={{
-                  'aria-label': 'Comment',
-                }}
-              />
-              <Fab size="small" onClick={() => this.handleSubmit(comment)} color="secondary" aria-label="send" className={classes.button}>
-                <Send />
-              </Fab>
-            </div>
-          </DialogActions>
-        </Dialog>
-      </div>
-    );
-  }
+          <FormattedMessage {...messages.comments} />
+          {dataComment !== undefined && dataComment.length > 1 ? 's' : ''}
+          <IconButton onClick={handleClose} className={classes.buttonClose} aria-label="Close">
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <List>
+            {dataComment !== undefined && getItem(dataComment)}
+          </List>
+        </DialogContent>
+        <DialogActions className={classes.commentAction}>
+          <div className={classes.commentForm}>
+            <Avatar alt="avatar" src={dummy.user.avatar} className={classes.avatarMini} />
+            <Input
+              placeholder={intl.formatMessage(messages.write_comments)}
+              onChange={handleChange}
+              value={comment}
+              className={classes.input}
+              inputProps={{
+                'aria-label': 'Comment',
+              }}
+            />
+            <Fab size="small" onClick={() => handleSubmit(comment)} color="secondary" aria-label="send" className={classes.button}>
+              <Send />
+            </Fab>
+          </div>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
 }
 
 Comment.propTypes = {
@@ -125,14 +119,12 @@ Comment.propTypes = {
   handleClose: PropTypes.func.isRequired,
   submitComment: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
-  dataComment: PropTypes.object,
-  fullScreen: PropTypes.bool.isRequired,
-  intl: intlShape.isRequired
+  dataComment: PropTypes.array,
+  intl: PropTypes.object.isRequired
 };
 
 Comment.defaultProps = {
-  dataComment: undefined
+  dataComment: []
 };
 
-const CommentResponsive = withMobileDialog()(Comment);
-export default withStyles(styles)(injectIntl(CommentResponsive));
+export default withStyles(styles)(injectIntl(Comment));

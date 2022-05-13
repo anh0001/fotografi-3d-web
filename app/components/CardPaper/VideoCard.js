@@ -10,48 +10,39 @@ import Avatar from '@material-ui/core/Avatar';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import styles from './cardStyle-jss';
 
-class VideoCard extends React.Component {
-  state = { expanded: false };
+function VideoCard(props) {
+  const {
+    classes,
+    title,
+    cover,
+    date
+  } = props;
 
-  handleExpandClick = () => {
-    const { expanded } = this.state;
-    this.setState({ expanded: !expanded });
-  };
-
-  render() {
-    const {
-      classes,
-      title,
-      cover,
-      date
-    } = this.props;
-
-    return (
-      <Card className={classes.cardSocmed}>
-        <CardMedia
-          className={classes.media}
-          image={cover}
-          title={title}
-        >
-          <IconButton className={classes.playBtn}><PlayArrowIcon /></IconButton>
-        </CardMedia>
-        <CardHeader
-          avatar={(
-            <Avatar aria-label="Recipe" className={classes.avatar}>
-              R
-            </Avatar>
-          )}
-          action={(
-            <IconButton>
-              <MoreVertIcon />
-            </IconButton>
-          )}
-          title={title}
-          subheader={date}
-        />
-      </Card>
-    );
-  }
+  return (
+    <Card className={classes.cardSocmed}>
+      <CardMedia
+        className={classes.media}
+        image={cover}
+        title={title}
+      >
+        <IconButton className={classes.playBtn}><PlayArrowIcon /></IconButton>
+      </CardMedia>
+      <CardHeader
+        avatar={(
+          <Avatar aria-label="Recipe" className={classes.avatar}>
+            R
+          </Avatar>
+        )}
+        action={(
+          <IconButton>
+            <MoreVertIcon />
+          </IconButton>
+        )}
+        title={title}
+        subheader={date}
+      />
+    </Card>
+  );
 }
 
 VideoCard.propTypes = {

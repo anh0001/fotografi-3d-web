@@ -1,4 +1,4 @@
-import React, { Fragment, PureComponent } from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -10,7 +10,6 @@ const styles = theme => ({
     height: 'auto',
   },
   divider: {
-    display: 'block',
     margin: `${theme.spacing(3)}px 0`,
   },
   field: {
@@ -19,62 +18,60 @@ const styles = theme => ({
   },
 });
 
-class ClassicBreadcrumbs extends PureComponent {
-  render() {
-    const { classes } = this.props;
-    const location = { pathname: '/grand-parent/parent/children' };
-    return (
-      <Fragment>
+function ClassicBreadcrumbs(props) {
+  const { classes } = props;
+  const location = { pathname: '/grand-parent/parent/children' };
+  return (
+    <Fragment>
+      <Grid
+        container
+        alignItems="flex-start"
+        justifyContent="flex-start"
+        direction="row"
+        spacing={2}
+      >
         <Grid
+          item
+          md={4}
           container
-          alignItems="flex-start"
-          justify="flex-start"
-          direction="row"
-          spacing={2}
+          alignItems="center"
+          justifyContent="center"
+          direction="column"
         >
-          <Grid
-            item
-            md={4}
-            container
-            alignItems="center"
-            justify="center"
-            direction="column"
-          >
-            <Typography variant="button" className={classes.divider}>Arrow Separator</Typography>
-            <div className={classes.field}>
-              <BreadCrumb theme="dark" separator=" › " location={location} />
-            </div>
-          </Grid>
-          <Grid
-            item
-            md={4}
-            container
-            alignItems="center"
-            justify="center"
-            direction="column"
-          >
-            <Typography variant="button" className={classes.divider}>Slash Separator</Typography>
-            <div className={classes.field}>
-              <BreadCrumb theme="dark" separator=" / " location={location} />
-            </div>
-          </Grid>
-          <Grid
-            item
-            md={4}
-            container
-            alignItems="center"
-            justify="center"
-            direction="column"
-          >
-            <Typography variant="button" className={classes.divider}>Greater Than Separator</Typography>
-            <div className={classes.field}>
-              <BreadCrumb theme="dark" separator=" > " location={location} />
-            </div>
-          </Grid>
+          <Typography variant="button" className={classes.divider}>Arrow Separator</Typography>
+          <div className={classes.field}>
+            <BreadCrumb theme="dark" separator=" › " location={location} />
+          </div>
         </Grid>
-      </Fragment>
-    );
-  }
+        <Grid
+          item
+          md={4}
+          container
+          alignItems="center"
+          justifyContent="center"
+          direction="column"
+        >
+          <Typography variant="button" className={classes.divider}>Slash Separator</Typography>
+          <div className={classes.field}>
+            <BreadCrumb theme="dark" separator=" / " location={location} />
+          </div>
+        </Grid>
+        <Grid
+          item
+          md={4}
+          container
+          alignItems="center"
+          justifyContent="center"
+          direction="column"
+        >
+          <Typography variant="button" className={classes.divider}>Greater Than Separator</Typography>
+          <div className={classes.field}>
+            <BreadCrumb theme="dark" separator=" > " location={location} />
+          </div>
+        </Grid>
+      </Grid>
+    </Fragment>
+  );
 }
 
 ClassicBreadcrumbs.propTypes = {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -60,7 +60,6 @@ function MySnackbarContent(props) {
     ...other
   } = props;
   const Icon = variantIcon[variant];
-
   return (
     <SnackbarContent
       className={classNames(classes[variant], className)}
@@ -106,7 +105,6 @@ const styles = theme => ({
     margin: theme.spacing(1),
   },
   divider: {
-    display: 'block',
     margin: `${theme.spacing(3)}px 0`,
   },
   margin: {
@@ -120,81 +118,76 @@ const action = (
   </Button>
 );
 
-class StyledNotif extends React.Component {
-  state = {
-    openStyle: false,
+function StyledNotif(props) {
+  const [openStyle, setOpen] = useState(false);
+
+  const handleClickStyle = () => {
+    setOpen(true);
   };
 
-  handleClickStyle = () => {
-    this.setState({ openStyle: true });
-  };
-
-  handleCloseStyle = (event, reason) => {
+  const handleCloseStyle = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-    this.setState({ openStyle: false });
+    setOpen(false);
   };
 
-  render() {
-    const { classes } = this.props;
-    const { openStyle } = this.state;
-    return (
-      <Grid container alignItems="flex-start" justify="center" direction="row" spacing={2}>
-        <Grid item md={6} xs={12}>
-          <Typography variant="button" className={classes.divider}>Default Styled Notification</Typography>
-          <Button className={classes.margin} variant="outlined" color="primary" onClick={this.handleClickStyle}>
-            Open success snackbar
-          </Button>
-          <Snackbar
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
-            }}
-            open={openStyle}
-            autoHideDuration={6000}
-            onClose={this.handleCloseStyle}
-          >
-            <MySnackbarContentWrapper
-              onClose={this.handleCloseStyle}
-              variant="success"
-              message="This is a success message!"
-            />
-          </Snackbar>
+  const { classes } = props;
+  return (
+    <Grid container alignItems="flex-start" justifyContent="center" direction="row" spacing={2}>
+      <Grid item md={6} xs={12}>
+        <Typography variant="button" className={classes.divider}>Default Styled Notification</Typography>
+        <Button className={classes.margin} variant="outlined" color="primary" onClick={() => handleClickStyle()}>
+          Open success snackbar
+        </Button>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={openStyle}
+          autoHideDuration={6000}
+          onClose={() => handleCloseStyle()}
+        >
           <MySnackbarContentWrapper
-            variant="error"
-            className={classes.margin}
-            message="This is an error message!"
-          />
-          <MySnackbarContentWrapper
-            variant="warning"
-            className={classes.margin}
-            message="This is a warning message!"
-          />
-          <MySnackbarContentWrapper
-            variant="info"
-            className={classes.margin}
-            message="This is an information message!"
-          />
-          <MySnackbarContentWrapper
+            onClose={() => handleCloseStyle()}
             variant="success"
-            className={classes.margin}
             message="This is a success message!"
           />
-        </Grid>
-        <Grid item md={6} xs={12}>
-          <Typography variant="button" className={classes.divider}>Custom Styled Notification with CSS</Typography>
-          <div>
-            <SnackbarContent className={classes.snackbar} message="Notification default" action={action} />
-            <SnackbarContent className={classNames(classes.snackbar, messageStyles.bgInfo)} message="Notification Info" action={action} />
-            <SnackbarContent className={classNames(classes.snackbar, messageStyles.bgSuccess)} message="Success Notification Message" />
-            <SnackbarContent className={classNames(classes.snackbar, messageStyles.bgWarning)} message="I love candy. I love cookies. I love cupcakes." action={action} />
-            <SnackbarContent className={classNames(classes.snackbar, messageStyles.bgError)} message="I love cheesecake. I love chocolate." action={action} />
-          </div>
-        </Grid>
+        </Snackbar>
+        <MySnackbarContentWrapper
+          variant="error"
+          className={classes.margin}
+          message="This is an error message!"
+        />
+        <MySnackbarContentWrapper
+          variant="warning"
+          className={classes.margin}
+          message="This is a warning message!"
+        />
+        <MySnackbarContentWrapper
+          variant="info"
+          className={classes.margin}
+          message="This is an information message!"
+        />
+        <MySnackbarContentWrapper
+          variant="success"
+          className={classes.margin}
+          message="This is a success message!"
+        />
       </Grid>
-    );
-  }
+      <Grid item md={6} xs={12}>
+        <Typography variant="button" className={classes.divider}>Custom Styled Notification with CSS</Typography>
+        <div>
+          <SnackbarContent className={classes.snackbar} message="Notification default" action={action} />
+          <SnackbarContent className={classNames(classes.snackbar, messageStyles.bgInfo)} message="Notification Info" action={action} />
+          <SnackbarContent className={classNames(classes.snackbar, messageStyles.bgSuccess)} message="Success Notification Message" />
+          <SnackbarContent className={classNames(classes.snackbar, messageStyles.bgWarning)} message="I love candy. I love cookies. I love cupcakes." action={action} />
+          <SnackbarContent className={classNames(classes.snackbar, messageStyles.bgError)} message="I love cheesecake. I love chocolate." action={action} />
+        </div>
+      </Grid>
+    </Grid>
+  );
 }
 
 StyledNotif.propTypes = {

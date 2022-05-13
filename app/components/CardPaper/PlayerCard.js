@@ -11,52 +11,43 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import styles from './cardStyle-jss';
 
-class PlayerCard extends React.Component {
-  state = { expanded: false };
+function PlayerCard(props) {
+  const {
+    classes,
+    theme,
+    title,
+    artist,
+    cover,
+  } = props;
 
-  handleExpandClick = () => {
-    const { expanded } = this.state;
-    this.setState({ expanded: !expanded });
-  };
-
-  render() {
-    const {
-      classes,
-      theme,
-      title,
-      artist,
-      cover,
-    } = this.props;
-
-    return (
-      <Card className={classes.cardPlayer}>
-        <div className={classes.details}>
-          <CardContent className={classes.content}>
-            <Typography variant="h5">{title}</Typography>
-            <Typography variant="subtitle1" color="textSecondary">
-              {artist}
-            </Typography>
-          </CardContent>
-          <div className={classes.controls}>
-            <IconButton aria-label="Previous">
-              {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
-            </IconButton>
-            <IconButton aria-label="Play/pause">
-              <PlayArrowIcon className={classes.playIcon} />
-            </IconButton>
-            <IconButton aria-label="Next">
-              {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
-            </IconButton>
-          </div>
+  return (
+    <Card className={classes.cardPlayer}>
+      <div className={classes.details}>
+        <CardContent className={classes.content}>
+          <Typography variant="h5">{title}</Typography>
+          <Typography variant="subtitle1" color="textSecondary">
+            {artist}
+          </Typography>
+        </CardContent>
+        <div className={classes.controls}>
+          <IconButton aria-label="Previous">
+            {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
+          </IconButton>
+          <IconButton aria-label="Play/pause">
+            <PlayArrowIcon className={classes.playIcon} />
+          </IconButton>
+          <IconButton aria-label="Next">
+            {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
+          </IconButton>
         </div>
-        <CardMedia
-          className={classes.cover}
-          image={cover}
-          title={title}
-        />
-      </Card>
-    );
-  }
+      </div>
+      <CardMedia
+        className={classes.cover}
+        image={cover}
+        title={title}
+      />
+    </Card>
+  );
 }
 
 PlayerCard.propTypes = {

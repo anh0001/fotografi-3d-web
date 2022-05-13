@@ -1,10 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { Helmet } from 'react-helmet';
 import brand from 'enl-api/dummy/brand';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   Timeline,
   WritePost,
@@ -21,96 +19,63 @@ import {
   closeNotifAction
 } from './reducers/timelineActions';
 
-class TimelineSocial extends React.Component {
-  componentDidMount() {
-    const { fetchData } = this.props;
-    fetchData(data);
-  }
+function TimelineSocial() {
+  // Redux State
+  const dataProps = useSelector(state => state.socmed.dataTimeline);
+  const commentIndex = useSelector(state => state.socmed.commentIndex);
+  const messageNotif = useSelector(state => state.socmed.notifMsg);
 
-  render() {
-    const title = brand.name + ' - Social Media';
-    const description = brand.desc;
-    const {
-      dataProps,
-      submitPost,
-      submitLike,
-      submitComment,
-      fetchComment,
-      commentIndex,
-      closeNotif,
-      messageNotif,
-    } = this.props;
-    return (
-      <div>
-        <Helmet>
-          <title>{title}</title>
-          <meta name="description" content={description} />
-          <meta property="og:title" content={title} />
-          <meta property="og:description" content={description} />
-          <meta property="twitter:title" content={title} />
-          <meta property="twitter:description" content={description} />
-        </Helmet>
-        <Notification close={() => closeNotif()} message={messageNotif} />
-        <Grid
-          container
-          alignItems="flex-start"
-          justify="flex-start"
-          direction="row"
-          spacing={3}
-        >
-          <Grid item md={8} xs={12}>
-            <div>
-              <WritePost submitPost={submitPost} />
-              <Timeline
-                dataTimeline={dataProps}
-                onlike={submitLike}
-                submitComment={submitComment}
-                fetchComment={fetchComment}
-                commentIndex={commentIndex}
-              />
-            </div>
-          </Grid>
-          <Grid item md={4} xs={12}>
-            <SideSection />
-          </Grid>
+  // Distpatcher
+  const fetchData = useDispatch();
+  const submitPost = useDispatch();
+  const submitComment = useDispatch();
+  const submitLike = useDispatch();
+  const fetchComment = useDispatch();
+  const closeNotif = useDispatch();
+
+  useEffect(() => {
+    fetchData(fetchAction(data));
+  }, []);
+
+  const title = brand.name + ' - Social Media';
+  const description = brand.desc;
+
+  return (
+    <div>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="twitter:title" content={title} />
+        <meta property="twitter:description" content={description} />
+      </Helmet>
+      <Notification close={() => closeNotif(closeNotifAction)} message={messageNotif} />
+      <Grid
+        container
+        alignItems="flex-start"
+        justifyContent="flex-start"
+        direction="row"
+        spacing={3}
+      >
+        <Grid item md={8} xs={12}>
+          <div>
+            <WritePost submitPost={(text, media, privacy) => submitPost(postAction(text, media, privacy))} />
+            <Timeline
+              dataTimeline={dataProps}
+              onlike={(payload) => submitLike(toggleLikeAction(payload))}
+              submitComment={(payload) => submitComment(postCommentAction(payload))}
+              fetchComment={(payload) => fetchComment(fetchCommentAction(payload))}
+              commentIndex={commentIndex}
+            />
+          </div>
         </Grid>
-      </div>
-    );
-  }
+        <Grid item md={4} xs={12}>
+          <SideSection />
+        </Grid>
+      </Grid>
+    </div>
+  );
 }
 
-TimelineSocial.propTypes = {
-  fetchData: PropTypes.func.isRequired,
-  submitPost: PropTypes.func.isRequired,
-  submitLike: PropTypes.func.isRequired,
-  submitComment: PropTypes.func.isRequired,
-  dataProps: PropTypes.object.isRequired,
-  fetchComment: PropTypes.func.isRequired,
-  commentIndex: PropTypes.number.isRequired,
-  closeNotif: PropTypes.func.isRequired,
-  messageNotif: PropTypes.string.isRequired,
-};
-
-const reducer = 'timeline';
-const mapStateToProps = state => ({
-  force: state, // force state from reducer
-  dataProps: state.getIn([reducer, 'dataTimeline']),
-  commentIndex: state.getIn([reducer, 'commentIndex']),
-  messageNotif: state.getIn([reducer, 'notifMsg']),
-});
-
-const constDispatchToProps = dispatch => ({
-  fetchData: bindActionCreators(fetchAction, dispatch),
-  submitPost: bindActionCreators(postAction, dispatch),
-  submitComment: bindActionCreators(postCommentAction, dispatch),
-  submitLike: bindActionCreators(toggleLikeAction, dispatch),
-  fetchComment: bindActionCreators(fetchCommentAction, dispatch),
-  closeNotif: () => dispatch(closeNotifAction),
-});
-
-const TimelineMapped = connect(
-  mapStateToProps,
-  constDispatchToProps
-)(TimelineSocial);
-
-export default TimelineMapped;
+export default TimelineSocial;

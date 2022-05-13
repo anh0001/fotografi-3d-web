@@ -136,6 +136,10 @@ export default defineMessages({
     id: `${scope}.forms.buttons`,
     defaultMessage: 'Button',
   },
+  dial_button: {
+    id: `${scope}.forms.dial_button`,
+    defaultMessage: 'Dial Button',
+  },
   toggle_button: {
     id: `${scope}.forms.toggle_button`,
     defaultMessage: 'Toggle Button',
@@ -342,7 +346,7 @@ export default defineMessages({
   },
   map_direction: {
     id: `${scope}.apps.map_direction`,
-    defaultMessage: 'Map Marker',
+    defaultMessage: 'Map Direction',
   },
   map_searchbox: {
     id: `${scope}.apps.map_searchbox`,

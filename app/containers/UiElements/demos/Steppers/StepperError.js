@@ -1,13 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-const styles = theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
   },
@@ -18,7 +17,7 @@ const styles = theme => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
-});
+}));
 
 function getSteps() {
   return ['Select campaign settings', 'Create an ad group', 'Create an ad'];
@@ -37,147 +36,118 @@ function getStepContent(step) {
   }
 }
 
-class StepperError extends React.Component {
-  static propTypes = {
-    classes: PropTypes.object.isRequired,
-  };
+export default function HorizontalNonLinearStepperWithError() {
+  const classes = useStyles();
+  const [activeStep, setActiveStep] = React.useState(0);
+  const [skipped, setSkipped] = React.useState(new Set());
+  const steps = getSteps();
 
-  state = {
-    activeStep: 0,
-    skipped: new Set(),
-  };
+  const isStepOptional = (step) => step === 1;
 
-  isStepOptional = step => (
-    step === 1
-  );
+  const isStepFailed = (step) => step === 1;
 
-  isStepFailed = step => (
-    step === 1
-  );
+  const isStepSkipped = (step) => skipped.has(step);
 
-  handleNext = () => {
-    const { activeStep } = this.state;
-    let { skipped } = this.state;
-    if (this.isStepSkipped(activeStep)) {
-      skipped = new Set(skipped.values());
-      skipped.delete(activeStep);
+  const handleNext = () => {
+    let newSkipped = skipped;
+    if (isStepSkipped(activeStep)) {
+      newSkipped = new Set(skipped.values());
+      newSkipped.delete(activeStep);
     }
-    this.setState({
-      activeStep: activeStep + 1,
-      skipped,
-    });
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped(newSkipped);
   };
 
-  handleBack = () => {
-    const { activeStep } = this.state;
-    this.setState({
-      activeStep: activeStep - 1,
-    });
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  handleSkip = () => {
-    const { activeStep, skipped } = this.state;
-    if (!this.isStepOptional(activeStep)) {
+  const handleSkip = () => {
+    if (!isStepOptional(activeStep)) {
       // You probably want to guard against something like this,
       // it should never occur unless someone's actively trying to break something.
       throw new Error("You can't skip a step that isn't optional.");
     }
-    const skippedConst = new Set(skipped.values());
-    skippedConst.add(activeStep);
-    this.setState({
-      activeStep: activeStep + 1,
-      skipped: skippedConst,
+
+    setSkipped((prevSkipped) => {
+      const newSkipped = new Set(prevSkipped.values());
+      newSkipped.add(activeStep);
+      return newSkipped;
     });
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
-  handleReset = () => {
-    this.setState({
-      activeStep: 0,
-    });
+  const handleReset = () => {
+    setActiveStep(0);
   };
 
-  isStepSkipped(step) {
-    const { skipped } = this.state;
-    return skipped.has(step);
-  }
-
-  render() {
-    const { classes } = this.props;
-    const steps = getSteps();
-    const { activeStep } = this.state;
-
-    return (
-      <div className={classes.root}>
-        <Stepper activeStep={activeStep}>
-          {steps.map((label, index) => {
-            const props = {};
-            const labelProps = {};
-            if (this.isStepOptional(index)) {
-              labelProps.optional = (
-                <Typography variant="caption" color="error">
-                  Alert message
-                </Typography>
-              );
-            }
-            if (this.isStepFailed(index)) {
-              labelProps.error = true;
-            }
-            if (this.isStepSkipped(index)) {
-              props.completed = false;
-            }
-            return (
-              <Step key={label} {...props}>
-                <StepLabel {...labelProps}>{label}</StepLabel>
-              </Step>
-            );
-          })}
-        </Stepper>
-        <div>
-          {activeStep === steps.length ? (
-            <div>
-              <Typography className={classes.instructions}>
-                All steps completed - you&quot;re finished
+  return (
+    <div className={classes.root}>
+      <Stepper activeStep={activeStep}>
+        {steps.map((label, index) => {
+          const stepProps = {};
+          const labelProps = {};
+          if (isStepOptional(index)) {
+            labelProps.optional = (
+              <Typography variant="caption" color="error">
+                Alert message
               </Typography>
-              <Button onClick={this.handleReset} className={classes.button}>
-                Reset
-              </Button>
-            </div>
-          ) : (
+            );
+          }
+          if (isStepFailed(index)) {
+            labelProps.error = true;
+          }
+          if (isStepSkipped(index)) {
+            stepProps.completed = false;
+          }
+          return (
+            <Step key={label} {...stepProps}>
+              <StepLabel {...labelProps}>{label}</StepLabel>
+            </Step>
+          );
+        })}
+      </Stepper>
+      <div>
+        {activeStep === steps.length ? (
+          <div>
+            <Typography className={classes.instructions}>
+              All steps completed - you&apos;re finished
+            </Typography>
+            <Button onClick={handleReset} className={classes.button}>
+              Reset
+            </Button>
+          </div>
+        ) : (
+          <div>
+            <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
             <div>
-              <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
-              <div>
-                <Button
-                  disabled={activeStep === 0}
-                  onClick={this.handleBack}
-                  className={classes.button}
-                >
-                  Back
-                </Button>
-                {this.isStepOptional(activeStep) && (
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={this.handleSkip}
-                    className={classes.button}
-                  >
-                    Skip
-                  </Button>
-                )}
+              <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
+                Back
+              </Button>
+              {isStepOptional(activeStep) && (
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={this.handleNext}
+                  onClick={handleSkip}
                   className={classes.button}
                 >
-                  {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                  Skip
                 </Button>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
-}
+              )}
 
-export default withStyles(styles)(StepperError);
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleNext}
+                className={classes.button}
+              >
+                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

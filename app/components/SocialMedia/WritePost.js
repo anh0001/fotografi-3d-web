@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Dropzone from 'react-dropzone';
@@ -15,9 +15,9 @@ import Paper from '@material-ui/core/Paper';
 import Select from '@material-ui/core/Select';
 import Tooltip from '@material-ui/core/Tooltip';
 import dummy from 'enl-api/dummy/dummyContents';
-import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
-import messages from './messages';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import styles from './jss/writePost-jss';
+import messages from './messages';
 
 function isImage(file) {
   const fileName = file.name || file.path;
@@ -28,159 +28,145 @@ function isImage(file) {
   return false;
 }
 
-class WritePost extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      privacy: 'public',
-      files: [],
-      message: ''
-    };
-    this.onDrop = this.onDrop.bind(this);
-  }
+function WritePost(props) {
+  const [privacy, setPrivacy] = useState('public');
+  const [files, setFiles] = useState([]);
+  const [message, setMessage] = useState('');
+  const { submitPost, classes, intl } = props;
 
-  onDrop(filesVal) {
-    const { files } = this.state;
+  const onDrop = (filesVal) => {
     let oldFiles = files;
     const filesLimit = 2;
     oldFiles = oldFiles.concat(filesVal);
     if (oldFiles.length > filesLimit) {
       console.log('Cannot upload more than ' + filesLimit + ' items.');
     } else {
-      this.setState({ files: filesVal });
+      setFiles(filesVal);
     }
-  }
-
-  handleChange = event => {
-    this.setState({ privacy: event.target.value });
   };
 
-  handleWrite = event => {
-    this.setState({ message: event.target.value });
+  const handleChange = event => {
+    setPrivacy(event.target.value);
   };
 
-  handlePost = (message, files, privacy) => {
+  const handleWrite = event => {
+    setMessage(event.target.value);
+  };
+
+  const handlePost = (messageParam, filesParam, privacyParam) => {
     // Submit Post to reducer
-    const { submitPost } = this.props;
-    submitPost(message, files, privacy);
+    submitPost(messageParam, filesParam, privacyParam);
     // Reset all fields
-    this.setState({
-      privacy: 'public',
-      files: [],
-      message: ''
-    });
-  }
+    setPrivacy('public');
+    setFiles([]);
+    setMessage('');
+  };
 
-  handleRemove(file, fileIndex) {
-    const { files } = this.state;
+  const handleRemove = (file, fileIndex) => {
     const thisFiles = files;
     // This is to prevent memory leaks.
     window.URL.revokeObjectURL(file.preview);
 
     thisFiles.splice(fileIndex, 1);
-    this.setState({ files: thisFiles });
-  }
+    setFiles(thisFiles);
+  };
 
-  render() {
-    const { classes, intl } = this.props;
-    let dropzoneRef;
-    const { privacy, files, message } = this.state;
-    const acceptedFiles = ['image/jpeg', 'image/png', 'image/bmp'];
-    const fileSizeLimit = 3000000;
-    const deleteBtn = (file, index) => (
-      <div className={classNames(classes.removeBtn, 'middle')}>
-        <IconButton onClick={() => this.handleRemove(file, index)}>
-          <ActionDelete className="removeBtn" />
-        </IconButton>
-      </div>
-    );
-    const previews = filesArray => filesArray.map((file, index) => {
-      const path = URL.createObjectURL(file) || '/pic' + file.path;
-      if (isImage(file)) {
-        return (
-          <div key={index.toString()}>
-            <figure><img src={path} alt="preview" /></figure>
-            {deleteBtn(file, index)}
-          </div>
-        );
-      }
-      return false;
-    });
-    return (
-      <div className={classes.statusWrap}>
-        <Paper className={classes.inputMessage}>
-          <Avatar alt="avatar" src={dummy.user.avatar} className={classes.avatarMini} />
-          <textarea
-            row="2"
-            placeholder={intl.formatMessage(messages.placeholder)}
-            value={message}
-            onChange={this.handleWrite}
-          />
-          <Dropzone
-            className={classes.hiddenDropzone}
-            accept={acceptedFiles.join(',')}
-            acceptClassName="stripes"
-            onDrop={this.onDrop}
-            maxSize={fileSizeLimit}
-            ref={(node) => { dropzoneRef = node; }}
-          >
-            {({ getRootProps, getInputProps }) => (
-              <div {...getRootProps()}>
-                <input {...getInputProps()} />
-              </div>
-            )}
-          </Dropzone>
-          <div className={classes.preview}>
-            {previews(files)}
-          </div>
-          <div className={classes.control}>
-            <Tooltip id="tooltip-upload" title={intl.formatMessage(messages.upload)}>
-              <IconButton
-                className={classes.button}
-                component="button"
-                onClick={() => {
-                  dropzoneRef.open();
-                }}
-              >
-                <PhotoCamera />
-              </IconButton>
-            </Tooltip>
-            <div className={classes.privacy}>
-              <FormControl className={classes.formControl}>
-                <Select
-                  value={privacy}
-                  onChange={this.handleChange}
-                  name="privacy"
-                  className={classes.selectEmpty}
-                >
-                  <MenuItem value="public">
-                    <FormattedMessage {...messages.public} />
-                  </MenuItem>
-                  <MenuItem value="friends">
-                    <FormattedMessage {...messages.friends} />
-                  </MenuItem>
-                  <MenuItem value="private">
-                    <FormattedMessage {...messages.only_me} />
-                  </MenuItem>
-                </Select>
-              </FormControl>
+  let dropzoneRef;
+  const acceptedFiles = ['image/jpeg', 'image/png', 'image/bmp'];
+  const fileSizeLimit = 3000000;
+  const deleteBtn = (file, index) => (
+    <div className={classNames(classes.removeBtn, 'middle')}>
+      <IconButton onClick={() => handleRemove(file, index)}>
+        <ActionDelete className="removeBtn" />
+      </IconButton>
+    </div>
+  );
+  const previews = filesArray => filesArray.map((file, index) => {
+    const path = URL.createObjectURL(file) || '/pic' + file.path;
+    if (isImage(file)) {
+      return (
+        <div key={index.toString()}>
+          <figure><img src={path} alt="preview" /></figure>
+          {deleteBtn(file, index)}
+        </div>
+      );
+    }
+    return false;
+  });
+  return (
+    <div className={classes.statusWrap}>
+      <Paper className={classes.inputMessage}>
+        <Avatar alt="avatar" src={dummy.user.avatar} className={classes.avatarMini} />
+        <textarea
+          row="2"
+          placeholder={intl.formatMessage(messages.placeholder)}
+          value={message}
+          onChange={handleWrite}
+        />
+        <Dropzone
+          className={classes.hiddenDropzone}
+          accept={acceptedFiles.join(',')}
+          acceptClassName="stripes"
+          onDrop={onDrop}
+          maxSize={fileSizeLimit}
+          ref={(node) => { dropzoneRef = node; }}
+        >
+          {({ getRootProps, getInputProps }) => (
+            <div {...getRootProps()}>
+              <input {...getInputProps()} />
             </div>
-            <Tooltip id="tooltip-post" title={intl.formatMessage(messages.post)}>
-              <Fab onClick={() => this.handlePost(message, files, privacy)} size="small" color="secondary" aria-label="send" className={classes.sendBtn}>
-                <Send />
-              </Fab>
-            </Tooltip>
+          )}
+        </Dropzone>
+        <div className={classes.preview}>
+          {previews(files)}
+        </div>
+        <div className={classes.control}>
+          <Tooltip id="tooltip-upload" title={intl.formatMessage(messages.upload)}>
+            <IconButton
+              className={classes.button}
+              component="button"
+              onClick={() => {
+                dropzoneRef.open();
+              }}
+            >
+              <PhotoCamera />
+            </IconButton>
+          </Tooltip>
+          <div className={classes.privacy}>
+            <FormControl className={classes.formControl}>
+              <Select
+                value={privacy}
+                onChange={handleChange}
+                name="privacy"
+                className={classes.selectEmpty}
+              >
+                <MenuItem value="public">
+                  <FormattedMessage {...messages.public} />
+                </MenuItem>
+                <MenuItem value="friends">
+                  <FormattedMessage {...messages.friends} />
+                </MenuItem>
+                <MenuItem value="private">
+                  <FormattedMessage {...messages.only_me} />
+                </MenuItem>
+              </Select>
+            </FormControl>
           </div>
-        </Paper>
-      </div>
-    );
-  }
+          <Tooltip id="tooltip-post" title={intl.formatMessage(messages.post)}>
+            <Fab onClick={() => handlePost(message, files, privacy)} size="small" color="secondary" aria-label="send" className={classes.sendBtn}>
+              <Send />
+            </Fab>
+          </Tooltip>
+        </div>
+      </Paper>
+    </div>
+  );
 }
 
 WritePost.propTypes = {
   classes: PropTypes.object.isRequired,
   submitPost: PropTypes.func.isRequired,
-  intl: intlShape.isRequired
+  intl: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(injectIntl(WritePost));

@@ -1,10 +1,11 @@
 import React, { Fragment } from 'react';
+import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import messages from './messages';
 
 function PaymentForm(props) {
@@ -45,7 +46,7 @@ function PaymentForm(props) {
 }
 
 PaymentForm.propTypes = {
-  intl: intlShape.isRequired
+  intl: PropTypes.object.isRequired
 };
 
 export default injectIntl(PaymentForm);

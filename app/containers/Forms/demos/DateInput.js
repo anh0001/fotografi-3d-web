@@ -1,9 +1,9 @@
-import React, { Fragment, PureComponent } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
-import { DatePicker, MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
-import { withStyles } from '@material-ui/core/styles';
-import DateFnsUtils from '@date-io/date-fns';
+import { DatePicker, KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
+import DateFnsUtils from '@date-io/date-fns';
+import { withStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import Icon from '@material-ui/core/Icon';
@@ -26,7 +26,6 @@ const styles = theme => ({
     height: 240,
   },
   divider: {
-    display: 'block',
     margin: `${theme.spacing(3)}px 0`,
   },
   picker: {
@@ -34,161 +33,152 @@ const styles = theme => ({
   }
 });
 
-class DateInput extends PureComponent {
-  state = {
-    selectedDate: new Date(),
-    anchorEl: null,
-    currentLocale: 'fr',
-  }
+function DateInput(props) {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [currentLocale, setCurrentLocale] = useState('fr');
 
-  handleDateChange = (date) => {
-    this.setState({ selectedDate: date });
-  }
-
-  handleMenuOpen = (event) => {
-    event.stopPropagation();
-    this.setState({ anchorEl: event.currentTarget });
-  }
-
-  handleMenuClose = () => {
-    this.setState({ anchorEl: null });
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
   };
 
-  selectLocale = (selectedLocale) => {
-    this.setState({
-      currentLocale: selectedLocale,
-      anchorEl: null,
-    });
-  }
+  const handleMenuOpen = (event) => {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+  };
 
-  render() {
-    const { selectedDate, currentLocale, anchorEl } = this.state;
-    const { classes } = this.props;
-    const locale = localeMap[currentLocale];
-    return (
-      <Fragment>
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const selectLocale = (selectedLocale) => {
+    setCurrentLocale(selectedLocale);
+    setAnchorEl(null);
+  };
+
+  const { classes } = props;
+  const locale = localeMap[currentLocale];
+  return (
+    <Fragment>
+      <Grid
+        container
+        alignItems="center"
+        justifyContent="space-around"
+        direction="row"
+      >
         <Grid
-          container
-          alignItems="center"
-          justify="space-around"
-          direction="row"
+          item
+          md={4}
+          className={classes.demo}
         >
-          <Grid
-            item
-            md={4}
-            className={classes.demo}
-          >
-            <Typography variant="button" className={classes.divider}>Basic usage</Typography>
-            <div className={classes.picker}>
-              <MuiPickersUtilsProvider utils={MomentUtils}>
-                <DatePicker
-                  label="Basic example"
-                  value={selectedDate}
-                  onChange={this.handleDateChange}
-                  animateYearScrolling={false}
-                />
-              </MuiPickersUtilsProvider>
-            </div>
+          <Typography variant="button" className={classes.divider}>Basic usage</Typography>
+          <div className={classes.picker}>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <DatePicker
+                label="Basic example"
+                value={selectedDate}
+                onChange={handleDateChange}
+                animateYearScrolling={false}
+              />
+            </MuiPickersUtilsProvider>
+          </div>
 
-            <div className={classes.picker}>
-              <MuiPickersUtilsProvider utils={MomentUtils}>
-                <DatePicker
-                  label="Clearable"
-                  clearable
-                  disableFuture
-                  maxDateMessage="Date must be less than today"
-                  value={selectedDate}
-                  onChange={this.handleDateChange}
-                  animateYearScrolling={false}
-                />
-              </MuiPickersUtilsProvider>
-            </div>
-          </Grid>
-          <Grid
-            item
-            md={4}
-            className={classes.demo}
-          >
-            <Typography variant="button" className={classes.divider}>Keyboard Input</Typography>
-            <div className={classes.picker}>
-              <MuiPickersUtilsProvider utils={MomentUtils}>
-                <KeyboardDatePicker
-                  clearable
-                  label="Uncontrolled input"
-                  value={selectedDate}
-                  onChange={this.handleDateChange}
-                  animateYearScrolling={false}
-                />
-              </MuiPickersUtilsProvider>
-            </div>
-
-            <div className={classes.picker}>
-              <MuiPickersUtilsProvider utils={MomentUtils}>
-                <KeyboardDatePicker
-                  label="Masked input"
-                  format="DD/MM/YYYY"
-                  placeholder="10/10/2018"
-                  mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
-                  value={selectedDate}
-                  onChange={this.handleDateChange}
-                  animateYearScrolling={false}
-                />
-              </MuiPickersUtilsProvider>
-            </div>
-          </Grid>
-          <Grid
-            item
-            md={4}
-            className={classes.demo}
-          >
-            <Typography variant="button" className={classes.divider}>Localization</Typography>
-            <div className={classes.picker}>
-              <div className={classes.divider}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils} locale={localeMap[currentLocale]}>
-                  <DatePicker
-                    value={selectedDate}
-                    onChange={this.handleDateChange}
-                    InputProps={{
-                      endAdornment: (
-                        <IconButton
-                          aria-label="Select locale"
-                          aria-owns={anchorEl ? 'locale-menu' : null}
-                          onClick={this.handleMenuOpen}
-                        >
-                          <Icon> more_vert </Icon>
-                        </IconButton>
-                      ),
-                    }}
-                  />
-                </MuiPickersUtilsProvider>
-              </div>
-
-              <Menu
-                id="locale-menu"
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={this.handleMenuClose}
-              >
-                {
-                  Object.keys(localeMap).map(localeItem => (
-                    <MenuItem
-                      key={localeItem}
-                      selected={localeItem === locale}
-                      onClick={() => this.selectLocale(localeItem)}
-                    >
-                      {localeItem}
-                    </MenuItem>
-                  ))
-                }
-              </Menu>
-            </div>
-          </Grid>
+          <div className={classes.picker}>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <DatePicker
+                label="Clearable"
+                clearable
+                disableFuture
+                maxDateMessage="Date must be less than today"
+                value={selectedDate}
+                onChange={handleDateChange}
+                animateYearScrolling={false}
+              />
+            </MuiPickersUtilsProvider>
+          </div>
         </Grid>
-      </Fragment>
-    );
-  }
-}
+        <Grid
+          item
+          md={4}
+          className={classes.demo}
+        >
+          <Typography variant="button" className={classes.divider}>Keyboard Input</Typography>
+          <div className={classes.picker}>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <KeyboardDatePicker
+                clearable
+                label="Uncontrolled input"
+                value={selectedDate}
+                onChange={handleDateChange}
+                animateYearScrolling={false}
+              />
+            </MuiPickersUtilsProvider>
+          </div>
 
+          <div className={classes.picker}>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <KeyboardDatePicker
+                label="Masked input"
+                format="DD/MM/YYYY"
+                placeholder="10/10/2018"
+                mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
+                value={selectedDate}
+                onChange={handleDateChange}
+                animateYearScrolling={false}
+              />
+            </MuiPickersUtilsProvider>
+          </div>
+        </Grid>
+        <Grid
+          item
+          md={4}
+          className={classes.demo}
+        >
+          <Typography variant="button" className={classes.divider}>Localization</Typography>
+          <div className={classes.picker}>
+            <div className={classes.divider}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils} locale={localeMap[currentLocale]}>
+                <DatePicker
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton
+                        aria-label="Select locale"
+                        aria-owns={anchorEl ? 'locale-menu' : null}
+                        onClick={handleMenuOpen}
+                      >
+                        <Icon> more_vert </Icon>
+                      </IconButton>
+                    ),
+                  }}
+                />
+              </MuiPickersUtilsProvider>
+            </div>
+            <Menu
+              id="locale-menu"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+            >
+              {
+                Object.keys(localeMap).map(localeItem => (
+                  <MenuItem
+                    key={localeItem}
+                    selected={localeItem === locale}
+                    onClick={() => selectLocale(localeItem)}
+                  >
+                    {localeItem}
+                  </MenuItem>
+                ))
+              }
+            </Menu>
+          </div>
+        </Grid>
+      </Grid>
+    </Fragment>
+  );
+}
 
 DateInput.propTypes = {
   classes: PropTypes.object.isRequired,

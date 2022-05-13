@@ -1,5 +1,5 @@
 import React from 'react';
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 import ThemePallete from 'enl-api/palette/themePalette';
 import {
   Radar,
@@ -10,7 +10,7 @@ import {
 } from 'recharts';
 import { data7 } from './sampleData';
 
-const theme = createMuiTheme(ThemePallete.purpleTheme);
+const theme = createTheme(ThemePallete.purpleTheme);
 const color = ({
   main: theme.palette.primary.main,
   dark: theme.palette.primary.dark,

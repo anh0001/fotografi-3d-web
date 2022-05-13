@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
+import ImageList from '@material-ui/core/ImageList';
+import ImageListItem from '@material-ui/core/ImageListItem';
+import ImageListItemBar from '@material-ui/core/ImageListItemBar';
 import IconButton from '@material-ui/core/IconButton';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import imgData from 'enl-api/images/imgData';
@@ -51,18 +51,18 @@ const styles = theme => ({
  *   },
  * ];
  */
-function AdvancedGridList(props) {
+function AdvancedImageList(props) {
   const { classes } = props;
 
   return (
     <div className={classes.root}>
-      <GridList cellHeight={200} spacing={1} className={classes.gridList}>
+      <ImageList rowHeight={200} gap={1} className={classes.gridList}>
         {imgData.map((tile, index) => (
-          <GridListTile key={index.toString()} cols={tile.featured ? 2 : 1} rows={tile.featured ? 2 : 1}>
+          <ImageListItem key={index.toString()} cols={tile.featured ? 2 : 1} rows={tile.featured ? 2 : 1}>
             <img src={tile.img} className={classes.img} alt={tile.title} />
-            <GridListTileBar
+            <ImageListItemBar
               title={tile.title}
-              titlePosition="top"
+              position="top"
               actionIcon={(
                 <IconButton className={classes.icon}>
                   <StarBorderIcon />
@@ -71,15 +71,15 @@ function AdvancedGridList(props) {
               actionPosition="left"
               className={classes.titleBar}
             />
-          </GridListTile>
+          </ImageListItem>
         ))}
-      </GridList>
+      </ImageList>
     </div>
   );
 }
 
-AdvancedGridList.propTypes = {
+AdvancedImageList.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(AdvancedGridList);
+export default withStyles(styles)(AdvancedImageList);

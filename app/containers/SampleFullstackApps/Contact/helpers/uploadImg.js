@@ -22,7 +22,8 @@ const uploadImg = (file, callback) => {
           console.log('Upload is ', snapshot.state);
           break;
       }
-    }, (error) => {
+    },
+    (error) => {
     // A full list of error codes is available at
     // https://firebase.google.com/docs/storage/web/handle-errors
       switch (error.code) {
@@ -42,7 +43,8 @@ const uploadImg = (file, callback) => {
           console.log('error.code : ', error.code);
           break;
       }
-    }, () => {
+    },
+    () => {
       // Upload completed successfully, now we can get the download URL
       uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
         console.log('File available at', downloadURL);

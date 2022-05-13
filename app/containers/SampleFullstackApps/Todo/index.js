@@ -1,17 +1,17 @@
 import React from 'react';
-import { List } from 'immutable';
+import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import brand from 'enl-api/dummy/brand';
 import { Helmet } from 'react-helmet';
-import { bindActionCreators } from 'redux';
 import {
   TaskFilters,
   TaskForm,
   TaskList,
   PapperBlock
 } from 'enl-components';
-import { injectIntl, intlShape } from 'react-intl';
+import styles from 'enl-components/TodoList/todo-jss';
+import { injectIntl } from 'react-intl';
 import messages from 'enl-components/TodoList/messages';
 import { getVisibleTasks } from './reducers/selectors';
 import {
@@ -21,90 +21,63 @@ import {
   updateTaskAction
 } from './reducers/todoActions';
 
+function Todo(props) {
+  const { classes, intl } = props;
+  const title = brand.name + ' - Todo App';
+  const description = brand.desc;
 
-class Todo extends React.Component {
-  render() {
-    const {
-      createTask,
-      removeTask,
-      tasks,
-      updateTask,
-      filterTasks,
-      filterType,
-      loading,
-      intl
-    } = this.props;
-    const title = brand.name + ' - Todo App';
-    const description = brand.desc;
-    return (
-      <div>
-        <Helmet>
-          <title>{title}</title>
-          <meta name="description" content={description} />
-          <meta property="og:title" content={title} />
-          <meta property="og:description" content={description} />
-          <meta property="twitter:title" content={title} />
-          <meta property="twitter:description" content={description} />
-        </Helmet>
-        <PapperBlock
-          title={intl.formatMessage(messages.title)}
-          icon="playlist_add_check"
-          noMargin
-          whiteBg
-          colorMode="light"
-          desc={intl.formatMessage(messages.subtitle)}
-        >
-          <TaskForm handleSubmit={createTask} />
-          <div className="g-col">
-            <TaskFilters filter={filterTasks} type={filterType} />
-            <TaskList
-              loading={loading}
-              removeTask={removeTask}
-              tasks={tasks}
-              updateTask={updateTask}
-            />
-          </div>
-        </PapperBlock>
-      </div>
-    );
-  }
+  // Redux State
+  const tasks = useSelector(state => getVisibleTasks(state.todoFullstack));
+  const filterType = useSelector(state => state.todoFullstack.filter);
+  const loading = useSelector(state => state.todoFullstack.loading);
+
+  // Dispatcher
+  const createTask = useDispatch();
+  const filterTasks = useDispatch();
+  const removeTask = useDispatch();
+  const updateTask = useDispatch();
+
+  const handleUpdate = (todo, change) => {
+    updateTask(updateTaskAction(todo, change));
+  };
+
+  return (
+    <div>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="twitter:title" content={title} />
+        <meta property="twitter:description" content={description} />
+      </Helmet>
+      <PapperBlock
+        title={intl.formatMessage(messages.title)}
+        icon="playlist_add_check"
+        noMargin
+        whiteBg
+        colorMode="light"
+        desc={intl.formatMessage(messages.subtitle)}
+        className={classes.root}
+      >
+        <TaskForm handleSubmit={(payload) => createTask(createTaskAction(payload))} />
+        <div className="g-col">
+          <TaskFilters filter={(payload) => filterTasks(filterTasksAction(payload))} type={filterType} />
+          <TaskList
+            loading={loading}
+            removeTask={(payload) => removeTask(removeTaskAction(payload))}
+            tasks={tasks}
+            updateTask={handleUpdate}
+          />
+        </div>
+      </PapperBlock>
+    </div>
+  );
 }
 
 Todo.propTypes = {
-  createTask: PropTypes.func.isRequired,
-  removeTask: PropTypes.func.isRequired,
-  tasks: PropTypes.instanceOf(List),
-  updateTask: PropTypes.func.isRequired,
-  filterTasks: PropTypes.func.isRequired,
-  filterType: PropTypes.string,
-  loading: PropTypes.bool,
-  intl: intlShape.isRequired
+  classes: PropTypes.object.isRequired,
+  intl: PropTypes.object.isRequired
 };
 
-
-Todo.defaultProps = {
-  tasks: null,
-  loading: false,
-  filterType: ''
-};
-
-const reducerTodo = 'todoFullstack';
-const mapStateToProps = state => ({
-  tasks: getVisibleTasks(state.get(reducerTodo)),
-  filterType: state.getIn([reducerTodo, 'filter']),
-  loading: state.getIn([reducerTodo, 'loading']),
-});
-
-const mapDispatchToProps = dispatch => ({
-  createTask: bindActionCreators(createTaskAction, dispatch),
-  filterTasks: bindActionCreators(filterTasksAction, dispatch),
-  removeTask: bindActionCreators(removeTaskAction, dispatch),
-  updateTask: bindActionCreators(updateTaskAction, dispatch),
-});
-
-const TodoMapped = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Todo);
-
-export default injectIntl(TodoMapped);
+export default withStyles(styles)(injectIntl(Todo));

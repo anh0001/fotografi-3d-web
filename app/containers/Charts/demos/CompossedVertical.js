@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { createMuiTheme, withStyles } from '@material-ui/core/styles';
+import { createTheme, withStyles } from '@material-ui/core/styles';
 import ThemePallete from 'enl-api/palette/themePalette';
 import green from '@material-ui/core/colors/green';
 import {
@@ -18,7 +18,7 @@ import {
 import { data1 } from './sampleData';
 import styles from './fluidChart-jss';
 
-const theme = createMuiTheme(ThemePallete.blueTheme);
+const theme = createTheme(ThemePallete.blueTheme);
 const color = ({
   main: theme.palette.primary.main,
   maindark: theme.palette.primary.dark,
@@ -30,7 +30,7 @@ function CompossedVertical(props) {
   const { classes } = props;
   return (
     <div className={classes.chartFluid}>
-      <ResponsiveContainer>
+      <ResponsiveContainer width={800} height="80%">
         <ComposedChart
           width={800}
           height={450}

@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
+import ImageList from '@material-ui/core/ImageList';
+import ImageListItem from '@material-ui/core/ImageListItem';
 import imgData from 'enl-api/images/imgData';
 
 const styles = theme => ({
@@ -43,24 +43,24 @@ const styles = theme => ({
  *   },
  * ];
  */
-function ImageGridList(props) {
+function ImageImageList(props) {
   const { classes } = props;
 
   return (
     <div className={classes.root}>
-      <GridList cellHeight={160} className={classes.gridList} cols={3}>
+      <ImageList rowHeight={160} className={classes.gridList} cols={3}>
         {imgData.map((tile, index) => (
-          <GridListTile key={index.toString()} cols={tile.cols || 1}>
+          <ImageListItem key={index.toString()} cols={tile.cols || 1}>
             <img src={tile.img} className={classes.img} alt={tile.title} />
-          </GridListTile>
+          </ImageListItem>
         ))}
-      </GridList>
+      </ImageList>
     </div>
   );
 }
 
-ImageGridList.propTypes = {
+ImageImageList.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ImageGridList);
+export default withStyles(styles)(ImageImageList);

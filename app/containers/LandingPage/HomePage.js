@@ -10,29 +10,27 @@ import {
 } from 'enl-components';
 import styles from 'enl-components/LandingPage/landingStyle-jss';
 
-class HomePage extends React.Component {
-  render() {
-    const { classes } = this.props;
-    return (
-      <div className={classes.landingWrap}>
-        <section id="banner">
-          <Banner />
-        </section>
-        <section id="feature">
-          <Feature />
-        </section>
-        <section id="showcase">
-          <Showcase />
-        </section>
-        <section id="tech">
-          <Technology />
-        </section>
-        {/* <section id="contact">
-          <Contact />
-        </section> */}
-      </div>
-    );
-  }
+function HomePage(props) {
+  const { classes } = props;
+  return (
+    <div className={classes.landingWrap}>
+      <section id="banner">
+        <Banner />
+      </section>
+      <section id="feature">
+        <Feature />
+      </section>
+      <section id="showcase">
+        <Showcase />
+      </section>
+      <section id="tech">
+        <Technology />
+      </section>
+      <section id="contact">
+        <Contact />
+      </section>
+    </div>
+  );
 }
 
 HomePage.propTypes = {

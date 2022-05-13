@@ -18,57 +18,55 @@ import PhotoLibrary from '@material-ui/icons/PhotoLibrary';
 import Divider from '@material-ui/core/Divider';
 import styles from './cardStyle-jss';
 
-class ProfileCard extends React.Component {
-  render() {
-    const {
-      classes,
-      cover,
-      avatar,
-      name,
-      title,
-      connection,
-      isVerified,
-      btnText
-    } = this.props;
+function ProfileCard(props) {
+  const {
+    classes,
+    cover,
+    avatar,
+    name,
+    title,
+    connection,
+    isVerified,
+    btnText
+  } = props;
 
-    return (
-      <Card className={classes.cardSocmed}>
-        <CardMedia
-          className={classes.mediaProfile}
-          image={cover}
-          title="cover"
-        />
-        <CardContent className={classes.contentProfile}>
-          <Avatar alt="avatar" src={avatar} className={classes.avatarBig} />
-          <Typography variant="h6" className={classes.name} gutterBottom>
-            {name}
-            {isVerified && <VerifiedUser className={classes.verified} />}
-          </Typography>
-          <Typography className={classes.subheading} gutterBottom>
-            <span className={Type.regular}>{title}</span>
-          </Typography>
-          <Typography variant="caption" component="p">
-            {connection}
+  return (
+    <Card className={classes.cardSocmed}>
+      <CardMedia
+        className={classes.mediaProfile}
+        image={cover}
+        title="cover"
+      />
+      <CardContent className={classes.contentProfile}>
+        <Avatar alt="avatar" src={avatar} className={classes.avatarBig} />
+        <Typography variant="h6" className={classes.name} gutterBottom>
+          {name}
+          {isVerified && <VerifiedUser className={classes.verified} />}
+        </Typography>
+        <Typography className={classes.subheading} gutterBottom>
+          <span className={Type.regular}>{title}</span>
+        </Typography>
+        <Typography variant="caption" component="p">
+          {connection}
             &nbsp;connection
-          </Typography>
-          <Button className={classes.buttonProfile} size="large" variant="outlined" color="secondary">
-            {btnText}
-          </Button>
-        </CardContent>
-        <Divider />
-        <CardActions>
-          <BottomNavigation
-            showLabels
-            className={classes.bottomLink}
-          >
-            <BottomNavigationAction label="20 Connection" icon={<SupervisorAccount />} />
-            <BottomNavigationAction label="10 Favorites" icon={<Favorite />} />
-            <BottomNavigationAction label="5 Albums" icon={<PhotoLibrary />} />
-          </BottomNavigation>
-        </CardActions>
-      </Card>
-    );
-  }
+        </Typography>
+        <Button className={classes.buttonProfile} size="large" variant="outlined" color="secondary">
+          {btnText}
+        </Button>
+      </CardContent>
+      <Divider />
+      <CardActions>
+        <BottomNavigation
+          showLabels
+          className={classes.bottomLink}
+        >
+          <BottomNavigationAction label="20 Connection" icon={<SupervisorAccount />} />
+          <BottomNavigationAction label="10 Favorites" icon={<Favorite />} />
+          <BottomNavigationAction label="5 Albums" icon={<PhotoLibrary />} />
+        </BottomNavigation>
+      </CardActions>
+    </Card>
+  );
 }
 
 ProfileCard.propTypes = {

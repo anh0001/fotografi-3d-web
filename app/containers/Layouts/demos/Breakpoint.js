@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import compose from 'recompose/compose';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Hidden from '@material-ui/core/Hidden';
@@ -23,7 +22,6 @@ const styles = theme => ({
     margin: theme.spacing(1),
   },
   divider: {
-    display: 'block',
     margin: `${theme.spacing(3)}px 0`,
   }
 });
@@ -116,4 +114,4 @@ Breakpoint.propTypes = {
   width: PropTypes.string.isRequired,
 };
 
-export default compose(withStyles(styles), withWidth())(Breakpoint);
+export default withWidth()(withStyles(styles)(Breakpoint));

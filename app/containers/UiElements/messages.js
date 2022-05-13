@@ -78,7 +78,7 @@ export default defineMessages({
   },
   accordionControlledDesc: {
     id: `${scope}.Accordion.controlled.desc`,
-    defaultMessage: 'Extend the default panel behavior to create an accordion with the ExpansionPanel component.',
+    defaultMessage: 'Extend the default panel behavior to create an accordion with the Accordion component.',
   },
   tabsTitle: {
     id: `${scope}.Tabs.title`,
@@ -490,7 +490,7 @@ export default defineMessages({
   },
   imageGridOnlyDesc: {
     id: `${scope}.Image.only.desc`,
-    defaultMessage: 'A simple example of a scrollable image GridList',
+    defaultMessage: 'A simple example of a scrollable image ImageList',
   },
   imageGridTitlebarsTitle: {
     id: `${scope}.Image.titleBars.title`,
@@ -498,7 +498,7 @@ export default defineMessages({
   },
   imageGridTitlebarsDesc: {
     id: `${scope}.Image.titleBars.desc`,
-    defaultMessage: 'This example demonstrates the use of the GridListTileBar to add an overlay to each GridListTile.',
+    defaultMessage: 'This example demonstrates the use of the ImageListItemBar to add an overlay to each ImageListItem.',
   },
   imageGridAdvancedTitle: {
     id: `${scope}.Image.advanced.title`,

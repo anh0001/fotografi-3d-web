@@ -1,4 +1,4 @@
-import { fromJS, List, Map } from 'immutable';
+import produce from 'immer';
 import notif from 'enl-api/ui/notifMessage';
 import { CLOSE_NOTIF } from 'enl-redux/constants/notifConstants';
 import {
@@ -7,15 +7,15 @@ import {
   UPDATE_CONTACT_SUCCESS,
   DELETE_CONTACT_SUCCESS,
   SEARCH_CONTACT,
-  SHOW_DETAIL_CONTACT,
+  SHOW_DETAIL_CONTACT_FIREBASE,
   HIDE_DETAIL,
-  EDIT_CONTACT,
+  EDIT_CONTACT_FIREBASE,
   ADD_CONTACT,
   CLOSE_CONTACT_FORM,
 } from './contactConstants';
 
 const initialState = {
-  formValues: Map(),
+  formValues: null,
   selectedIndex: 0,
   selectedId: '',
   keywordValue: '',
@@ -23,98 +23,82 @@ const initialState = {
   openFrm: false,
   showMobileDetail: false,
   notifMsg: '',
-  contactList: new List(),
+  contactList: [],
   loading: true,
 };
 // let editingIndex = 0;
 
-const initialImmutableState = fromJS(initialState);
-
-export default function reducer(state = initialImmutableState, action = {}) {
+/* eslint-disable default-case, no-param-reassign */
+const contactReducer = (state = initialState, action = {}) => produce(state, draft => {
   switch (action.type) {
     case FETCH_CONTACT_SUCCESS:
-      return state.withMutations((mutableState) => {
-        const items = fromJS(action.payload);
-        mutableState
-          .set('contactList', new List(items))
-          .set('loading', false);
-      });
+      draft.contactList = action.payload;
+      draft.loading = false;
+      break;
     case CREATE_CONTACT_SUCCESS:
-      return state.withMutations((mutableState) => {
-        const items = action.payload;
-        mutableState.set('contactList', state.get('contactList').unshift(items));
-        mutableState
-          .set('formValues', Map())
-          .set('avatarInit', '')
-          .set('openFrm', false)
-          .set('notifMsg', notif.saved);
-      });
-    case UPDATE_CONTACT_SUCCESS:
-      return state.withMutations((mutableState) => {
-        mutableState.set(
-          'contactList',
-          state.get('contactList').map(contact => (contact.key === action.payload.key ? action.payload : contact))
-        );
-        mutableState
-          .set('formValues', Map())
-          .set('avatarInit', '')
-          .set('openFrm', false)
-          .set('notifMsg', notif.updated);
-      });
-    case DELETE_CONTACT_SUCCESS:
-      return state.withMutations((mutableState) => {
-        mutableState
-          .set(
-            'contactList',
-            state.get('contactList').filter(contact => contact.key !== action.payload.key)
-          )
-          .set('notifMsg', notif.removed);
-      });
-    case SEARCH_CONTACT:
-      return state.withMutations((mutableState) => {
-        action.keyword.persist();
-        const keyword = action.keyword.target.value.toLowerCase();
-        mutableState.set('keywordValue', keyword);
-      });
+      draft.contactList.unshift(action.payload);
+      draft.formValues = null;
+      draft.avatarInit = '';
+      draft.openFrm = false;
+      draft.notifMsg = notif.saved;
+      break;
+    case UPDATE_CONTACT_SUCCESS: {
+      const index = draft.contactList.findIndex((obj) => obj.key === action.payload.key);
+      if (index !== -1) {
+        draft.contactList[index] = action.payload;
+      }
+      draft.formValues = null;
+      draft.avatarInit = '';
+      draft.openFrm = false;
+      draft.notifMsg = notif.updated;
+      break;
+    }
+    case DELETE_CONTACT_SUCCESS: {
+      const index = draft.contactList.findIndex((obj) => obj.key === action.payload.key);
+      if (index !== -1) {
+        draft.contactList.splice(index, 1);
+        draft.notifMsg = notif.removed;
+      }
+      break;
+    }
+    case SEARCH_CONTACT: {
+      action.keyword.persist();
+      const keyword = action.keyword.target.value.toLowerCase();
+      draft.keywordValue = keyword;
+      break;
+    }
     case ADD_CONTACT:
-      return state.withMutations((mutableState) => {
-        mutableState
-          .set('openFrm', true)
-          .set('formValues', Map())
-          .set('avatarInit', '');
-      });
+      draft.openFrm = true;
+      draft.formValues = null;
+      draft.avatarInit = '';
+      break;
     case CLOSE_CONTACT_FORM:
-      return state.withMutations((mutableState) => {
-        mutableState
-          .set('openFrm', false)
-          .set('formValues', Map())
-          .set('avatarInit', '')
-          .set('notifMsg', notif.discard);
-      });
-    case EDIT_CONTACT:
-      return state.withMutations((mutableState) => {
-        mutableState
-          .set('openFrm', true)
-          .set('selectedId', action.item.get('key'))
-          .set('formValues', action.item)
-          .set('avatarInit', action.item.get('avatar'));
-      });
-    case SHOW_DETAIL_CONTACT:
-      return state.withMutations((mutableState) => {
-        const index = state.get('contactList').indexOf(action.item);
-        mutableState
-          .set('selectedIndex', index)
-          .set('showMobileDetail', true);
-      });
+      draft.openFrm = false;
+      draft.formValues = null;
+      draft.avatarInit = '';
+      draft.notifMsg = notif.discard;
+      break;
+    case EDIT_CONTACT_FIREBASE:
+      draft.openFrm = true;
+      draft.selectedId = action.item.key;
+      draft.formValues = action.item.toJS();
+      draft.avatarInit = action.item.avatar;
+      break;
+    case SHOW_DETAIL_CONTACT_FIREBASE: {
+      const index = state.contactList.indexOf(action.item);
+      draft.selectedIndex = index || 0;
+      draft.showMobileDetail = true;
+      break;
+    }
     case HIDE_DETAIL:
-      return state.withMutations((mutableState) => {
-        mutableState.set('showMobileDetail', false);
-      });
+      draft.showMobileDetail = false;
+      break;
     case CLOSE_NOTIF:
-      return state.withMutations((mutableState) => {
-        mutableState.set('notifMsg', '');
-      });
+      draft.notifMsg = '';
+      break;
     default:
-      return state;
+      break;
   }
-}
+});
+
+export default contactReducer;

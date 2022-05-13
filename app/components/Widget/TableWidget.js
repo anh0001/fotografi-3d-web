@@ -16,7 +16,7 @@ import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import messageStyles from 'enl-styles/Messages.scss';
 import progressStyles from 'enl-styles/Progress.scss';
 import imgApi from 'enl-api/images/photos';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import avatarApi from 'enl-api/images/avatars';
 import messages from './messages';
 import PapperBlock from '../PapperBlock/PapperBlock';
@@ -40,7 +40,7 @@ function createData(id, name, date, total, avatar, buyerName, photo, type, curre
 }
 
 const data = [
-  createData('QWE123', 'Woman Bag', '23 Oct 2018', 300, avatarApi[6], 'Guest', imgApi[21], 'blur_on', 14, 30, 'Error', 'Canceled'),
+  createData('QWE123', 'Woman Bag', '23 Oct 2018', 300, avatarApi[6], 'John Doe', imgApi[21], 'blur_on', 14, 30, 'Error', 'Canceled'),
   createData('ABC890', 'Laptop', '11 Nov 2018', 230, avatarApi[8], 'Jim Doe', imgApi[29], 'computer', 25, 70, 'Success', 'Sent'),
   createData('GHI556', 'Pinapple Jam', '5 Nov 2018', 34, avatarApi[2], 'Jane Doe', imgApi[25], 'restaurant_menu', 35, 50, 'Warning', 'Pending'),
   createData('MNO444', 'Action Figure', '22 Sept 2018', 17, avatarApi[9], 'Jack Doe', imgApi[30], 'toys', 9, 85, 'Info', 'Paid'),
@@ -147,7 +147,7 @@ function TableWidget(props) {
 
 TableWidget.propTypes = {
   classes: PropTypes.object.isRequired,
-  intl: intlShape.isRequired
+  intl: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(injectIntl(TableWidget));

@@ -56,6 +56,30 @@ export default defineMessages({
     id: `${scope}.ToggleButton.toggleButton.desc`,
     defaultMessage: 'Toggle buttons can be used to group related options.'
   },
+  dialSimpleTitle: {
+    id: `${scope}.DialButton.simple.title`,
+    defaultMessage: 'Simple Speed Dial Button'
+  },
+  dialSimpleDesc: {
+    id: `${scope}.DialButton.simple.desc`,
+    defaultMessage: 'The floating action button can display related actions.'
+  },
+  dialCustomTitle: {
+    id: `${scope}.DialButton.custom.title`,
+    defaultMessage: 'Custom close icon'
+  },
+  dialCustomDesc: {
+    id: `${scope}.DialButton.custom.desc`,
+    defaultMessage: 'You can provide an alternate icon for the closed and open states using the icon and openIcon props of the SpeedDialIcon component.'
+  },
+  dialTooltipsTitle: {
+    id: `${scope}.DialButton.tooltips.title`,
+    defaultMessage: 'Persistent action tooltips'
+  },
+  dialTooltipsDesc: {
+    id: `${scope}.DialButton.tooltips.desc`,
+    defaultMessage: 'The SpeedDialActions tooltips can be be displayed persistently so that users don\'t have to long-press in order to see the tooltip on touch devices.'
+  },
   textfiledTitle: {
     id: `${scope}.Textfields.title`,
     defaultMessage: 'Textfields'

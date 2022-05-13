@@ -1,54 +1,36 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
-const styles = {
+const useStyles = makeStyles({
   root: {
-    flexGrow: 1,
+    width: '100%',
   },
-};
+});
 
-class LinearDeterminate extends React.Component {
-  state = {
-    completed: 0,
-  };
+export default function LinearDeterminate() {
+  const classes = useStyles();
+  const [progress, setProgress] = React.useState(0);
 
-  timer = null;
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setProgress((oldProgress) => {
+        if (oldProgress === 100) {
+          return 0;
+        }
+        const diff = Math.random() * 10;
+        return Math.min(oldProgress + diff, 100);
+      });
+    }, 500);
 
-  componentDidMount() {
-    this.timer = setInterval(this.progress, 500);
-  }
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
 
-  componentWillUnmount() {
-    clearInterval(this.timer);
-  }
-
-  progress = () => {
-    const { completed } = this.state;
-    if (completed === 100) {
-      this.setState({ completed: 0 });
-    } else {
-      const diff = Math.random() * 10;
-      this.setState({ completed: Math.min(completed + diff, 100) });
-    }
-  };
-
-  render() {
-    const { classes } = this.props;
-    const { completed } = this.state;
-    return (
-      <div className={classes.root}>
-        <LinearProgress variant="determinate" value={completed} />
-        <br />
-        <LinearProgress color="secondary" variant="determinate" value={completed} />
-      </div>
-    );
-  }
+  return (
+    <div className={classes.root}>
+      <LinearProgress variant="determinate" value={progress} />
+    </div>
+  );
 }
-
-LinearDeterminate.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(LinearDeterminate);

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -26,15 +26,15 @@ const styles = theme => ({
   },
 });
 
-class ListControl extends React.Component {
-  state = {
+function ListControl(props) {
+  const [checkState, setCheck] = useState({
     checked: [0],
     checked2: [1],
-    checked3: ['wifi'],
-  };
+    checked3: ['wifi']
+  });
 
-  handleToggle = value => () => {
-    const { checked } = this.state;
+  const handleToggle = value => () => {
+    const { checked } = checkState;
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
@@ -44,110 +44,108 @@ class ListControl extends React.Component {
       newChecked.splice(currentIndex, 1);
     }
 
-    this.setState({
+    setCheck({
       checked: newChecked,
       checked2: newChecked,
       checked3: newChecked,
     });
   };
 
-  render() {
-    const { classes } = this.props;
-    const { checked, checked2, checked3 } = this.state;
-    return (
-      <Fragment>
-        <Grid
-          container
-          alignItems="flex-start"
-          justify="flex-start"
-          direction="row"
-          spacing={2}
-        >
-          <Grid item md={4} xs={12}>
-            <Typography variant="button" className={classes.divider}>Checkbox</Typography>
-            <div className={classes.root}>
-              <List>
-                {[0, 1, 2, 3].map(value => (
-                  <ListItem
-                    key={value}
-                    role={undefined}
-                    dense
-                    button
-                    onClick={this.handleToggle(value)}
-                    className={classes.listItem}
-                  >
-                    <Checkbox
-                      checked={checked.indexOf(value) !== -1}
-                      tabIndex={-1}
-                      disableRipple
-                    />
-                    <ListItemText primary={`Line item ${value + 1}`} />
-                    <ListItemSecondaryAction>
-                      <IconButton aria-label="Comments">
-                        <CommentIcon />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                ))}
-              </List>
-            </div>
-          </Grid>
-          <Grid item md={4} xs={12}>
-            <Typography variant="button" className={classes.divider}>Checkbox</Typography>
-            <div className={classes.root}>
-              <List>
-                {[0, 1, 2, 3].map(value => (
-                  <ListItem key={value} dense button className={classes.listItem}>
-                    <ListItemAvatar>
-                      <Avatar alt="Remy Sharp" src="/images/pp_boy.svg" />
-                    </ListItemAvatar>
-                    <ListItemText primary={`Line item ${value + 1}`} />
-                    <ListItemSecondaryAction>
-                      <Checkbox
-                        onChange={this.handleToggle(value)}
-                        checked={checked2.indexOf(value) !== -1}
-                      />
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                ))}
-              </List>
-            </div>
-          </Grid>
-          <Grid item md={4} xs={12}>
-            <Typography variant="button" className={classes.divider}>Switch</Typography>
-            <div className={classes.root}>
-              <List subheader={<ListSubheader>Settings</ListSubheader>}>
-                <ListItem>
-                  <ListItemIcon>
-                    <WifiIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Wi-Fi" />
+  const { classes } = props;
+  const { checked, checked2, checked3 } = checkState;
+  return (
+    <Fragment>
+      <Grid
+        container
+        alignItems="flex-start"
+        justifyContent="flex-start"
+        direction="row"
+        spacing={2}
+      >
+        <Grid item md={4} xs={12}>
+          <Typography variant="button" className={classes.divider}>Checkbox</Typography>
+          <div className={classes.root}>
+            <List>
+              {[0, 1, 2, 3].map(value => (
+                <ListItem
+                  key={value}
+                  role={undefined}
+                  dense
+                  button
+                  onClick={() => handleToggle(value)}
+                  className={classes.listItem}
+                >
+                  <Checkbox
+                    checked={checked.indexOf(value) !== -1}
+                    tabIndex={-1}
+                    disableRipple
+                  />
+                  <ListItemText primary={`Line item ${value + 1}`} />
                   <ListItemSecondaryAction>
-                    <Switch
-                      onChange={this.handleToggle('wifi')}
-                      checked={checked3.indexOf('wifi') !== -1}
-                    />
+                    <IconButton aria-label="Comments">
+                      <CommentIcon />
+                    </IconButton>
                   </ListItemSecondaryAction>
                 </ListItem>
-                <ListItem>
-                  <ListItemIcon>
-                    <BluetoothIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Bluetooth" />
-                  <ListItemSecondaryAction>
-                    <Switch
-                      onChange={this.handleToggle('bluetooth')}
-                      checked={checked3.indexOf('bluetooth') !== -1}
-                    />
-                  </ListItemSecondaryAction>
-                </ListItem>
-              </List>
-            </div>
-          </Grid>
+              ))}
+            </List>
+          </div>
         </Grid>
-      </Fragment>
-    );
-  }
+        <Grid item md={4} xs={12}>
+          <Typography variant="button" className={classes.divider}>Checkbox</Typography>
+          <div className={classes.root}>
+            <List>
+              {[0, 1, 2, 3].map(value => (
+                <ListItem key={value} dense button className={classes.listItem}>
+                  <ListItemAvatar>
+                    <Avatar alt="Remy Sharp" src="/images/pp_boy.svg" />
+                  </ListItemAvatar>
+                  <ListItemText primary={`Line item ${value + 1}`} />
+                  <ListItemSecondaryAction>
+                    <Checkbox
+                      onChange={() => handleToggle(value)}
+                      checked={checked2.indexOf(value) !== -1}
+                    />
+                  </ListItemSecondaryAction>
+                </ListItem>
+              ))}
+            </List>
+          </div>
+        </Grid>
+        <Grid item md={4} xs={12}>
+          <Typography variant="button" className={classes.divider}>Switch</Typography>
+          <div className={classes.root}>
+            <List subheader={<ListSubheader>Settings</ListSubheader>}>
+              <ListItem>
+                <ListItemIcon>
+                  <WifiIcon />
+                </ListItemIcon>
+                <ListItemText primary="Wi-Fi" />
+                <ListItemSecondaryAction>
+                  <Switch
+                    onChange={() => handleToggle('wifi')}
+                    checked={checked3.indexOf('wifi') !== -1}
+                  />
+                </ListItemSecondaryAction>
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <BluetoothIcon />
+                </ListItemIcon>
+                <ListItemText primary="Bluetooth" />
+                <ListItemSecondaryAction>
+                  <Switch
+                    onChange={() => handleToggle('bluetooth')}
+                    checked={checked3.indexOf('bluetooth') !== -1}
+                  />
+                </ListItemSecondaryAction>
+              </ListItem>
+            </List>
+          </div>
+        </Grid>
+      </Grid>
+    </Fragment>
+  );
 }
 
 ListControl.propTypes = {

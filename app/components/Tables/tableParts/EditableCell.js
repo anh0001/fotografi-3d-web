@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -8,76 +8,76 @@ import css from 'enl-styles/Table.scss';
 
 const styles = {};
 
-class EditableCell extends React.Component {
-  handleUpdate(event) {
-    const { updateRow, branch } = this.props;
+function EditableCell(props) {
+  const {
+    cellData,
+    edited,
+    inputType,
+    theme,
+    updateRow,
+    branch
+  } = props;
+
+  const handleUpdate = useCallback((event) => {
     event.persist();
     updateRow(event, branch);
-  }
+  }, [updateRow, branch]);
 
-  render() {
-    const {
-      cellData,
-      edited,
-      inputType,
-      theme,
-    } = this.props;
-    switch (inputType) {
-      case 'text':
-        return (
-          <TableCell padding="none">
-            <TextField
-              placeholder={cellData.type}
-              name={cellData.type}
-              className={classNames(css.crudInput, theme.palette.type === 'dark' ? css.lightTxt : css.darkTxt)}
-              id={cellData.id.toString()}
-              value={cellData.value}
-              onChange={(event) => this.handleUpdate(event)}
-              disabled={!edited}
-              margin="none"
-              inputProps={{
-                'aria-label': 'Description',
-              }}
-            />
-          </TableCell>
-        );
-      case 'number':
-        return (
-          <TableCell padding="none">
-            <TextField
-              id={cellData.id.toString()}
-              name={cellData.type}
-              className={classNames(css.crudInput, theme.palette.type === 'dark' ? css.lightTxt : css.darkTxt)}
-              value={cellData.value}
-              onChange={(event) => this.handleUpdate(event)}
-              type="number"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              margin="none"
-              disabled={!edited}
-            />
-          </TableCell>
-        );
-      default:
-        return (
-          <TableCell padding="none">
-            <TextField
-              placeholder={cellData.type}
-              name={cellData.type}
-              className={classNames(css.crudInput, theme.palette.type === 'dark' ? css.lightTxt : css.darkTxt)}
-              id={cellData.id.toString()}
-              value={cellData.value}
-              onChange={(event) => this.handleUpdate(event)}
-              disabled={!edited}
-              margin="none"
-              inputProps={{
-                'aria-label': 'Description',
-              }}
-            />
-          </TableCell>
-        );
-    }
+  switch (inputType) {
+    case 'text':
+      return (
+        <TableCell padding="normal">
+          <TextField
+            placeholder={cellData.type}
+            name={cellData.type}
+            className={classNames(css.crudInput, theme.palette.type === 'dark' ? css.lightTxt : css.darkTxt)}
+            id={cellData.id.toString()}
+            value={cellData.value}
+            onChange={(event) => handleUpdate(event)}
+            disabled={!edited}
+            margin="none"
+            inputProps={{
+              'aria-label': 'Description',
+            }}
+          />
+        </TableCell>
+      );
+    case 'number':
+      return (
+        <TableCell padding="none">
+          <TextField
+            id={cellData.id.toString()}
+            name={cellData.type}
+            className={classNames(css.crudInput, theme.palette.type === 'dark' ? css.lightTxt : css.darkTxt)}
+            value={cellData.value}
+            onChange={(event) => handleUpdate(event)}
+            type="number"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            margin="none"
+            disabled={!edited}
+          />
+        </TableCell>
+      );
+    default:
+      return (
+        <TableCell padding="normal">
+          <TextField
+            placeholder={cellData.type}
+            name={cellData.type}
+            className={classNames(css.crudInput, theme.palette.type === 'dark' ? css.lightTxt : css.darkTxt)}
+            id={cellData.id.toString()}
+            value={cellData.value}
+            onChange={(event) => handleUpdate(event)}
+            disabled={!edited}
+            margin="none"
+            inputProps={{
+              'aria-label': 'Description',
+            }}
+          />
+        </TableCell>
+      );
   }
 }
 

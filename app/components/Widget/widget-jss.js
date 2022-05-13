@@ -1,5 +1,5 @@
 import colorfull from 'enl-api/palette/colorfull';
-import { darken, fade, lighten } from '@material-ui/core/styles/colorManipulator';
+import { darken, alpha, lighten } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
 import images from 'enl-api/images/photos';
@@ -92,7 +92,8 @@ const styles = theme => ({
     boxShadow: theme.shadows[4],
     background: theme.palette.background.paper,
     '& svg': {
-      fontSize: 24
+      fontSize: 24,
+      fill: theme.palette.primary.main
     },
     '&$sm': {
       width: 30,
@@ -101,7 +102,7 @@ const styles = theme => ({
     '&$mc': {
       width: 24,
       height: 24,
-      top: 12,
+      top: 2,
       left: 8,
       marginRight: 0
     },
@@ -313,7 +314,11 @@ const styles = theme => ({
   mapWrap: {
     position: 'relative',
     overflow: 'hidden',
-    boxShadow: theme.shade.light,
+    height: 200,
+    borderRadius: theme.rounded.small,
+    '& > div': {
+      height: '100%'
+    }
   },
   address: {
     display: 'block'
@@ -510,14 +515,14 @@ const styles = theme => ({
     padding: theme.spacing(2),
     background: theme.palette.type === 'dark' ? theme.palette.primary.dark : theme.palette.primary.light,
     '& button': {
-      background: fade(theme.palette.background.paper, 0.3),
+      background: alpha(theme.palette.background.paper, 0.3),
       color: theme.palette.common.white,
       borderRadius: theme.rounded.medium
     }
   },
   stripped: {
     '& tbody tr:nth-child(even)': {
-      background: theme.palette.type === 'dark' ? fade(theme.palette.grey[900], 0.5) : theme.palette.grey[50]
+      background: theme.palette.type === 'dark' ? alpha(theme.palette.grey[900], 0.5) : theme.palette.grey[50]
     }
   },
   activityWrap: {

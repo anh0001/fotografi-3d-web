@@ -1,4 +1,4 @@
-import { List, Record } from 'immutable';
+import produce from 'immer';
 import {
   ADD_TASK,
   FILTER_TASKS_DATA,
@@ -7,28 +7,40 @@ import {
   EDIT_TASK
 } from './todoConstants';
 
-
-export const TasksState = new Record({
+const initialState = {
   filter: '',
-  list: new List()
-});
+  list: []
+};
 
-
-function todoReducer(state = new TasksState(), { payload, type }) {
-  switch (type) {
+/* eslint-disable default-case, no-param-reassign */
+const todoReducer = (state = initialState, action = {}) => produce(state, draft => {
+  switch (action.type) {
     case LOAD_TASKS_DATA:
-      return state.set('list', new List(payload.tasks.reverse()));
+      draft.list = action.tasks.reverse();
+      break;
     case ADD_TASK:
-      return state.set('list', state.list.unshift(payload.task));
-    case DELETE_TASK:
-      return state.set('list', state.list.filter(task => task.key !== payload.task.key));
-    case EDIT_TASK:
-      return state.set('list', state.list.map(task => (task.key === payload.task.key ? payload.task : task)));
+      draft.list.unshift(action.task);
+      break;
+    case DELETE_TASK: {
+      const index = draft.list.findIndex((obj) => obj.key === action.task.key);
+      if (index !== -1) {
+        draft.list.splice(index, 1);
+      }
+      break;
+    }
+    case EDIT_TASK: {
+      const index = draft.list.findIndex((obj) => obj.key === action.task.key);
+      if (index !== -1) {
+        draft.list[index] = action.task;
+      }
+      break;
+    }
     case FILTER_TASKS_DATA:
-      return state.set('filter', payload.filterType || '');
+      draft.filter = action.filterType;
+      break;
     default:
-      return state;
+      break;
   }
-}
+});
 
 export default todoReducer;

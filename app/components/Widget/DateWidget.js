@@ -1,61 +1,60 @@
-import React, { Component } from 'react';
+import React, {
+  useState, useEffect, useCallback, useRef
+} from 'react';
 import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
 import Calendar from 'react-calendar';
 import Clock from 'react-clock';
+import 'enl-styles/vendors/react-clock/react-clock.css';
+import 'enl-styles/vendors/react-calendar/react-calendar.css';
 import styles from './widget-jss';
 
-class DateWidget extends Component {
-  state = {
-    date: new Date(),
-  }
+function DateWidget(props) {
+  const [date, setDate] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const timeInterval = useRef();
 
-  componentWillMount() {
-    this.setTime();
-  }
+  const setTime = useCallback(() => {
+    const datenow = new Date();
+    const timeOptions = { hour: '2-digit', minute: '2-digit', };
+    const time = datenow.toLocaleTimeString([], timeOptions);
+    setCurrentTime(time);
+  }, []);
 
-  componentDidMount() {
-    setInterval(
+  useEffect(() => {
+    timeInterval.current = setInterval(
       () => {
-        this.setState({ date: new Date() });
-        this.setTime();
+        setTime();
       },
       1000
     );
-  }
+  }, [setTime]);
 
-  onChange = date => this.setState({ date });
+  useEffect(() => () => {
+    timeInterval && timeInterval.current && clearInterval(timeInterval.current);
+  }, []);
 
-  setTime() {
-    const date = new Date();
-    const timeOptions = { hour: '2-digit', minute: '2-digit', };
-    const currentTime = date.toLocaleTimeString([], timeOptions);
+  const onChange = dateParams => setDate(dateParams);
 
-    this.setState({ currentTime });
-  }
-
-  render() {
-    const { classes } = this.props;
-    const { date, currentTime } = this.state;
-    return (
-      <Paper className={classes.wrapperDate}>
-        <section className={classes.calendarWrap}>
-          <Calendar
-            onChange={this.onChange}
-            value={date}
-          />
-        </section>
-        <section className={classes.clockWrap}>
-          <Clock
-            value={date}
-            renderSecondHand={false}
-          />
-          <h4 className={classes.today}>{currentTime}</h4>
-        </section>
-      </Paper>
-    );
-  }
+  const { classes } = props;
+  return (
+    <Paper className={classes.wrapperDate}>
+      <section className={classes.calendarWrap}>
+        <Calendar
+          onChange={onChange}
+          value={date}
+        />
+      </section>
+      <section className={classes.clockWrap}>
+        <Clock
+          value={date}
+          renderSecondHand={false}
+        />
+        <h4 className={classes.today}>{currentTime.toString()}</h4>
+      </section>
+    </Paper>
+  );
 }
 
 DateWidget.propTypes = {

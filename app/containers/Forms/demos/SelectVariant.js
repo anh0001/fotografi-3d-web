@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
@@ -28,122 +28,119 @@ const styles = theme => ({
   }
 });
 
-class SelectVariant extends React.Component {
-  state = {
+function SelectVariant(props) {
+  const { classes } = props;
+  const InputLabelRef = useRef(null);
+  const [dataState, setDataState] = useState({
     age: '',
-    labelWidth: 0,
-  };
+    labelWidth: 0
+  });
 
-  componentDidMount() {
-    this.setState({ // eslint-disable-line
-      labelWidth: ReactDOM.findDOMNode(this.InputLabelRef).offsetWidth, // eslint-disable-line
+  useEffect(() => {
+    setDataState({
+      labelWidth: ReactDOM.findDOMNode(InputLabelRef.current).offsetWidth, // eslint-disable-line
     });
-  }
+  }, []);
 
-  handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
+  const handleChange = event => {
+    setDataState({
+      ...dataState,
+      [event.target.name]: event.target.value
+    });
   };
 
-  render() {
-    const { classes } = this.props;
-    const { age, labelWidth } = this.state;
-
-    return (
-      <div className={classes.root}>
-        <Grid container spacing={3}>
-          <Grid item md={6} xs={12}>
-            <Typography variant="button" className={classes.label}>Material Selection</Typography>
-            <form className={classes.root} autoComplete="off">
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel
-                  ref={ref => {
-                    this.InputLabelRef = ref;
-                  }}
-                  htmlFor="outlined-age-simple"
-                >
-                  Age
-                </InputLabel>
-                <Select
-                  value={age}
-                  onChange={this.handleChange}
-                  input={(
-                    <OutlinedInput
-                      labelWidth={labelWidth}
-                      name="age"
-                      id="outlined-age-simple"
-                    />
-                  )}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl variant="filled" className={classes.formControl}>
-                <InputLabel htmlFor="filled-age-simple">Age</InputLabel>
-                <Select
-                  value={age}
-                  onChange={this.handleChange}
-                  input={<FilledInput name="age" id="filled-age-simple" />}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
-              </FormControl>
-            </form>
-          </Grid>
-          <Grid item md={6} xs={12}>
-            <Typography variant="button" className={classes.label}>Native Selection</Typography>
-            <div>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel htmlFor="outlined-age-native-simple">
-                  Age
-                </InputLabel>
-                <Select
-                  native
-                  value={age}
-                  onChange={this.handleChange}
-                  input={(
-                    <OutlinedInput
-                      name="age"
-                      labelWidth={labelWidth}
-                      id="outlined-age-native-simple"
-                    />
-                  )}
-                >
-                  <option value="" />
-                  <option value={10}>Ten</option>
-                  <option value={20}>Twenty</option>
-                  <option value={30}>Thirty</option>
-                </Select>
-              </FormControl>
-              <FormControl variant="filled" className={classes.formControl}>
-                <InputLabel htmlFor="filled-age-native-simple">Age</InputLabel>
-                <Select
-                  native
-                  value={age}
-                  onChange={this.handleChange}
-                  input={<FilledInput name="age" id="filled-age-native-simple" />}
-                >
-                  <option value="" />
-                  <option value={10}>Ten</option>
-                  <option value={20}>Twenty</option>
-                  <option value={30}>Thirty</option>
-                </Select>
-              </FormControl>
-            </div>
-          </Grid>
+  return (
+    <div className={classes.root}>
+      <Grid container spacing={3}>
+        <Grid item md={6} xs={12}>
+          <Typography variant="button" className={classes.label}>Material Selection</Typography>
+          <form className={classes.root} autoComplete="off">
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel
+                ref={InputLabelRef}
+                htmlFor="outlined-age-simple"
+              >
+                Age
+              </InputLabel>
+              <Select
+                value={dataState.age ? dataState.age : ''}
+                onChange={handleChange}
+                input={(
+                  <OutlinedInput
+                    labelWidth={dataState.labelWidth}
+                    name="age"
+                    id="outlined-age-simple"
+                  />
+                )}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value={10}>Ten</MenuItem>
+                <MenuItem value={20}>Twenty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl variant="filled" className={classes.formControl}>
+              <InputLabel htmlFor="filled-age-simple">Age</InputLabel>
+              <Select
+                value={dataState.age ? dataState.age : ''}
+                onChange={handleChange}
+                input={<FilledInput name="age" id="filled-age-simple" />}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value={10}>Ten</MenuItem>
+                <MenuItem value={20}>Twenty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem>
+              </Select>
+            </FormControl>
+          </form>
         </Grid>
-      </div>
-    );
-  }
+        <Grid item md={6} xs={12}>
+          <Typography variant="button" className={classes.label}>Native Selection</Typography>
+          <br />
+          <FormControl variant="outlined" className={classes.formControl}>
+            <InputLabel htmlFor="outlined-age-native-simple">
+              Age
+            </InputLabel>
+            <Select
+              native
+              value={dataState.age ? dataState.age : ''}
+              onChange={handleChange}
+              input={(
+                <OutlinedInput
+                  name="age"
+                  labelWidth={dataState.labelWidth}
+                  id="outlined-age-native-simple"
+                />
+              )}
+            >
+              <option value="" />
+              <option value={10}>Ten</option>
+              <option value={20}>Twenty</option>
+              <option value={30}>Thirty</option>
+            </Select>
+          </FormControl>
+          <FormControl variant="filled" className={classes.formControl}>
+            <InputLabel htmlFor="filled-age-native-simple">Age</InputLabel>
+            <Select
+              native
+              value={dataState.age ? dataState.age : ''}
+              onChange={handleChange}
+              input={<FilledInput name="age" id="filled-age-native-simple" />}
+            >
+              <option value="" />
+              <option value={10}>Ten</option>
+              <option value={20}>Twenty</option>
+              <option value={30}>Thirty</option>
+            </Select>
+          </FormControl>
+        </Grid>
+      </Grid>
+    </div>
+  );
 }
 
 SelectVariant.propTypes = {

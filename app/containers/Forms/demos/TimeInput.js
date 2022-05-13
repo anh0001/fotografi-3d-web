@@ -1,5 +1,5 @@
-import React, { Fragment, PureComponent } from 'react';
-import { KeyboardTimePicker, MuiPickersUtilsProvider, TimePicker } from '@material-ui/pickers';
+import React, { Fragment, useState } from 'react';
+import { TimePicker, KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
@@ -14,7 +14,6 @@ const styles = theme => ({
     height: 'auto',
   },
   divider: {
-    display: 'block',
     margin: `${theme.spacing(3)}px 0`,
   },
   picker: {
@@ -22,103 +21,98 @@ const styles = theme => ({
   }
 });
 
-class TimeInput extends PureComponent {
-  state = {
-    selectedDate: new Date(),
-  }
+function TimeInput(props) {
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
-  handleDateChange = (date) => {
-    this.setState({ selectedDate: date });
-  }
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
 
-  render() {
-    const { selectedDate } = this.state;
-    const { classes } = this.props;
-    return (
-      <Fragment>
+  const { classes } = props;
+  return (
+    <Fragment>
+      <Grid
+        container
+        alignItems="flex-start"
+        justifyContent="space-around"
+        direction="row"
+        spacing={3}
+      >
         <Grid
-          container
-          alignItems="flex-start"
-          justify="space-around"
-          direction="row"
-          spacing={3}
+          item
+          md={6}
+          className={classes.demo}
         >
-          <Grid
-            item
-            md={6}
-            className={classes.demo}
-          >
-            <Typography variant="button" className={classes.divider}>Basic usage</Typography>
-            <Typography className={classes.divider}>
-              A time picker should adjusts to a user’s preferred time setting, i.e. the 12-hour or 24-hour format.
-            </Typography>
-            <div className={classes.picker}>
-              <MuiPickersUtilsProvider utils={MomentUtils}>
-                <div className="picker">
-                  <TimePicker
-                    label="12 hours"
-                    value={selectedDate}
-                    onChange={this.handleDateChange}
-                  />
-                </div>
-              </MuiPickersUtilsProvider>
-            </div>
+          <Typography variant="button" className={classes.divider}>Basic usage</Typography>
+          <Typography className={classes.divider}>
+            A time picker should adjusts to a user’s preferred time setting, i.e. the 12-hour or 24-hour format.
+          </Typography>
+          <div className={classes.picker}>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <div className="picker">
+                <TimePicker
+                  label="12 hours"
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                />
+              </div>
+            </MuiPickersUtilsProvider>
+          </div>
 
-            <div className={classes.picker}>
-              <MuiPickersUtilsProvider utils={MomentUtils}>
-                <TimePicker
-                  clearable
-                  ampm={false}
-                  label="24 hours"
-                  value={selectedDate}
-                  onChange={this.handleDateChange}
-                />
-              </MuiPickersUtilsProvider>
-            </div>
-          </Grid>
-          <Grid
-            item
-            md={6}
-            className={classes.demo}
-          >
-            <Typography variant="button" className={classes.divider}>Keyboard Input</Typography>
-            <div className={classes.picker}>
-              <MuiPickersUtilsProvider utils={MomentUtils}>
-                <KeyboardTimePicker
-                  label="Masked timepicker"
-                  mask={[/\d/, /\d/, ':', /\d/, /\d/, ' ', /a|p/i, 'M']}
-                  placeholder="08:00 AM"
-                  value={selectedDate}
-                  onChange={this.handleDateChange}
-                />
-              </MuiPickersUtilsProvider>
-            </div>
-            <Typography variant="button" className={classes.divider}>Custom Icon</Typography>
-            <div className={classes.picker}>
-              <MuiPickersUtilsProvider utils={MomentUtils}>
-                <TimePicker
-                  label="Masked timepicker"
-                  mask={[/\d/, /\d/, ':', /\d/, /\d/, ' ', /a|p/i, 'M']}
-                  placeholder="08:00 AM"
-                  value={selectedDate}
-                  onChange={this.handleDateChange}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton>
-                          <Icon>access_time</Icon>
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </MuiPickersUtilsProvider>
-            </div>
-          </Grid>
+          <div className={classes.picker}>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <TimePicker
+                clearable
+                ampm={false}
+                label="24 hours"
+                value={selectedDate}
+                onChange={handleDateChange}
+              />
+            </MuiPickersUtilsProvider>
+          </div>
         </Grid>
-      </Fragment>
-    );
-  }
+        <Grid
+          item
+          md={6}
+          className={classes.demo}
+        >
+          <Typography variant="button" className={classes.divider}>Keyboard Input</Typography>
+          <div className={classes.picker}>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <KeyboardDatePicker
+                label="Masked timepicker"
+                mask={[/\d/, /\d/, ':', /\d/, /\d/, ' ', /a|p/i, 'M']}
+                placeholder="08:00 AM"
+                value={selectedDate}
+                onChange={handleDateChange}
+              />
+            </MuiPickersUtilsProvider>
+          </div>
+          <Typography variant="button" className={classes.divider}>Custom Icon</Typography>
+          <div className={classes.picker}>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <TimePicker
+                label="Masked timepicker"
+                mask={[/\d/, /\d/, ':', /\d/, /\d/, ' ', /a|p/i, 'M']}
+                placeholder="08:00 AM"
+                value={selectedDate}
+                onChange={handleDateChange}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton>
+                        <Icon>access_time</Icon>
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </MuiPickersUtilsProvider>
+          </div>
+        </Grid>
+      </Grid>
+    </Fragment>
+  );
 }
 
 TimeInput.propTypes = {

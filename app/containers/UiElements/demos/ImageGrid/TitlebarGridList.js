@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
+import ImageList from '@material-ui/core/ImageList';
+import ImageListItem from '@material-ui/core/ImageListItem';
+import ImageListItemBar from '@material-ui/core/ImageListItemBar';
 import Subheader from '@material-ui/core/ListSubheader';
 import IconButton from '@material-ui/core/IconButton';
 import InfoIcon from '@material-ui/icons/Info';
@@ -46,19 +46,19 @@ const styles = theme => ({
  *   },
  * ];
  */
-function TitlebarGridList(props) {
+function TitlebarImageList(props) {
   const { classes } = props;
 
   return (
     <div className={classes.root}>
-      <GridList cellHeight={180} className={classes.gridList}>
-        <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
+      <ImageList rowHeight={180} className={classes.gridList}>
+        <ImageListItem key="Subheader" cols={2} style={{ height: 'auto' }}>
           <Subheader component="div">December</Subheader>
-        </GridListTile>
+        </ImageListItem>
         {imgData.map((tile, index) => (
-          <GridListTile key={index.toString()}>
+          <ImageListItem key={index.toString()}>
             <img src={tile.img} className={classes.img} alt={tile.title} />
-            <GridListTileBar
+            <ImageListItemBar
               title={tile.title}
               subtitle={(
                 <span>
@@ -72,15 +72,15 @@ function TitlebarGridList(props) {
                 </IconButton>
               )}
             />
-          </GridListTile>
+          </ImageListItem>
         ))}
-      </GridList>
+      </ImageList>
     </div>
   );
 }
 
-TitlebarGridList.propTypes = {
+TitlebarImageList.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TitlebarGridList);
+export default withStyles(styles)(TitlebarImageList);

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -12,75 +12,101 @@ import ShoppingBasket from '@material-ui/icons/ShoppingBasket';
 import ThumbDown from '@material-ui/icons/ThumbDown';
 import ThumbUp from '@material-ui/icons/ThumbUp';
 import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 
-function TabContainer(props) {
-  const { children } = props;
+function TabPanel(props) {
+  const {
+    children, value, index, ...other
+  } = props;
+
   return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
-      {children}
-    </Typography>
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`scrollable-force-tabpanel-${index}`}
+      aria-labelledby={`scrollable-force-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
   );
 }
 
-TabContainer.propTypes = {
+TabPanel.propTypes = {
   children: PropTypes.node.isRequired,
+  index: PropTypes.any.isRequired,
+  value: PropTypes.any.isRequired,
 };
 
-const styles = theme => ({
+function a11yProps(index) {
+  return {
+    id: `scrollable-force-tab-${index}`,
+    'aria-controls': `scrollable-force-tabpanel-${index}`,
+  };
+}
+
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     width: '100%',
     backgroundColor: theme.palette.background.paper,
   },
-});
+}));
 
-class ScrollIconTabs extends React.Component {
-  state = {
-    value: 0,
+export default function ScrollableTabsButtonForce() {
+  const classes = useStyles();
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
   };
 
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
-
-  render() {
-    const { classes } = this.props;
-    const { value } = this.state;
-
-    return (
-      <div className={classes.root}>
-        <AppBar position="static" color="default">
-          <Tabs
-            value={value}
-            onChange={this.handleChange}
-            variant="scrollable"
-            scrollButtons="on"
-            indicatorColor="primary"
-            textColor="secondary"
-          >
-            <Tab label="Item One" icon={<PhoneIcon />} />
-            <Tab label="Item Two" icon={<FavoriteIcon />} />
-            <Tab label="Item Three" icon={<PersonPinIcon />} />
-            <Tab label="Item Four" icon={<HelpIcon />} />
-            <Tab label="Item Five" icon={<ShoppingBasket />} />
-            <Tab label="Item Six" icon={<ThumbDown />} />
-            <Tab label="Item Seven" icon={<ThumbUp />} />
-          </Tabs>
-        </AppBar>
-        {value === 0 && <TabContainer>Item One</TabContainer>}
-        {value === 1 && <TabContainer>Item Two</TabContainer>}
-        {value === 2 && <TabContainer>Item Three</TabContainer>}
-        {value === 3 && <TabContainer>Item Four</TabContainer>}
-        {value === 4 && <TabContainer>Item Five</TabContainer>}
-        {value === 5 && <TabContainer>Item Six</TabContainer>}
-        {value === 6 && <TabContainer>Item Seven</TabContainer>}
-      </div>
-    );
-  }
+  return (
+    <div className={classes.root}>
+      <AppBar position="static" color="default">
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          variant="scrollable"
+          scrollButtons="on"
+          indicatorColor="primary"
+          textColor="primary"
+          aria-label="scrollable force tabs example"
+        >
+          <Tab label="Item One" icon={<PhoneIcon />} {...a11yProps(0)} />
+          <Tab label="Item Two" icon={<FavoriteIcon />} {...a11yProps(1)} />
+          <Tab label="Item Three" icon={<PersonPinIcon />} {...a11yProps(2)} />
+          <Tab label="Item Four" icon={<HelpIcon />} {...a11yProps(3)} />
+          <Tab label="Item Five" icon={<ShoppingBasket />} {...a11yProps(4)} />
+          <Tab label="Item Six" icon={<ThumbDown />} {...a11yProps(5)} />
+          <Tab label="Item Seven" icon={<ThumbUp />} {...a11yProps(6)} />
+        </Tabs>
+      </AppBar>
+      <TabPanel value={value} index={0}>
+        Item One
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        Item Two
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        Item Three
+      </TabPanel>
+      <TabPanel value={value} index={3}>
+        Item Four
+      </TabPanel>
+      <TabPanel value={value} index={4}>
+        Item Five
+      </TabPanel>
+      <TabPanel value={value} index={5}>
+        Item Six
+      </TabPanel>
+      <TabPanel value={value} index={6}>
+        Item Seven
+      </TabPanel>
+    </div>
+  );
 }
-
-ScrollIconTabs.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(ScrollIconTabs);

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { createMuiTheme, withStyles } from '@material-ui/core/styles';
+import { createTheme, withStyles } from '@material-ui/core/styles';
 import ThemePallete from 'enl-api/palette/themePalette';
 import {
   BarChart,
@@ -17,7 +17,7 @@ import {
 import { data1 } from './sampleData';
 import styles from './fluidChart-jss';
 
-const theme = createMuiTheme(ThemePallete.purpleTheme);
+const theme = createTheme(ThemePallete.purpleTheme);
 const color = ({
   primary: theme.palette.primary.main,
   secondary: theme.palette.secondary.main,
@@ -46,21 +46,21 @@ renderCustomizedLabel.propTypes = {
   x: PropTypes.number,
   y: PropTypes.number,
   width: PropTypes.number,
-  value: PropTypes.number,
+  value: PropTypes.string,
 };
 
 renderCustomizedLabel.defaultProps = {
   x: 0,
   y: 0,
   width: 0,
-  value: 0,
+  value: '',
 };
 
 function BarCustomLabel(props) {
   const { classes } = props;
   return (
     <div className={classes.chartFluid}>
-      <ResponsiveContainer>
+      <ResponsiveContainer width={800} height="80%">
         <BarChart
           width={800}
           height={450}

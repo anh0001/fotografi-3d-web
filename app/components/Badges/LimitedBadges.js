@@ -1,21 +1,19 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Badge from '@material-ui/core/Badge';
 
-class LimitedBadges extends PureComponent {
-  render() {
-    const {
-      children,
-      limit,
-      value,
-      ...rest
-    } = this.props;
-    return (
-      <Badge badgeContent={value > limit ? limit + '+' : value} {...rest}>
-        { children }
-      </Badge>
-    );
-  }
+function LimitedBadges(props) {
+  const {
+    children,
+    limit,
+    value,
+    ...rest
+  } = props;
+  return (
+    <Badge badgeContent={value > limit ? limit + '+' : value} {...rest}>
+      { children }
+    </Badge>
+  );
 }
 
 LimitedBadges.propTypes = {

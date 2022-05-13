@@ -4,7 +4,7 @@ const connectionData = [
   {
     cover: imgApi[41],
     avatar: avatarApi[6],
-    name: 'Guest',
+    name: 'John Doe',
     title: 'UX Designer',
     connection: 203,
     verified: false

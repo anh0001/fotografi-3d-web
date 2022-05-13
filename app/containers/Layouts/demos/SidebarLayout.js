@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
@@ -32,6 +32,7 @@ const styles = theme => ({
     }),
   },
   appBarShift: {
+    marginLeft: 0,
     width: '100%',
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
@@ -43,6 +44,7 @@ const styles = theme => ({
     },
   },
   menuButton: {
+    marginLeft: 0,
     marginRight: 36,
   },
   drawerPaper: {
@@ -80,91 +82,85 @@ const styles = theme => ({
   },
 });
 
-class SidebarLayout extends React.Component {
-  state = {
-    open: true,
+function SidebarLayout(props) {
+  const [open, setOpen] = useState(true);
+
+  const resize = () => {
+    setOpen(window.innerWidth >= 760);
   };
 
-  componentDidMount() {
-    window.addEventListener('resize', this.resize.bind(this));
-    this.resize();
-  }
+  useEffect(() => {
+    window.addEventListener('resize', resize.bind(this));
+    resize();
+  }, []);
 
-  handleDrawerToggle = () => {
-    const { open } = this.state;
-    this.setState({ open: !open });
+  const handleDrawerToggle = () => {
+    setOpen(!open);
   };
 
-  resize() {
-    this.setState({ open: window.innerWidth >= 760 });
-  }
-
-  render() {
-    const { classes } = this.props;
-    const { open } = this.state;
-    const drawer = (
-      <div>
-        <div className={classes.toolbar} />
-        <Divider />
-        <List>{mailFolderListItems}</List>
-        <Divider />
-        <List>{otherMailFolderListItems}</List>
-      </div>
-    );
-    return (
-      <div className={classes.root}>
-        <AppBar
-          position="absolute"
-          className={classNames(classes.appBar, open && classes.appBarShift)}
+  const { classes } = props;
+  const drawer = (
+    <div>
+      <div className={classes.toolbar} />
+      <Divider />
+      <List>{mailFolderListItems}</List>
+      <Divider />
+      <List>{otherMailFolderListItems}</List>
+    </div>
+  );
+  return (
+    <div className={classes.root}>
+      <AppBar
+        position="absolute"
+        className={classNames(classes.appBar, open && classes.appBarShift)}
+      >
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={() => handleDrawerToggle()}
+            className={classNames(classes.menuButton)}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" color="inherit" noWrap>
+            App Layout with Sidebar
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Hidden mdUp>
+        <Drawer
+          variant="temporary"
+          anchor="left"
+          open={open}
+          onClose={() => handleDrawerToggle()}
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
         >
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={this.handleDrawerToggle}
-              className={classNames(classes.menuButton)}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" color="inherit" noWrap>
-              App Layout with Sidebar
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <Hidden mdUp>
-          <Drawer
-            variant="temporary"
-            anchor="left"
-            open={open}
-            onClose={this.handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden smDown implementation="css">
-          <Drawer
-            variant="permanent"
-            classes={{
-              paper: classNames(classes.drawerPaper, !open && classes.drawerPaperClose),
-            }}
-            open={open}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <main className={classes.content}>
-          <div className={classes.toolbar} />
-          <Typography noWrap>Your App Content</Typography>
-        </main>
-      </div>
-    );
-  }
+          {drawer}
+        </Drawer>
+      </Hidden>
+      <Hidden smDown implementation="css">
+        <Drawer
+          variant="permanent"
+          classes={{
+            paper: classNames(classes.drawerPaper, !open && classes.drawerPaperClose),
+          }}
+          open={open}
+        >
+          {drawer}
+        </Drawer>
+      </Hidden>
+      <main className={classes.content}>
+        <div className={classes.toolbar} />
+        <Typography noWrap>Your App Content</Typography>
+      </main>
+    </div>
+  );
 }
 
 SidebarLayout.propTypes = {

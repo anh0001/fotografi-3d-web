@@ -1,4 +1,4 @@
-import { fade } from '@material-ui/core/styles/colorManipulator';
+import { alpha } from '@material-ui/core/styles';
 import deepOrange from '@material-ui/core/colors/deepOrange';
 import deepPurple from '@material-ui/core/colors/deepPurple';
 import pink from '@material-ui/core/colors/pink';
@@ -49,11 +49,17 @@ const styles = theme => ({
   img: {
     maxWidth: 'none'
   },
-  root: theme.mixins.gutters({
+  root: {
+    marginTop: theme.spacing(3),
     paddingTop: 16,
     paddingBottom: 16,
-    marginTop: theme.spacing(3),
-  }),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      paddingLeft: theme.spacing(3),
+      paddingRight: theme.spacing(3),
+    },
+  },
   progressRoot: {
     marginBottom: theme.spacing(3),
   },
@@ -175,7 +181,7 @@ const styles = theme => ({
       color: `${theme.palette.common.white} !important`,
     },
     '& > div': {
-      borderColor: fade(theme.palette.common.white, 0.6),
+      borderColor: alpha(theme.palette.common.white, 0.6),
     }
   },
 });

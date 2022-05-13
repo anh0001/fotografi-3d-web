@@ -6,47 +6,46 @@ import Hidden from '@material-ui/core/Hidden';
 import EmailMenu from './EmailMenu';
 import styles from './email-jss';
 
-class EmailSidebar extends React.Component {
-  render() {
-    const {
-      classes,
-      compose,
-      goto,
-      selected,
-      handleDrawerToggle,
-      mobileOpen
-    } = this.props;
-    return (
-      <Fragment>
-        <Hidden mdUp>
-          <Drawer
-            variant="temporary"
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-          >
-            <EmailMenu compose={compose} goto={goto} onClose={handleDrawerToggle} selected={selected} />
-          </Drawer>
-        </Hidden>
-        <Hidden smDown>
-          <Drawer
-            variant="permanent"
-            className={classes.sidebar}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-          >
-            <EmailMenu compose={compose} goto={goto} selected={selected} />
-          </Drawer>
-        </Hidden>
-      </Fragment>
-    );
-  }
+function EmailSidebar(props) {
+  const {
+    classes,
+    compose,
+    goto,
+    selected,
+    handleDrawerToggle,
+    mobileOpen
+  } = props;
+
+  return (
+    <Fragment>
+      <Hidden mdUp>
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+        >
+          <EmailMenu compose={compose} goto={goto} onClose={handleDrawerToggle} selected={selected} />
+        </Drawer>
+      </Hidden>
+      <Hidden smDown>
+        <Drawer
+          variant="permanent"
+          className={classes.sidebar}
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+        >
+          <EmailMenu compose={compose} goto={goto} selected={selected} />
+        </Drawer>
+      </Hidden>
+    </Fragment>
+  );
 }
 
 EmailSidebar.propTypes = {

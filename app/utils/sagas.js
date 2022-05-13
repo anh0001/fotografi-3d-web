@@ -4,7 +4,6 @@ import contactSagas from 'enl-containers/SampleFullstackApps/Contact/reducers/co
 import emailSagas from 'enl-containers/SampleFullstackApps/Email/reducers/emailSagas';
 import authSagas from 'enl-redux/modules/authSagas';
 
-
 export default function* sagas() {
   yield all([
     ...authSagas,

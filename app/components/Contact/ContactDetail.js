@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
@@ -24,7 +24,7 @@ import LocationOn from '@material-ui/icons/LocationOn';
 import Work from '@material-ui/icons/Work';
 import Language from '@material-ui/icons/Language';
 import Divider from '@material-ui/core/Divider';
-import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import PlaceLoader from './PlaceLoader';
 import messages from './messages';
 import styles from './contact-jss';
@@ -37,138 +37,124 @@ const optionsOpt = [
 
 const ITEM_HEIGHT = 48;
 
-class ContactDetail extends React.Component {
-  state = {
-    anchorElOpt: null,
-  };
-
-  handleClickOpt = event => {
-    this.setState({ anchorElOpt: event.currentTarget });
-  };
-
-  handleCloseOpt = () => {
-    this.setState({ anchorElOpt: null });
-  };
-
-  deleteContact = (item) => {
-    const { remove } = this.props;
+function ContactDetail(props) {
+  const {
+    classes,
+    dataContact,
+    itemSelected,
+    edit,
+    showMobileDetail,
+    hideDetail,
+    loading,
+    intl,
+    remove,
+    favorite
+  } = props;
+  const [anchorElOpt, setAnchorElOpt] = useState(null);
+  const handleClickOpt = event => setAnchorElOpt(event.currentTarget);
+  const handleCloseOpt = () => setAnchorElOpt(null);
+  const deleteContact = (item) => {
     remove(item);
-    this.setState({ anchorElOpt: null });
-  }
-
-  toggleFavorite = index => {
-    const { favorite, dataContact } = this.props;
-    const contact = dataContact.get(index);
-    favorite(contact, { favorited: !contact.get('favorited') });
-  }
-
-  render() {
-    const {
-      classes,
-      dataContact,
-      itemSelected,
-      edit,
-      showMobileDetail,
-      hideDetail,
-      loading,
-      intl
-    } = this.props;
-    const { anchorElOpt } = this.state;
-    return (
-      <main className={classNames(classes.content, showMobileDetail ? classes.detailPopup : '')}>
-        <section className={classes.cover}>
-          <div className={classes.opt}>
-            <IconButton className={classes.favorite} aria-label="Favorite" onClick={() => this.toggleFavorite(itemSelected)}>
-              {dataContact.getIn([itemSelected, 'favorited']) ? (<Star />) : <StarBorder />}
+    setAnchorElOpt(null);
+  };
+  return (
+    <main className={classNames(classes.content, showMobileDetail ? classes.detailPopup : '')}>
+      <section className={classes.cover}>
+        <div className={classes.opt}>
+          {dataContact[itemSelected] && (
+            <IconButton className={classes.favorite} aria-label="Favorite" onClick={() => favorite(dataContact[itemSelected])}>
+              {dataContact[itemSelected].favorited ? (<Star />) : <StarBorder />}
             </IconButton>
-            <IconButton aria-label="Edit" onClick={() => edit(dataContact.get(itemSelected))}>
-              <Edit />
-            </IconButton>
-            <IconButton
-              aria-label="More"
-              aria-owns={anchorElOpt ? 'long-menu' : null}
-              aria-haspopup="true"
-              className={classes.button}
-              onClick={this.handleClickOpt}
-            >
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              id="long-menu"
-              anchorEl={anchorElOpt}
-              open={Boolean(anchorElOpt)}
-              onClose={this.handleCloseOpt}
-              PaperProps={{
-                style: {
-                  maxHeight: ITEM_HEIGHT * 4.5,
-                  width: 200,
-                },
-              }}
-            >
-              <MenuItem onClick={this.handleCloseOpt}>
-                <FormattedMessage {...messages.block} />
-              </MenuItem>
-              <MenuItem onClick={() => this.deleteContact(dataContact.get(itemSelected))}>
-                <FormattedMessage {...messages.delete} />
-              </MenuItem>
-              {optionsOpt.map(option => (
-                <MenuItem key={option} onClick={this.handleCloseOpt}>
-                  {option}
-                </MenuItem>
-              ))}
-            </Menu>
-          </div>
-          <IconButton
-            onClick={hideDetail}
-            className={classes.navIconHide}
-            aria-label="Back"
-          >
-            <ArrowBack />
+          )}
+          <IconButton aria-label="Edit" onClick={() => edit(dataContact[itemSelected])}>
+            <Edit />
           </IconButton>
-          <Hidden xsDown>
-            {loading
-              ? (
-                <div className={classes.placeLoaderCover}>
-                  <PlaceLoader loop={1} />
-                </div>
-              )
-              : (
-                <Fragment>
-                  <Avatar alt={dataContact.getIn([itemSelected, 'name'])} src={dataContact.getIn([itemSelected, 'avatar'])} className={classes.avatar} />
-                  <Typography className={classes.userName} variant="h6">
-                    {dataContact.getIn([itemSelected, 'name'])}
-                    <div>
-                      <Typography variant="caption">
-                        {dataContact.getIn([itemSelected, 'title'])}
-                      </Typography>
-                    </div>
-                  </Typography>
-                </Fragment>
-              )
-            }
-          </Hidden>
-        </section>
-        <div>
-          <Hidden smUp>
-            {loading
-              ? (
-                <div className={classes.placeLoaderCover}>
-                  <PlaceLoader loop={1} />
-                </div>
-              )
-              : (
-                <div className={classes.avatarTop}>
-                  <Avatar alt={dataContact.getIn([itemSelected, 'name'])} src={dataContact.getIn([itemSelected, 'avatar'])} className={classes.avatar} />
-                  <Typography variant="h5">
-                    {dataContact.getIn([itemSelected, 'name'])}
-                    <Typography>
-                      {dataContact.getIn([itemSelected, 'title'])}
+          <IconButton
+            aria-label="More"
+            aria-owns={anchorElOpt ? 'long-menu' : null}
+            aria-haspopup="true"
+            className={classes.button}
+            onClick={handleClickOpt}
+          >
+            <MoreVertIcon />
+          </IconButton>
+          <Menu
+            id="long-menu"
+            anchorEl={anchorElOpt}
+            open={Boolean(anchorElOpt)}
+            onClose={handleCloseOpt}
+            PaperProps={{
+              style: {
+                maxHeight: ITEM_HEIGHT * 4.5,
+                width: 200,
+              },
+            }}
+          >
+            <MenuItem onClick={handleCloseOpt}>
+              <FormattedMessage {...messages.block} />
+            </MenuItem>
+            <MenuItem onClick={() => deleteContact(dataContact[itemSelected])}>
+              <FormattedMessage {...messages.delete} />
+            </MenuItem>
+            {optionsOpt.map(option => (
+              <MenuItem key={option} onClick={handleCloseOpt}>
+                {option}
+              </MenuItem>
+            ))}
+          </Menu>
+        </div>
+        <IconButton
+          onClick={hideDetail}
+          className={classes.navIconHide}
+          aria-label="Back"
+        >
+          <ArrowBack />
+        </IconButton>
+        <Hidden xsDown>
+          {!loading && dataContact.length > 0
+            ? (
+              <Fragment>
+                <Avatar alt={dataContact[itemSelected].name} src={dataContact[itemSelected].avatar} className={classes.avatar} />
+                <Typography className={classes.userName} variant="h6">
+                  {dataContact[itemSelected].name}
+                  <div>
+                    <Typography variant="caption">
+                      {dataContact[itemSelected].title}
                     </Typography>
+                  </div>
+                </Typography>
+              </Fragment>
+            )
+            : (
+              <div className={classes.placeLoaderCover}>
+                <PlaceLoader loop={1} />
+              </div>
+            )
+          }
+        </Hidden>
+      </section>
+      <div>
+        <Hidden smUp>
+          {!loading && dataContact.length > 0
+            ? (
+              <div className={classes.avatarTop}>
+                <Avatar alt={dataContact[itemSelected].name} src={dataContact[itemSelected].avatar} className={classes.avatar} />
+                <Typography variant="h5">
+                  {dataContact[itemSelected].name}
+                  <Typography>
+                    {dataContact[itemSelected].title}
                   </Typography>
-                </div>
-              )
-            }
-          </Hidden>
+                </Typography>
+              </div>
+            )
+            : (
+              <div className={classes.placeLoaderCover}>
+                <PlaceLoader loop={1} />
+              </div>
+            )
+          }
+        </Hidden>
+        {dataContact.length > 0 && (
           <List className={classes.detailContact}>
             <ListItem>
               <ListItemAvatar>
@@ -176,7 +162,7 @@ class ContactDetail extends React.Component {
                   <LocalPhone />
                 </Avatar>
               </ListItemAvatar>
-              <ListItemText primary={dataContact.getIn([itemSelected, 'phone'])} secondary={intl.formatMessage(messages.phone)} />
+              <ListItemText primary={dataContact[itemSelected].phone} secondary={intl.formatMessage(messages.phone)} />
             </ListItem>
             <Divider />
             <ListItem>
@@ -185,7 +171,7 @@ class ContactDetail extends React.Component {
                   <Smartphone />
                 </Avatar>
               </ListItemAvatar>
-              <ListItemText primary={dataContact.getIn([itemSelected, 'secondaryPhone'])} secondary={intl.formatMessage(messages.secondary_phone)} />
+              <ListItemText primary={dataContact[itemSelected].secondaryPhone} secondary={intl.formatMessage(messages.secondary_phone)} />
             </ListItem>
             <Divider />
             <ListItem>
@@ -194,7 +180,7 @@ class ContactDetail extends React.Component {
                   <Email />
                 </Avatar>
               </ListItemAvatar>
-              <ListItemText primary={dataContact.getIn([itemSelected, 'personalEmail'])} secondary={intl.formatMessage(messages.personal_email)} />
+              <ListItemText primary={dataContact[itemSelected].personalEmail} secondary={intl.formatMessage(messages.personal_email)} />
             </ListItem>
             <Divider />
             <ListItem>
@@ -203,7 +189,7 @@ class ContactDetail extends React.Component {
                   <Work />
                 </Avatar>
               </ListItemAvatar>
-              <ListItemText primary={dataContact.getIn([itemSelected, 'companyEmail'])} secondary={intl.formatMessage(messages.company_email)} />
+              <ListItemText primary={dataContact[itemSelected].companyEmail} secondary={intl.formatMessage(messages.company_email)} />
             </ListItem>
             <Divider />
             <ListItem>
@@ -212,7 +198,7 @@ class ContactDetail extends React.Component {
                   <LocationOn />
                 </Avatar>
               </ListItemAvatar>
-              <ListItemText primary={dataContact.getIn([itemSelected, 'address'])} secondary={intl.formatMessage(messages.address)} />
+              <ListItemText primary={dataContact[itemSelected].address} secondary={intl.formatMessage(messages.address)} />
             </ListItem>
             <Divider />
             <ListItem>
@@ -221,26 +207,26 @@ class ContactDetail extends React.Component {
                   <Language />
                 </Avatar>
               </ListItemAvatar>
-              <ListItemText primary={dataContact.getIn([itemSelected, 'website'])} secondary={intl.formatMessage(messages.website)} />
+              <ListItemText primary={dataContact[itemSelected].website} secondary={intl.formatMessage(messages.website)} />
             </ListItem>
           </List>
-        </div>
-      </main>
-    );
-  }
+        )}
+      </div>
+    </main>
+  );
 }
 
 ContactDetail.propTypes = {
   classes: PropTypes.object.isRequired,
   showMobileDetail: PropTypes.bool.isRequired,
   loading: PropTypes.bool,
-  dataContact: PropTypes.object.isRequired,
+  dataContact: PropTypes.array.isRequired,
   itemSelected: PropTypes.number.isRequired,
   edit: PropTypes.func.isRequired,
   remove: PropTypes.func.isRequired,
   favorite: PropTypes.func.isRequired,
   hideDetail: PropTypes.func.isRequired,
-  intl: intlShape.isRequired,
+  intl: PropTypes.object.isRequired,
 };
 
 ContactDetail.defaultProps = {

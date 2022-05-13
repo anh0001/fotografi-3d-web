@@ -1,4 +1,4 @@
-import { fromJS, List } from 'immutable';
+import produce from 'immer';
 import MenuContent from 'enl-api/ui/menu';
 import {
   TOGGLE_SIDEBAR,
@@ -8,7 +8,8 @@ import {
   CHANGE_MODE,
   CHANGE_LAYOUT,
   CHANGE_DIRECTION,
-  LOAD_PAGE
+  LOAD_PAGE,
+  CLOSE_MENU
 } from '../constants/uiConstants';
 
 const initialState = {
@@ -18,7 +19,7 @@ const initialState = {
   direction: 'ltr', // ltr or rtl
   layout: 'big-sidebar', // sidebar, big-sidebar, top-navigation, mega-menu
   /* End settings */
-  palette: List([
+  palette: [
     { name: 'Red', value: 'redTheme' },
     { name: 'Green', value: 'greenTheme' },
     { name: 'Blue', value: 'blueTheme' },
@@ -28,8 +29,8 @@ const initialState = {
     { name: 'Green Light', value: 'lightGreenTheme' },
     { name: 'Blue Light', value: 'lightBlueTheme' },
     { name: 'Brown', value: 'brownTheme' },
-  ]),
-  sidebarOpen: false,
+  ],
+  sidebarOpen: true,
   pageLoaded: false,
   subMenuOpen: []
 };
@@ -53,65 +54,63 @@ const setNavCollapse = (arr, curRoute) => {
   return headMenu;
 };
 
-const initialImmutableState = fromJS(initialState);
-
-export default function reducer(state = initialImmutableState, action = {}) {
+/* eslint-disable default-case, no-param-reassign */
+const uiReducer = (state = initialState, action = {}) => produce(state, draft => {
   switch (action.type) {
     case TOGGLE_SIDEBAR:
-      return state.withMutations((mutableState) => {
-        mutableState.set('sidebarOpen', !state.get('sidebarOpen'));
-      });
+      draft.sidebarOpen = !state.sidebarOpen;
+      break;
     case OPEN_MENU:
-      return state.withMutations((mutableState) => {
-        mutableState.set('sidebarOpen', true);
-      });
-    case OPEN_SUBMENU:
-      return state.withMutations((mutableState) => {
-        // Set initial open parent menu
-        const activeParent = setNavCollapse(
-          getMenus(MenuContent),
-          action.initialLocation
-        );
+      draft.sidebarOpen = true;
+      break;
+    case CLOSE_MENU:
+      draft.sidebarOpen = false;
+      draft.subMenuOpen = [];
+      break;
+    case OPEN_SUBMENU: {
+      // Set initial open parent menu
+      const activeParent = setNavCollapse(
+        getMenus(MenuContent),
+        action.initialLocation
+      );
 
-        // Once page loaded will expand the parent menu
-        if (action.initialLocation) {
-          mutableState.set('subMenuOpen', List([activeParent]));
-          return;
+      // Once page loaded will expand the parent menu
+      if (action.initialLocation) {
+        draft.subMenuOpen = [activeParent];
+        const path = action.initialLocation.split('/');
+        if (path.length <= 3 && action.initialLocation !== '/app') {
+          draft.sidebarOpen = false;
         }
+        return;
+      }
 
-        // Expand / Collapse parent menu
-        const menuList = state.get('subMenuOpen');
-        if (menuList.indexOf(action.key) > -1) {
-          if (action.keyParent) {
-            mutableState.set('subMenuOpen', List([action.keyParent]));
-          } else {
-            mutableState.set('subMenuOpen', List([]));
-          }
-        } else {
-          mutableState.set('subMenuOpen', List([action.key, action.keyParent]));
-        }
-      });
+      // Expand / Collapse parent menu
+      const menuList = state.subMenuOpen;
+      if (menuList.indexOf(action.key) > -1) {
+        draft.subMenuOpen = [];
+      } else {
+        draft.subMenuOpen = [action.key, action.keyParent];
+      }
+      break;
+    }
     case CHANGE_THEME:
-      return state.withMutations((mutableState) => {
-        mutableState.set('theme', action.theme);
-      });
+      draft.theme = action.theme;
+      break;
     case CHANGE_MODE:
-      return state.withMutations((mutableState) => {
-        mutableState.set('type', action.mode);
-      });
+      draft.type = action.mode;
+      break;
     case CHANGE_LAYOUT:
-      return state.withMutations((mutableState) => {
-        mutableState.set('layout', action.layout);
-      });
+      draft.layout = action.layout;
+      break;
     case CHANGE_DIRECTION:
-      return state.withMutations((mutableState) => {
-        mutableState.set('direction', action.direction);
-      });
+      draft.direction = action.direction;
+      break;
     case LOAD_PAGE:
-      return state.withMutations((mutableState) => {
-        mutableState.set('pageLoaded', action.isLoaded);
-      });
+      draft.pageLoaded = action.isLoaded;
+      break;
     default:
-      return state;
+      break;
   }
-}
+});
+
+export default uiReducer;

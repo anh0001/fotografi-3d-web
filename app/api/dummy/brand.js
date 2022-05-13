@@ -1,7 +1,7 @@
 module.exports = {
-  name: 'Nge-Labs',
-  desc: 'Empowering Your Labs',
-  prefix: 'nge-labs',
-  footerText: 'Nge-Labs All Rights Reserved 2020',
-  logoText: 'Nge-Labs',
+  name: 'Enlite Prime',
+  desc: 'Enlite Prime - React.js Fullstack Template',
+  prefix: 'enlite',
+  footerText: 'Enlite Prime All Rights Reserved 2020',
+  logoText: 'Enlite Prime',
 };

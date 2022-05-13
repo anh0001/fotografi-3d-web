@@ -1,14 +1,12 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { WeatherWidget } from 'enl-components';
 
-class WeatherStatus extends PureComponent {
-  render() {
-    return (
-      <div>
-        <WeatherWidget status="cloud" city="Bandung" temp={18} />
-      </div>
-    );
-  }
+function WeatherStatus() {
+  return (
+    <div>
+      <WeatherWidget status="cloud" city="Bandung" temp={18} />
+    </div>
+  );
 }
 
 export default WeatherStatus;

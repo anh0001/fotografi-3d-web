@@ -1,442 +1,297 @@
-import Loadable from 'react-loadable';
+import React from 'react';
 import Loading from 'enl-components/Loading';
+import loadable from '../utils/loadable';
 
 // Landing Page
-export const HomePage = Loadable({
-  loader: () => import('./LandingPage/HomePage'),
-  loading: Loading,
+export const HomePage = loadable(() => import('./LandingPage/HomePage'), {
+  fallback: <Loading />,
 });
 // Dashboard
-export const AnalyticDashboard = Loadable({
-  loader: () => import('./Dashboard/AnalyticDashboard'),
-  loading: Loading,
+export const AnalyticDashboard = loadable(() => import('./Dashboard/AnalyticDashboard'), {
+  fallback: <Loading />,
 });
-export const MarketingDashboard = Loadable({
-  loader: () => import('./Dashboard/MarketingDashboard'),
-  loading: Loading,
+export const MarketingDashboard = loadable(() => import('./Dashboard/MarketingDashboard'), {
+  fallback: <Loading />,
 });
-export const CryptoDashboard = Loadable({
-  loader: () => import('./Dashboard/CryptoDashboard'),
-  loading: Loading,
+export const CryptoDashboard = loadable(() => import('./Dashboard/CryptoDashboard'), {
+  fallback: <Loading />,
 });
 
 // Layouts
-export const Infographics = Loadable({
-  loader: () => import('./Widgets/Infographics'),
-  loading: Loading,
+export const Infographics = loadable(() => import('./Widgets/Infographics'), {
+  fallback: <Loading />,
 });
-export const MiniApps = Loadable({
-  loader: () => import('./Widgets/MiniApps'),
-  loading: Loading,
+export const MiniApps = loadable(() => import('./Widgets/MiniApps'), {
+  fallback: <Loading />,
 });
-export const Analytics = Loadable({
-  loader: () => import('./Widgets/Analytics'),
-  loading: Loading,
+export const Analytics = loadable(() => import('./Widgets/Analytics'), {
+  fallback: <Loading />,
 });
-export const Gallery = Loadable({
-  loader: () => import('./Widgets/Gallery'),
-  loading: Loading,
+export const Gallery = loadable(() => import('./Widgets/Gallery'), {
+  fallback: <Loading />,
 });
-export const Status = Loadable({
-  loader: () => import('./Widgets/Status'),
-  loading: Loading,
+export const Status = loadable(() => import('./Widgets/Status'), {
+  fallback: <Loading />,
 });
 
 // Layouts
-export const AppLayout = Loadable({
-  loader: () => import('./Layouts/AppLayout'),
-  loading: Loading,
+export const AppLayout = loadable(() => import('./Layouts/AppLayout'), {
+  fallback: <Loading />,
 });
-export const Responsive = Loadable({
-  loader: () => import('./Layouts/Responsive'),
-  loading: Loading,
+export const Responsive = loadable(() => import('./Layouts/Responsive'), {
+  fallback: <Loading />,
 });
-export const Grid = Loadable({
-  loader: () => import('./Layouts/Grid'),
-  loading: Loading,
+export const Grid = loadable(() => import('./Layouts/Grid'), {
+  fallback: <Loading />,
 });
 
 // Tables
-export const SimpleTable = Loadable({
-  loader: () => import('./Tables/BasicTable'),
-  loading: Loading,
+export const SimpleTable = loadable(() => import('./Tables/BasicTable'), {
+  fallback: <Loading />,
 });
-export const AdvancedTable = Loadable({
-  loader: () => import('./Tables/AdvancedTable'),
-  loading: Loading,
+export const AdvancedTable = loadable(() => import('./Tables/AdvancedTable'), {
+  fallback: <Loading />,
 });
-export const EditableCell = Loadable({
-  loader: () => import('./Tables/EditableCell'),
-  loading: Loading,
+export const EditableCell = loadable(() => import('./Tables/EditableCell'), {
+  fallback: <Loading />,
 });
-export const TreeTable = Loadable({
-  loader: () => import('./Tables/TreeTable'),
-  loading: Loading,
+export const TreeTable = loadable(() => import('./Tables/TreeTable'), {
+  fallback: <Loading />,
 });
-export const TablePlayground = Loadable({
-  loader: () => import('./Tables/TablePlayground'),
-  loading: Loading,
+export const TablePlayground = loadable(() => import('./Tables/TablePlayground'), {
+  fallback: <Loading />,
 });
 
 // Forms
-export const ReduxForm = Loadable({
-  loader: () => import('./Forms/ReduxForm'),
-  loading: Loading,
+export const ReduxForm = loadable(() => import('./Forms/ReduxForm'), {
+  fallback: <Loading />,
 });
-export const DateTimePicker = Loadable({
-  loader: () => import('./Forms/DateTimePicker'),
-  loading: Loading,
+export const DateTimePicker = loadable(() => import('./Forms/DateTimePicker'), {
+  fallback: <Loading />,
 });
-export const CheckboxRadio = Loadable({
-  loader: () => import('./Forms/CheckboxRadio'),
-  loading: Loading,
+export const CheckboxRadio = loadable(() => import('./Forms/CheckboxRadio'), {
+  fallback: <Loading />,
 });
-export const Switches = Loadable({
-  loader: () => import('./Forms/Switches'),
-  loading: Loading,
+export const Switches = loadable(() => import('./Forms/Switches'), {
+  fallback: <Loading />,
 });
-export const Selectbox = Loadable({
-  loader: () => import('./Forms/Selectbox'),
-  loading: Loading,
+export const Selectbox = loadable(() => import('./Forms/Selectbox'), {
+  fallback: <Loading />,
 });
-export const SliderRange = Loadable({
-  loader: () => import('./Forms/SliderRange'),
-  loading: Loading,
+export const SliderRange = loadable(() => import('./Forms/SliderRange'), {
+  fallback: <Loading />,
 });
-export const Buttons = Loadable({
-  loader: () => import('./Forms/Buttons'),
-  loading: Loading,
+export const Buttons = loadable(() => import('./Forms/Buttons'), {
+  fallback: <Loading />,
 });
-export const ToggleButton = Loadable({
-  loader: () => import('./Forms/ToggleButton'),
-  loading: Loading,
+export const ToggleButton = loadable(() => import('./Forms/ToggleButton'), {
+  fallback: <Loading />,
 });
-export const Textbox = Loadable({
-  loader: () => import('./Forms/Textbox'),
-  loading: Loading,
+export const Textbox = loadable(() => import('./Forms/Textbox'), {
+  fallback: <Loading />,
 });
-export const Autocomplete = Loadable({
-  loader: () => import('./Forms/Autocomplete'),
-  loading: Loading,
+export const Autocomplete = loadable(() => import('./Forms/Autocomplete'), {
+  fallback: <Loading />,
 });
-export const TextEditor = Loadable({
-  loader: () => import('./Forms/TextEditor'),
-  loading: Loading,
+export const TextEditor = loadable(() => import('./Forms/TextEditor'), {
+  fallback: <Loading />,
 });
-export const Upload = Loadable({
-  loader: () => import('./Forms/Upload'),
-  loading: Loading,
+export const Upload = loadable(() => import('./Forms/Upload'), {
+  fallback: <Loading />,
+});
+export const DialButton = loadable(() => import('./Forms/DialButton'), {
+  fallback: <Loading />,
 });
 
 // UI Components
-export const Badges = Loadable({
-  loader: () => import('./UiElements/Badges'),
-  loading: Loading,
+export const Badges = loadable(() => import('./UiElements/Badges'), {
+  fallback: <Loading />,
 });
-export const Avatars = Loadable({
-  loader: () => import('./UiElements/Avatars'),
-  loading: Loading,
+export const Avatars = loadable(() => import('./UiElements/Avatars'), {
+  fallback: <Loading />,
 });
-export const Accordion = Loadable({
-  loader: () => import('./UiElements/Accordion'),
-  loading: Loading,
+export const Accordion = loadable(() => import('./UiElements/Accordion'), {
+  fallback: <Loading />,
 });
-export const List = Loadable({
-  loader: () => import('./UiElements/List'),
-  loading: Loading,
+export const List = loadable(() => import('./UiElements/List'), {
+  fallback: <Loading />,
 });
-export const PopoverTooltip = Loadable({
-  loader: () => import('./UiElements/PopoverTooltip'),
-  loading: Loading,
+export const PopoverTooltip = loadable(() => import('./UiElements/PopoverTooltip'), {
+  fallback: <Loading />,
 });
-export const Snackbar = Loadable({
-  loader: () => import('./UiElements/Snackbar'),
-  loading: Loading,
+export const Snackbar = loadable(() => import('./UiElements/Snackbar'), {
+  fallback: <Loading />,
 });
-export const Typography = Loadable({
-  loader: () => import('./UiElements/Typography'),
-  loading: Loading,
+export const Typography = loadable(() => import('./UiElements/Typography'), {
+  fallback: <Loading />,
 });
-export const Tabs = Loadable({
-  loader: () => import('./UiElements/Tabs'),
-  loading: Loading,
+export const Tabs = loadable(() => import('./UiElements/Tabs'), {
+  fallback: <Loading />,
 });
-export const Cards = Loadable({
-  loader: () => import('./UiElements/Cards'),
-  loading: Loading,
+export const Cards = loadable(() => import('./UiElements/Cards'), {
+  fallback: <Loading />,
 });
-export const ImageGrid = Loadable({
-  loader: () => import('./UiElements/ImageGrid'),
-  loading: Loading,
+export const ImageGrid = loadable(() => import('./UiElements/ImageGrid'), {
+  fallback: <Loading />,
 });
-export const Progress = Loadable({
-  loader: () => import('./UiElements/Progress'),
-  loading: Loading,
+export const Progress = loadable(() => import('./UiElements/Progress'), {
+  fallback: <Loading />,
 });
-export const DialogModal = Loadable({
-  loader: () => import('./UiElements/DialogModal'),
-  loading: Loading,
+export const DialogModal = loadable(() => import('./UiElements/DialogModal'), {
+  fallback: <Loading />,
 });
-export const Steppers = Loadable({
-  loader: () => import('./UiElements/Steppers'),
-  loading: Loading,
+export const Steppers = loadable(() => import('./UiElements/Steppers'), {
+  fallback: <Loading />,
 });
-export const DrawerMenu = Loadable({
-  loader: () => import('./UiElements/DrawerMenu'),
-  loading: Loading,
+export const DrawerMenu = loadable(() => import('./UiElements/DrawerMenu'), {
+  fallback: <Loading />,
 });
-export const Breadcrumbs = Loadable({
-  loader: () => import('./UiElements/Breadcrumbs'),
-  loading: Loading,
+export const Breadcrumbs = loadable(() => import('./UiElements/Breadcrumbs'), {
+  fallback: <Loading />,
 });
-export const Icons = Loadable({
-  loader: () => import('./UiElements/Icons'),
-  loading: Loading,
+export const Icons = loadable(() => import('./UiElements/Icons'), {
+  fallback: <Loading />,
 });
-export const SliderCarousel = Loadable({
-  loader: () => import('./UiElements/SliderCarousel'),
-  loading: Loading,
+export const SliderCarousel = loadable(() => import('./UiElements/SliderCarousel'), {
+  fallback: <Loading />,
 });
-export const Tags = Loadable({
-  loader: () => import('./UiElements/Tags'),
-  loading: Loading,
+export const Tags = loadable(() => import('./UiElements/Tags'), {
+  fallback: <Loading />,
 });
-export const TreeView = Loadable({
-  loader: () => import('./UiElements/TreeView'),
-  loading: Loading,
+export const TreeView = loadable(() => import('./UiElements/TreeView'), {
+  fallback: <Loading />,
 });
 // Chart
-export const LineCharts = Loadable({
-  loader: () => import('./Charts/LineCharts'),
-  loading: Loading,
+export const LineCharts = loadable(() => import('./Charts/LineCharts'), {
+  fallback: <Loading />,
 });
-export const BarCharts = Loadable({
-  loader: () => import('./Charts/BarCharts'),
-  loading: Loading,
+export const BarCharts = loadable(() => import('./Charts/BarCharts'), {
+  fallback: <Loading />,
 });
-export const AreaCharts = Loadable({
-  loader: () => import('./Charts/AreaCharts'),
-  loading: Loading,
+export const AreaCharts = loadable(() => import('./Charts/AreaCharts'), {
+  fallback: <Loading />,
 });
-export const PieCharts = Loadable({
-  loader: () => import('./Charts/PieCharts'),
-  loading: Loading,
+export const PieCharts = loadable(() => import('./Charts/PieCharts'), {
+  fallback: <Loading />,
 });
-export const RadarCharts = Loadable({
-  loader: () => import('./Charts/RadarCharts'),
-  loading: Loading,
+export const RadarCharts = loadable(() => import('./Charts/RadarCharts'), {
+  fallback: <Loading />,
 });
-export const ScatterCharts = Loadable({
-  loader: () => import('./Charts/ScatterCharts'),
-  loading: Loading,
+export const ScatterCharts = loadable(() => import('./Charts/ScatterCharts'), {
+  fallback: <Loading />,
 });
-export const CompossedCharts = Loadable({
-  loader: () => import('./Charts/CompossedCharts'),
-  loading: Loading,
+export const CompossedCharts = loadable(() => import('./Charts/CompossedCharts'), {
+  fallback: <Loading />,
 });
 
 // Pages
-export const LoginFullstack = Loadable({
-  loader: () => import('./Pages/UsersFullstack/Login'),
-  loading: Loading,
+export const LoginFullstack = loadable(() => import('./Pages/UsersFullstack/Login'), {
+  fallback: <Loading />,
 });
-export const RegisterFullstack = Loadable({
-  loader: () => import('./Pages/UsersFullstack/Register'),
-  loading: Loading,
+export const RegisterFullstack = loadable(() => import('./Pages/UsersFullstack/Register'), {
+  fallback: <Loading />,
 });
-export const ResetPasswordFullstack = Loadable({
-  loader: () => import('./Pages/UsersFullstack/ResetPassword'),
-  loading: Loading,
+export const ResetPasswordFullstack = loadable(() => import('./Pages/UsersFullstack/ResetPassword'), {
+  fallback: <Loading />,
 });
-export const Login = Loadable({
-  loader: () => import('./Pages/Users/Login'),
-  loading: Loading,
+export const Login = loadable(() => import('./Pages/Users/Login'), {
+  fallback: <Loading />,
 });
-export const Register = Loadable({
-  loader: () => import('./Pages/Users/Register'),
-  loading: Loading,
+export const Register = loadable(() => import('./Pages/Users/Register'), {
+  fallback: <Loading />,
 });
-export const ResetPassword = Loadable({
-  loader: () => import('./Pages/Users/ResetPassword'),
-  loading: Loading,
+export const ResetPassword = loadable(() => import('./Pages/Users/ResetPassword'), {
+  fallback: <Loading />,
 });
 
-export const LockScreen = Loadable({
-  loader: () => import('./Pages/Users/LockScreen'),
-  loading: Loading,
+export const LockScreen = loadable(() => import('./Pages/Users/LockScreen'), {
+  fallback: <Loading />,
 });
-export const ComingSoon = Loadable({
-  loader: () => import('./Pages/ComingSoon'),
-  loading: Loading,
+export const ComingSoon = loadable(() => import('./Pages/ComingSoon'), {
+  fallback: <Loading />,
 });
-export const Ecommerce = Loadable({
-  loader: () => import('./Pages/Ecommerce'),
-  loading: Loading,
+export const Ecommerce = loadable(() => import('./Pages/Ecommerce'), {
+  fallback: <Loading />,
 });
-export const MyProducts = Loadable({
-  loader: () => import('./Pages/Ecommerce/MyProducts'),
-  loading: Loading,
+export const ProductPage = loadable(() => import('./Pages/Ecommerce/ProductPage'), {
+  fallback: <Loading />,
 });
-export const AddProduct = Loadable({
-  loader: () => import('./Pages/Ecommerce/AddProduct'),
-  loading: Loading,
+export const CheckoutPage = loadable(() => import('./Pages/Ecommerce/CheckoutPage'), {
+  fallback: <Loading />,
 });
-export const EditProduct = Loadable({
-  loader: () => import('./Pages/Ecommerce/EditProduct'),
-  loading: Loading,
+export const InvoicePage = loadable(() => import('./Pages/Ecommerce/InvoicePage'), {
+  fallback: <Loading />,
 });
-export const ProductPage = Loadable({
-  loader: () => import('./Pages/Ecommerce/ProductPage'),
-  loading: Loading,
+export const Profile = loadable(() => import('./Pages/UserProfile'), {
+  fallback: <Loading />,
 });
-export const CheckoutPage = Loadable({
-  loader: () => import('./Pages/Ecommerce/CheckoutPage'),
-  loading: Loading,
+export const Timeline = loadable(() => import('./Pages/Timeline'), {
+  fallback: <Loading />,
 });
-export const Invoice = Loadable({
-  loader: () => import('./Pages/Ecommerce/Invoice'),
-  loading: Loading,
+export const Chat = loadable(() => import('./Pages/Chat'), {
+  fallback: <Loading />,
 });
-export const Profile = Loadable({
-  loader: () => import('./Pages/UserProfile'),
-  loading: Loading,
+export const BlankPage = loadable(() => import('./Pages/BlankPage'), {
+  fallback: <Loading />,
 });
-export const EditProfile = Loadable({
-  loader: () => import('./Pages/UserProfile/editProfile'),
-  loading: Loading,
+export const AuthenticatedPage = loadable(() => import('./Pages/AuthenticatedPage'), {
+  fallback: <Loading />,
 });
-
-export const SearchProjects = Loadable({
-  loader: () => import('./Pages/Projects'),
-  loading: Loading,
-});
-export const MyProjects = Loadable({
-  loader: () => import('./Pages/Projects/MyProjects'),
-  loading: Loading,
-});
-export const NewProject = Loadable({
-  loader: () => import('./Pages/Projects/NewProject'),
-  loading: Loading,
-});
-export const EditProject = Loadable({
-  loader: () => import('./Pages/Projects/EditProject'),
-  loading: Loading,
-});
-export const ReadProject = Loadable({
-  loader: () => import('./Pages/Projects/ReadProject'),
-  loading: Loading,
-});
-
-export const SearchArticles = Loadable({
-  loader: () => import('./Pages/Articles'),
-  loading: Loading,
-});
-export const MyArticles = Loadable({
-  loader: () => import('./Pages/Articles/MyArticles'),
-  loading: Loading,
-});
-export const NewArticle = Loadable({
-  loader: () => import('./Pages/Articles/NewArticle'),
-  loading: Loading,
-});
-export const EditArticle = Loadable({
-  loader: () => import('./Pages/Articles/EditArticle'),
-  loading: Loading,
-});
-export const ReadArticle = Loadable({
-  loader: () => import('./Pages/Articles/ReadArticle'),
-  loading: Loading,
-});
-
-export const Timeline = Loadable({
-  loader: () => import('./Pages/Timeline'),
-  loading: Loading,
-});
-export const Chat = Loadable({
-  loader: () => import('./Pages/Chat'),
-  loading: Loading,
-});
-export const BlankPage = Loadable({
-  loader: () => import('./Pages/BlankPage'),
-  loading: Loading,
-});
-export const AuthenticatedPage = Loadable({
-  loader: () => import('./Pages/AuthenticatedPage'),
-  loading: Loading,
-});
-
 
 // Sample Pre Build Apps
-export const Todo = Loadable({
-  loader: () => import('./SampleApps/Todo'),
-  loading: Loading,
+export const Todo = loadable(() => import('./SampleApps/Todo'), {
+  fallback: <Loading />,
 });
-export const TodoFirebase = Loadable({
-  loader: () => import('./SampleFullstackApps/Todo'),
-  loading: Loading,
+export const TodoFirebase = loadable(() => import('./SampleFullstackApps/Todo'), {
+  fallback: <Loading />,
 });
-export const Contact = Loadable({
-  loader: () => import('./SampleApps/Contact'),
-  loading: Loading,
+export const Contact = loadable(() => import('./SampleApps/Contact'), {
+  fallback: <Loading />,
 });
-export const ContactFirebase = Loadable({
-  loader: () => import('./SampleFullstackApps/Contact'),
-  loading: Loading,
+export const ContactFirebase = loadable(() => import('./SampleFullstackApps/Contact'), {
+  fallback: <Loading />,
 });
-export const Email = Loadable({
-  loader: () => import('./SampleApps/Email'),
-  loading: Loading,
+export const Email = loadable(() => import('./SampleApps/Email'), {
+  fallback: <Loading />,
 });
-export const EmailFirebase = Loadable({
-  loader: () => import('./SampleFullstackApps/Email'),
-  loading: Loading,
+export const EmailFirebase = loadable(() => import('./SampleFullstackApps/Email'), {
+  fallback: <Loading />,
 });
 
-export const Photos = Loadable({
-  loader: () => import('./Pages/Photos'),
-  loading: Loading,
+export const Photos = loadable(() => import('./Pages/Photos'), {
+  fallback: <Loading />,
 });
 
 // Maps
-export const MapMarker = Loadable({
-  loader: () => import('./Maps/MapMarker'),
-  loading: Loading,
+export const MapMarker = loadable(() => import('./Maps/MapMarker'), {
+  fallback: <Loading />,
 });
-export const MapDirection = Loadable({
-  loader: () => import('./Maps/MapDirection'),
-  loading: Loading,
+export const MapDirection = loadable(() => import('./Maps/MapDirection'), {
+  fallback: <Loading />,
 });
-export const SearchMap = Loadable({
-  loader: () => import('./Maps/SearchMap'),
-  loading: Loading,
+export const SearchMap = loadable(() => import('./Maps/SearchMap'), {
+  fallback: <Loading />,
 });
-export const TrafficIndicator = Loadable({
-  loader: () => import('./Maps/TrafficIndicator'),
-  loading: Loading,
+export const TrafficIndicator = loadable(() => import('./Maps/TrafficIndicator'), {
+  fallback: <Loading />,
 });
-export const StreetViewMap = Loadable({
-  loader: () => import('./Maps/StreetViewMap'),
-  loading: Loading,
+export const StreetViewMap = loadable(() => import('./Maps/StreetViewMap'), {
+  fallback: <Loading />,
 });
 
 // Other
-export const NotFound = Loadable({
-  loader: () => import('./NotFound/NotFound'),
-  loading: Loading,
+export const NotFound = loadable(() => import('./NotFound/NotFound'), {
+  fallback: <Loading />,
 });
-export const Error = Loadable({
-  loader: () => import('./Pages/Error'),
-  loading: Loading,
+export const Error = loadable(() => import('./Pages/Error'), {
+  fallback: <Loading />,
 });
-export const Maintenance = Loadable({
-  loader: () => import('./Pages/Maintenance'),
-  loading: Loading,
+export const Maintenance = loadable(() => import('./Pages/Maintenance'), {
+  fallback: <Loading />,
 });
-export const Parent = Loadable({
-  loader: () => import('./Parent'),
-  loading: Loading,
+export const Parent = loadable(() => import('./Parent'), {
+  fallback: <Loading />,
 });
-export const TermsConditions = Loadable({
-  loader: () => import('./Pages/TermsConditions'),
-  loading: Loading,
+export const TermsConditions = loadable(() => import('./Pages/TermsConditions'), {
+  fallback: <Loading />,
 });

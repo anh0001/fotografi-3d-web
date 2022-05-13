@@ -4,14 +4,14 @@ import purple from '@material-ui/core/colors/deepPurple';
 import teal from '@material-ui/core/colors/teal';
 import brown from '@material-ui/core/colors/brown';
 import red from '@material-ui/core/colors/red';
-import { darken, fade } from '@material-ui/core/styles/colorManipulator';
+import { darken, alpha } from '@material-ui/core/styles';
 
 const drawerWidth = 300;
 const drawerHeight = 540;
 
 const gradient = theme => ({
   backgroundColor: theme.palette.background.paper,
-  backgroundImage: `linear-gradient(to right, ${theme.palette.background.paper} 0%, ${fade(theme.palette.divider, 0.03)} 50%, ${fade(theme.palette.divider, 0.03)} 70%, ${theme.palette.background.paper} 100%)`,
+  backgroundImage: `linear-gradient(to right, ${theme.palette.background.paper} 0%, ${alpha(theme.palette.divider, 0.03)} 50%, ${alpha(theme.palette.divider, 0.03)} 70%, ${theme.palette.background.paper} 100%)`,
   backgroundRepeat: 'no-repeat',
 });
 
@@ -43,7 +43,7 @@ const styles = theme => ({
   fixHeight: {},
   appBar: {
     height: 'auto',
-    background: theme.palette.type === 'dark' ? fade(theme.palette.grey[800], 0.75) : fade(theme.palette.background.paper, 0.95),
+    background: theme.palette.type === 'dark' ? alpha(theme.palette.grey[800], 0.75) : alpha(theme.palette.background.paper, 0.95),
     justifyContent: 'center',
     '& $avatar': {
       width: 80,
@@ -301,7 +301,7 @@ const styles = theme => ({
     }
   },
   selected: {
-    background: fade(theme.palette.type === 'dark' ? theme.palette.primary.dark : theme.palette.background.paper, 0.8),
+    background: alpha(theme.palette.type === 'dark' ? theme.palette.primary.dark : theme.palette.background.paper, 0.8),
     '& span': {
       color: theme.palette.type === 'dark' ? theme.palette.primary.light : theme.palette.primary.dark
     },
@@ -309,7 +309,7 @@ const styles = theme => ({
       fill: theme.palette.type === 'dark' ? theme.palette.primary.light : theme.palette.primary.dark
     },
     '&:focus, &:hover': {
-      background: fade(theme.palette.type === 'dark' ? theme.palette.primary.dark : theme.palette.background.paper, 0.8),
+      background: alpha(theme.palette.type === 'dark' ? theme.palette.primary.dark : theme.palette.background.paper, 0.8),
     }
   },
   hiddenDropzone: {
@@ -360,7 +360,7 @@ const styles = theme => ({
       height: 40,
       borderRadius: '50%',
       display: 'block',
-      animation: '2s placeHolderImg linear infinite',
+      animation: '2s $placeHolderImg linear infinite',
     },
     '& $textContent': {
       flex: 1,
@@ -371,7 +371,7 @@ const styles = theme => ({
       height: 20,
       borderRadius: 8,
       display: 'block',
-      animation: '2s placeHolderTitle linear infinite',
+      animation: '2s $placeHolderTitle linear infinite',
     },
     '& $subtitle': {
       width: '50%',

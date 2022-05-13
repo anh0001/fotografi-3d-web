@@ -26,7 +26,7 @@ function ProgressWidget(props) {
           <FormattedMessage {...messages.intermediate} />
         </span>
       </Typography>
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Chip
           avatar={(
             <Avatar>

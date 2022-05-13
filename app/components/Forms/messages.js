@@ -24,10 +24,6 @@ export default defineMessages({
     id: `${scope}.Register.or`,
     defaultMessage: 'Or register with',
   },
-  loginFieldUsername: {
-    id: `${scope}.Register.field.username`,
-    defaultMessage: 'Username',
-  },
   loginFieldName: {
     id: `${scope}.Register.field.name`,
     defaultMessage: 'Username',
@@ -43,10 +39,6 @@ export default defineMessages({
   loginFieldRetypePassword: {
     id: `${scope}.Register.field.retypePassword`,
     defaultMessage: 'Re-type Password',
-  },
-  loginFieldUserType: {
-    id: `${scope}.Register.field.userType`,
-    defaultMessage: 'User Type',
   },
   loginForgotPassword: {
     id: `${scope}.Login.field.forgot`,

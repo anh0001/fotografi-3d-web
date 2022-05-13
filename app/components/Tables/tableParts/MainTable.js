@@ -17,80 +17,78 @@ import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 import Row from './Row';
 import styles from '../tableStyle-jss';
 
-class MainTable extends React.Component {
-  render() {
-    const {
-      classes,
-      items,
-      addEmptyRow,
-      removeRow,
-      updateRow,
-      editRow,
-      finishEditRow,
-      anchor,
-      branch,
-      title,
-      width
-    } = this.props;
+function MainTable(props) {
+  const {
+    classes,
+    items,
+    addEmptyRow,
+    removeRow,
+    updateRow,
+    editRow,
+    finishEditRow,
+    anchor,
+    branch,
+    title,
+    width
+  } = props;
 
-    const getItems = dataArray => dataArray.map(item => (
-      <Row
-        anchor={anchor}
-        updateRow={(event) => updateRow(event, item, branch)}
-        item={item}
-        removeRow={() => removeRow(item, branch)}
-        key={item.get('id')}
-        editRow={() => editRow(item, branch)}
-        finishEditRow={() => finishEditRow(item, branch)}
-        branch={branch}
-      />
-    ));
+  const getItems = dataArray => dataArray.map(item => (
+    <Row
+      anchor={anchor}
+      updateRow={(event) => updateRow(event, item, branch)}
+      item={item}
+      removeRow={() => removeRow(item, branch)}
+      key={item.id}
+      editRow={() => editRow(item, branch)}
+      finishEditRow={() => finishEditRow(item, branch)}
+      branch={branch}
+    />
+  ));
 
-    const getHead = dataArray => dataArray.map((item, index) => {
-      if (!item.hidden) {
-        return (
-          <TableCell padding="none" key={index.toString()} width={item.width}>{item.label}</TableCell>
-        );
-      }
-      return false;
-    });
-    return (
-      <div>
-        <Toolbar className={classes.toolbar}>
-          <div className={classes.title}>
-            <Typography variant="h6">{title}</Typography>
-          </div>
-          <div className={classes.spacer} />
-          <div className={classes.actions}>
-            <Tooltip title="Add Item">
-              <Button variant="contained" onClick={() => addEmptyRow(anchor, branch)} color="secondary" className={classes.button}>
-                <AddIcon className={classNames(isWidthUp('sm', width) && classes.leftIcon, classes.iconSmall)} />
-                {isWidthUp('sm', width) && 'Add New'}
-              </Button>
-            </Tooltip>
-          </div>
-        </Toolbar>
-        <div className={classes.rootTable}>
-          <Table className={classNames(css.tableCrud, classes.table, classes.stripped)}>
-            <TableHead>
-              <TableRow>
-                { getHead(anchor) }
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {getItems(items)}
-            </TableBody>
-          </Table>
+  const getHead = dataArray => dataArray.map((item, index) => {
+    if (!item.hidden) {
+      return (
+        <TableCell padding="none" key={index.toString()} width={item.width}>{item.label}</TableCell>
+      );
+    }
+    return false;
+  });
+  return (
+    <div>
+      <Toolbar className={classes.toolbar}>
+        <div className={classes.title}>
+          <Typography variant="h6">{title}</Typography>
         </div>
+        <div className={classes.spacer} />
+        <div className={classes.actions}>
+          <Tooltip title="Add Item">
+            <Button variant="contained" onClick={() => addEmptyRow(anchor, branch)} color="secondary" className={classes.button}>
+              <AddIcon className={classNames(isWidthUp('sm', width) && classes.leftIcon, classes.iconSmall)} />
+              {isWidthUp('sm', width) && 'Add New'}
+            </Button>
+          </Tooltip>
+        </div>
+      </Toolbar>
+      <div className={classes.rootTable}>
+        <Table className={classNames(css.tableCrud, classes.table, classes.stripped)}>
+          <TableHead>
+            <TableRow>
+              {getHead(anchor)}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {getItems(items)}
+          </TableBody>
+        </Table>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 MainTable.propTypes = {
   title: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
-  items: PropTypes.object.isRequired,
+  items: PropTypes.array.isRequired,
   anchor: PropTypes.array.isRequired,
   addEmptyRow: PropTypes.func.isRequired,
   removeRow: PropTypes.func.isRequired,

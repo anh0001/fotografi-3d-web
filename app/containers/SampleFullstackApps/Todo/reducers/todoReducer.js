@@ -1,4 +1,4 @@
-import { List, Record } from 'immutable';
+import produce from 'immer';
 import {
   CREATE_TASK_FULFILLED,
   FILTER_TASKS,
@@ -7,36 +7,42 @@ import {
   UPDATE_TASK_FULFILLED
 } from './todoConstants';
 
-
-export const TasksState = new Record({
+const initialState = {
   filter: '',
-  list: new List(),
+  list: [],
   loading: true,
-});
+};
 
-function todoReducer(state = new TasksState(), { payload, type }) {
-  switch (type) {
+/* eslint-disable default-case, no-param-reassign */
+const todoReducer = (state = initialState, action = {}) => produce(state, draft => {
+  switch (action.type) {
     case LOAD_TASKS_FULFILLED:
-      return state.merge({
-        list: new List(payload.tasks.reverse()),
-        loading: false,
-      });
-
+      draft.list = action.payload.tasks.reverse();
+      draft.loading = false;
+      break;
     case CREATE_TASK_FULFILLED:
-      return state.set('list', state.list.unshift(payload.task));
-
+      draft.list.unshift(action.payload.task);
+      break;
     case FILTER_TASKS:
-      return state.set('filter', payload.filterType || '');
-
-    case REMOVE_TASK_FULFILLED:
-      return state.set('list', state.list.filter(task => task.key !== payload.task.key));
-
-    case UPDATE_TASK_FULFILLED:
-      return state.set('list', state.list.map(task => (task.key === payload.task.key ? payload.task : task)));
-
+      draft.filter = action.payload.filterType || '';
+      break;
+    case REMOVE_TASK_FULFILLED: {
+      const index = draft.list.findIndex((obj) => obj.key === action.payload.task.key);
+      if (index !== -1) {
+        draft.list.splice(index, 1);
+      }
+      break;
+    }
+    case UPDATE_TASK_FULFILLED: {
+      const index = draft.list.findIndex((obj) => obj.key === action.payload.task.key);
+      if (index !== -1) {
+        draft.list[index] = action.payload.task;
+      }
+      break;
+    }
     default:
-      return state;
+      break;
   }
-}
+});
 
 export default todoReducer;

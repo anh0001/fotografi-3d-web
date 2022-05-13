@@ -1,4 +1,4 @@
-import { fade } from '@material-ui/core/styles/colorManipulator';
+import { alpha } from '@material-ui/core/styles';
 
 const panelWidth = 360;
 const styles = theme => ({
@@ -30,7 +30,7 @@ const styles = theme => ({
   },
   root: {
     height: '100%',
-    backgroundColor: theme.palette.type === 'dark' ? fade(theme.palette.grey.A700, 0.95) : fade(theme.palette.background.default, 0.95),
+    backgroundColor: theme.palette.type === 'dark' ? alpha(theme.palette.grey.A700, 0.95) : alpha(theme.palette.background.default, 0.95),
     boxShadow: '0px 5px 10px 1px rgba(80,80,80, 0.2)',
     paddingTop: theme.spacing(6),
     [theme.breakpoints.up('sm')]: {
@@ -53,7 +53,7 @@ const styles = theme => ({
   toggleButton: {
     position: 'absolute',
     top: 300,
-    backgroundColor: theme.palette.type === 'dark' ? fade(theme.palette.grey.A700, 0.75) : fade(theme.palette.background.default, 0.95),
+    backgroundColor: theme.palette.type === 'dark' ? alpha(theme.palette.grey.A700, 0.75) : alpha(theme.palette.background.default, 0.95),
     padding: theme.spacing(1),
     zIndex: 1
   },

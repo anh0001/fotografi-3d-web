@@ -14,125 +14,123 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Divider from '@material-ui/core/Divider';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import Type from 'enl-styles/Typography.scss';
-import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import messages from './messages';
 import styles from './cart-jss';
 
-class Cart extends React.Component {
-  render() {
-    const {
-      classes,
-      anchorEl,
-      close,
-      dataCart,
-      removeItem,
-      totalPrice,
-      checkout,
-      intl
-    } = this.props;
+function Cart(props) {
+  const {
+    classes,
+    anchorEl,
+    close,
+    dataCart,
+    removeItem,
+    totalPrice,
+    checkout,
+    intl
+  } = props;
 
-    const getCartItem = dataArray => dataArray.map((item, index) => (
-      <Fragment key={index.toString()}>
-        <ListItem>
-          <figure>
-            <img src={item.get('thumbnail')} alt="thumb" />
-          </figure>
-          <ListItemText
-            primary={item.get('name')}
-            secondary={`${intl.formatMessage(messages.quantity)}: ${item.get('quantity')} Item - Rp. ${item.get('price') * item.get('quantity')}`}
-            className={classes.itemText}
-          />
-          <ListItemSecondaryAction>
-            <IconButton aria-label="Comments" onClick={() => removeItem(item)}>
-              <DeleteIcon />
-            </IconButton>
-          </ListItemSecondaryAction>
-        </ListItem>
-        <li>
-          <Divider />
-        </li>
-      </Fragment>
-    ));
-    return (
-      <Menu
-        id="cart-menu"
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={Boolean(anchorEl)}
-        onClose={close}
-        className={classes.cartPanel}
+  const getCartItem = dataArray => dataArray.map((item, index) => (
+    <Fragment key={index.toString()}>
+      <ListItem>
+        <figure>
+          <img src={item.thumbnail} alt="thumb" />
+        </figure>
+        <ListItemText
+          primary={item.name}
+          secondary={`${intl.formatMessage(messages.quantity)}: ${item.quantity} Item - USD ${item.price * item.quantity}`}
+          className={classes.itemText}
+        />
+        <ListItemSecondaryAction>
+          <IconButton aria-label="Comments" onClick={() => removeItem(item)}>
+            <DeleteIcon />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
+      <li>
+        <Divider />
+      </li>
+    </Fragment>
+  ));
+  return (
+    <Menu
+      id="cart-menu"
+      anchorEl={anchorEl}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      open={Boolean(anchorEl)}
+      onClose={close}
+      className={classes.cartPanel}
+    >
+      <List
+        component="ul"
+        subheader={(
+          <ListSubheader component="div">
+            <ShoppingCartIcon />
+            <FormattedMessage {...messages.total} />
+            :
+            &nbsp;
+            {dataCart.size}
+            &nbsp;
+            <FormattedMessage {...messages.unique_item} />
+          </ListSubheader>
+        )}
+        className={classes.cartWrap}
       >
-        <List
-          component="ul"
-          subheader={(
-            <ListSubheader component="div">
-              <ShoppingCartIcon />
-              <FormattedMessage {...messages.total} />
-              :
-              &nbsp;
-              {dataCart.size}
-              &nbsp;
-              <FormattedMessage {...messages.unique_item} />
-            </ListSubheader>
-          )}
-          className={classes.cartWrap}
-        >
-          {
-            dataCart.size < 1 ? (
-              <div className={classes.empty}>
+        {
+          dataCart.size < 1 ? (
+            <div className={classes.empty}>
+              <Typography variant="subtitle1">
+                <FormattedMessage {...messages.emptyTitle} />
+              </Typography>
+              <Typography variant="caption">
+                <FormattedMessage {...messages.emptyDesc} />
+              </Typography>
+            </div>
+          ) : (
+            <Fragment>
+              {getCartItem(dataCart)}
+              <ListItem className={classes.totalPrice}>
                 <Typography variant="subtitle1">
-                  <FormattedMessage {...messages.emptyTitle} />
+                  <FormattedMessage {...messages.total} />
+                  &nbsp;:
+                  <span className={Type.bold}>
+                    $
+                    {totalPrice}
+                  </span>
                 </Typography>
-                <Typography variant="caption">
-                  <FormattedMessage {...messages.emptyDesc} />
-                </Typography>
-              </div>
-            ) : (
-              <Fragment>
-                {getCartItem(dataCart)}
-                <ListItem className={classes.totalPrice}>
-                  <Typography variant="subtitle1">
-                    <FormattedMessage {...messages.total} />
-                    &nbsp;:
-                    <span className={Type.bold}>
-                      Rp.
-                      {totalPrice.toLocaleString()}
-                    </span>
-                  </Typography>
-                </ListItem>
-                <li>
-                  <Divider />
-                </li>
-                <ListItem>
-                  <Button fullWidth className={classes.button} variant="contained" onClick={() => checkout()} color="secondary">
-                    <FormattedMessage {...messages.checkout} />
-                  </Button>
-                </ListItem>
-              </Fragment>
-            )
-          }
-        </List>
-      </Menu>
-    );
-  }
+              </ListItem>
+              <li>
+                <Divider />
+              </li>
+              <ListItem>
+                <Button fullWidth className={classes.button} variant="contained" onClick={() => checkout()} color="secondary">
+                  <FormattedMessage {...messages.checkout} />
+                </Button>
+              </ListItem>
+            </Fragment>
+          )
+        }
+      </List>
+    </Menu>
+  );
 }
 
 Cart.propTypes = {
   classes: PropTypes.object.isRequired,
-  dataCart: PropTypes.object.isRequired,
+  dataCart: PropTypes.array.isRequired,
   anchorEl: PropTypes.object,
   close: PropTypes.func.isRequired,
   removeItem: PropTypes.func.isRequired,
   checkout: PropTypes.func.isRequired,
   totalPrice: PropTypes.number.isRequired,
-  intl: intlShape.isRequired
+  intl: PropTypes.object.isRequired
 };
 
 Cart.defaultProps = {

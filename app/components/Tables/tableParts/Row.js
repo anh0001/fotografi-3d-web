@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import TableCell from '@material-ui/core/TableCell';
 import { withStyles } from '@material-ui/core/styles';
@@ -20,137 +20,139 @@ const styles = theme => ({
   },
 });
 
-class Row extends React.Component {
-  render() {
-    const {
-      classes,
-      anchor,
-      item,
-      removeRow,
-      updateRow,
-      editRow,
-      finishEditRow,
-      branch
-    } = this.props;
-    const eventDel = () => {
-      removeRow(item, branch);
-    };
-    const eventEdit = () => {
-      editRow(item, branch);
-    };
-    const eventDone = () => {
-      finishEditRow(item, branch);
-    };
-    const renderCell = dataArray => dataArray.map((itemCell, index) => {
-      if (itemCell.name !== 'action' && !itemCell.hidden) {
-        const inputType = anchor[index].type;
-        switch (inputType) {
-          case 'selection':
-            return (
-              <SelectableCell
-                updateRow={(event) => updateRow(event, branch)}
-                cellData={{
-                  type: itemCell.name,
-                  value: item.get(itemCell.name),
-                  id: item.get('id'),
-                }}
-                edited={item.get('edited')}
-                key={index.toString()}
-                options={anchor[index].options}
-                branch={branch}
-              />
-            );
-          case 'toggle':
-            return (
-              <ToggleCell
-                updateRow={(event) => updateRow(event, branch)}
-                cellData={{
-                  type: itemCell.name,
-                  value: item.get(itemCell.name),
-                  id: item.get('id'),
-                }}
-                edited={item.get('edited')}
-                key={index.toString()}
-                branch={branch}
-              />
-            );
-          case 'date':
-            return (
-              <DatePickerCell
-                updateRow={(event) => updateRow(event, branch)}
-                cellData={{
-                  type: itemCell.name,
-                  value: item.get(itemCell.name),
-                  id: item.get('id'),
-                }}
-                edited={item.get('edited')}
-                key={index.toString()}
-                branch={branch}
-              />
-            );
-          case 'time':
-            return (
-              <TimePickerCell
-                updateRow={(event) => updateRow(event, branch)}
-                cellData={{
-                  type: itemCell.name,
-                  value: item.get(itemCell.name),
-                  id: item.get('id'),
-                }}
-                edited={item.get('edited')}
-                key={index.toString()}
-                branch={branch}
-              />
-            );
-          default:
-            return (
-              <EditableCell
-                updateRow={(event) => updateRow(event, branch)}
-                cellData={{
-                  type: itemCell.name,
-                  value: item.get(itemCell.name),
-                  id: item.get('id'),
-                }}
-                edited={item.get('edited')}
-                key={index.toString()}
-                inputType={inputType}
-                branch={branch}
-              />
-            );
-        }
+function Row(props) {
+  const {
+    classes,
+    anchor,
+    item,
+    removeRow,
+    updateRow,
+    editRow,
+    finishEditRow,
+    branch
+  } = props;
+
+  const eventDel = useCallback(() => {
+    removeRow(item, branch);
+  }, [removeRow, item, branch]);
+
+  const eventEdit = useCallback(() => {
+    editRow(item, branch);
+  }, [editRow, item, branch]);
+
+  const eventDone = useCallback(() => {
+    finishEditRow(item, branch);
+  }, [finishEditRow, item, branch]);
+
+  const renderCell = dataArray => dataArray.map((itemCell, index) => {
+    if (itemCell.name !== 'action' && !itemCell.hidden) {
+      const inputType = anchor[index].type;
+      switch (inputType) {
+        case 'selection':
+          return (
+            <SelectableCell
+              updateRow={(event) => updateRow(event, branch)}
+              cellData={{
+                type: itemCell.name,
+                value: item[itemCell.name],
+                id: item.id,
+              }}
+              edited={item.edited}
+              key={index.toString()}
+              options={anchor[index].options}
+              branch={branch}
+            />
+          );
+        case 'toggle':
+          return (
+            <ToggleCell
+              updateRow={(event) => updateRow(event, branch)}
+              cellData={{
+                type: itemCell.name,
+                value: item[itemCell.name],
+                id: item.id,
+              }}
+              edited={item.edited}
+              key={index.toString()}
+              branch={branch}
+            />
+          );
+        case 'date':
+          return (
+            <DatePickerCell
+              updateRow={(event) => updateRow(event, branch)}
+              cellData={{
+                type: itemCell.name,
+                value: item[itemCell.name],
+                id: item.id,
+              }}
+              edited={item.edited}
+              key={index.toString()}
+              branch={branch}
+            />
+          );
+        case 'time':
+          return (
+            <TimePickerCell
+              updateRow={(event) => updateRow(event, branch)}
+              cellData={{
+                type: itemCell.name,
+                value: item[itemCell.name],
+                id: item.id,
+              }}
+              edited={item.edited}
+              key={index.toString()}
+              branch={branch}
+            />
+          );
+        default:
+          return (
+            <EditableCell
+              updateRow={(event) => updateRow(event, branch)}
+              cellData={{
+                type: itemCell.name,
+                value: item[itemCell.name],
+                id: item.id,
+              }}
+              edited={item.edited}
+              key={index.toString()}
+              inputType={inputType}
+              branch={branch}
+            />
+          );
       }
-      return false;
-    });
-    return (
-      <tr className={item.get('edited') ? css.editing : ''}>
-        {renderCell(anchor)}
-        <TableCell padding="none">
-          <IconButton
-            onClick={() => eventEdit(this)}
-            className={classNames((item.get('edited') ? css.hideAction : ''), classes.button)}
-            aria-label="Edit"
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            onClick={() => eventDone(this)}
-            color="secondary"
-            className={classNames((!item.get('edited') ? css.hideAction : ''), classes.button)}
-            aria-label="Done"
-          >
-            <DoneIcon />
-          </IconButton>
-          <IconButton
-            onClick={() => eventDel(this)}
-            className={classes.button}
-            aria-label="Delete"
-          >
-            <DeleteIcon />
-          </IconButton>
-        </TableCell>
-      </tr>
-    );
-  }
+    }
+    return false;
+  });
+  return (
+    <tr className={item.edited ? css.editing : ''}>
+      {renderCell(anchor)}
+      <TableCell padding="none">
+        <IconButton
+          onClick={() => eventEdit(this)}
+          className={classNames((item.edited ? css.hideAction : ''), classes.button)}
+          aria-label="Edit"
+        >
+          <EditIcon />
+        </IconButton>
+        <IconButton
+          onClick={() => eventDone(this)}
+          color="secondary"
+          className={classNames((!item.edited ? css.hideAction : ''), classes.button)}
+          aria-label="Done"
+        >
+          <DoneIcon />
+        </IconButton>
+        <IconButton
+          onClick={() => eventDel(this)}
+          className={classes.button}
+          aria-label="Delete"
+        >
+          <DeleteIcon />
+        </IconButton>
+      </TableCell>
+    </tr>
+  );
 }
 
 Row.propTypes = {

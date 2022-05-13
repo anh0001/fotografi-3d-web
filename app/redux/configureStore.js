@@ -3,15 +3,24 @@
  */
 
 import { createStore, applyMiddleware, compose } from 'redux';
-import { fromJS } from 'immutable';
-import { routerMiddleware } from 'connected-react-router/immutable';
+import { routerMiddleware } from 'connected-react-router';
 import createSagaMiddleware from 'redux-saga';
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import createReducer from './reducers';
 import sagas from '../utils/sagas';
 
 const sagaMiddleware = createSagaMiddleware();
 
-export default function configureStore(initialState = {}, history) {
+const persistConfig = {
+  key: 'enlite',
+  storage,
+  whitelist: []
+};
+
+const persistedReducer = persistReducer(persistConfig, createReducer());
+
+export default function configureStore(initialState = {}, history) { // eslint-disable-line
   // Create the store with two middlewares
   // 1. sagaMiddleware: Makes redux-sagas work
   // 2. routerMiddleware: Syncs the location/URL path to the state
@@ -31,15 +40,15 @@ export default function configureStore(initialState = {}, history) {
       : compose;
   /* eslint-enable */
   const store = createStore(
-    createReducer(),
-    fromJS(initialState),
+    persistedReducer,
+    initialState,
     composeEnhancers(...enhancers),
   );
 
+  const persistor = persistStore(store);
+
   // Extensions
-  // sagaMiddleware.run(sagas);
-  store.runSaga = sagaMiddleware.run;
-  store.runSaga(sagas);
+  sagaMiddleware.run(sagas);
   store.injectedReducers = {}; // Reducer registry
   store.injectedSagas = {}; // Saga registry
 
@@ -51,5 +60,5 @@ export default function configureStore(initialState = {}, history) {
     });
   }
 
-  return store;
+  return { store, persistor };
 }

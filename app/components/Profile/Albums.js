@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import { NavLink } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
+import ImageList from '@material-ui/core/ImageList';
+import ImageListItem from '@material-ui/core/ImageListItem';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Typography from '@material-ui/core/Typography';
 import imgData from 'enl-api/images/imgData';
@@ -32,18 +32,18 @@ function Albums(props) {
             component={LinkBtn}
             to="/app/pages/photo-gallery"
           >
-            <GridList cellHeight={160} className={classes.gridList} cols={3}>
+            <ImageList rowHeight={160} className={classes.gridList} cols={3}>
               {imgData.map((tile, index) => {
                 if (index > 6) {
                   return false;
                 }
                 return (
-                  <GridListTile key={index.toString()} cols={tile.cols || 1}>
+                  <ImageListItem key={index.toString()} cols={tile.cols || 1}>
                     <img src={tile.img} className={classes.img} alt={tile.title} />
-                  </GridListTile>
+                  </ImageListItem>
                 );
               })}
-            </GridList>
+            </ImageList>
             <span className={classes.imageBackdrop} />
             <span className={classes.imageButton}>
               <Typography
@@ -64,18 +64,18 @@ function Albums(props) {
             component={LinkBtn}
             to="/app/pages/photo-gallery"
           >
-            <GridList cellHeight={160} className={classes.gridListAlbum} cols={3}>
+            <ImageList rowHeight={160} className={classes.gridListAlbum} cols={3}>
               {imgData.map((tile, index) => {
                 if (index > 2 && index < 9) {
                   return false;
                 }
                 return (
-                  <GridListTile key={index.toString()} cols={tile.cols || 1}>
+                  <ImageListItem key={index.toString()} cols={tile.cols || 1}>
                     <img src={tile.img} className={classes.img} alt={tile.title} />
-                  </GridListTile>
+                  </ImageListItem>
                 );
               })}
-            </GridList>
+            </ImageList>
             <span className={classes.imageBackdrop} />
             <span className={classes.imageButton}>
               <Typography
@@ -98,18 +98,18 @@ function Albums(props) {
             component={LinkBtn}
             to="/app/pages/photo-gallery"
           >
-            <GridList cellHeight={160} className={classes.gridList} cols={3}>
+            <ImageList rowHeight={160} className={classes.gridList} cols={3}>
               {imgData.map((tile, index) => {
                 if (index > 4 && index < 10) {
                   return false;
                 }
                 return (
-                  <GridListTile key={index.toString()} cols={tile.cols || 1}>
+                  <ImageListItem key={index.toString()} cols={tile.cols || 1}>
                     <img src={tile.img} className={classes.img} alt={tile.title} />
-                  </GridListTile>
+                  </ImageListItem>
                 );
               })}
-            </GridList>
+            </ImageList>
             <span className={classes.imageBackdrop} />
             <span className={classes.imageButton}>
               <Typography
@@ -130,18 +130,18 @@ function Albums(props) {
             component={LinkBtn}
             to="/app/pages/photo-gallery"
           >
-            <GridList cellHeight={160} className={classes.gridList} cols={3}>
+            <ImageList rowHeight={160} className={classes.gridList} cols={3}>
               {imgData.map((tile, index) => {
                 if (index % 2) {
                   return false;
                 }
                 return (
-                  <GridListTile key={index.toString()} cols={tile.cols || 1}>
+                  <ImageListItem key={index.toString()} cols={tile.cols || 1}>
                     <img src={tile.img} className={classes.img} alt={tile.title} />
-                  </GridListTile>
+                  </ImageListItem>
                 );
               })}
-            </GridList>
+            </ImageList>
             <span className={classes.imageBackdrop} />
             <span className={classes.imageButton}>
               <Typography

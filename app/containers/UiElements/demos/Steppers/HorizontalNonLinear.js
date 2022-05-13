@@ -1,17 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepButton from '@material-ui/core/StepButton';
 import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
 
-const styles = theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
   },
@@ -25,10 +20,7 @@ const styles = theme => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
-  stepItem: {
-    whiteSpace: 'inherit'
-  }
-});
+}));
 
 function getSteps() {
   return ['Select campaign settings', 'Create an ad group', 'Create an ad'];
@@ -47,165 +39,100 @@ function getStepContent(step) {
   }
 }
 
-class HorizontalNonLinear extends React.Component {
-  state = {
-    activeStep: 0,
-    altLabel: false,
-    completed: {},
-  };
+export default function HorizontalNonLinearStepper() {
+  const classes = useStyles();
+  const [activeStep, setActiveStep] = React.useState(0);
+  const [completed, setCompleted] = React.useState({});
+  const steps = getSteps();
 
-  totalSteps = () => (
-    getSteps().length
-  );
+  const totalSteps = () => steps.length;
 
-  handleNext = () => {
-    const { completed, activeStep } = this.state;
-    let activeStepLet;
+  const completedSteps = () => Object.keys(completed).length;
 
-    if (this.isLastStep() && !this.allStepsCompleted()) {
-      // It's the last step, but not all steps have been completed,
+  const isLastStep = () => activeStep === totalSteps() - 1;
+
+  const allStepsCompleted = () => completedSteps() === totalSteps();
+
+  const handleNext = () => {
+    const newActiveStep = isLastStep() && !allStepsCompleted() // It's the last step, but not all steps have been completed,
       // find the first step that has been completed
-      const steps = getSteps();
-      activeStepLet = steps.findIndex((step, i) => !(i in completed));
-    } else {
-      activeStepLet = activeStep + 1;
-    }
-    this.setState({
-      activeStep: activeStepLet,
-    });
+      ? steps.findIndex((step, i) => !(i in completed))
+      : activeStep + 1;
+    setActiveStep(newActiveStep);
   };
 
-  handleBack = () => {
-    const { activeStep } = this.state;
-    this.setState({
-      activeStep: activeStep - 1,
-    });
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  handleStep = step => () => {
-    this.setState({
-      activeStep: step,
-    });
+  const handleStep = (step) => () => {
+    setActiveStep(step);
   };
 
-  handleComplete = () => {
-    const { completed, activeStep } = this.state;
-    completed[activeStep] = true;
-    this.setState({
-      completed,
-    });
-    this.handleNext();
+  const handleComplete = () => {
+    const newCompleted = completed;
+    newCompleted[activeStep] = true;
+    setCompleted(newCompleted);
+    handleNext();
   };
 
-  handleReset = () => {
-    this.setState({
-      activeStep: 0,
-      completed: {},
-    });
+  const handleReset = () => {
+    setActiveStep(0);
+    setCompleted({});
   };
 
-  handleChange = name => event => {
-    this.setState({ [name]: event.target.checked });
-  };
-
-  allStepsCompleted() {
-    return this.completedSteps() === this.totalSteps();
-  }
-
-  completedSteps() {
-    const { completed } = this.state;
-    return Object.keys(completed).length;
-  }
-
-  isLastStep() {
-    const { activeStep } = this.state;
-    return activeStep === this.totalSteps() - 1;
-  }
-
-  render() {
-    const { classes } = this.props;
-    const steps = getSteps();
-    const { activeStep, altLabel, completed } = this.state;
-
-    return (
-      <div className={classes.root}>
-        <FormGroup row>
-          <FormControlLabel
-            control={(
-              <Switch
-                checked={altLabel}
-                onChange={this.handleChange('altLabel')}
-                value="altLabel"
-              />
-            )}
-            label="Alternative Design"
-          />
-        </FormGroup>
-        <Divider />
-        <Stepper nonLinear activeStep={activeStep} alternativeLabel={altLabel}>
-          {steps.map((label, index) => (
-            <Step key={label}>
-              <StepButton
-                className={classes.stepItem}
-                onClick={this.handleStep(index)}
-                completed={completed[index]}
+  return (
+    <div className={classes.root}>
+      <Stepper nonLinear activeStep={activeStep}>
+        {steps.map((label, index) => (
+          <Step key={label}>
+            <StepButton onClick={handleStep(index)} completed={completed[index]}>
+              {label}
+            </StepButton>
+          </Step>
+        ))}
+      </Stepper>
+      <div>
+        {allStepsCompleted() ? (
+          <div>
+            <Typography className={classes.instructions}>
+              All steps completed - you&apos;re finished
+            </Typography>
+            <Button onClick={handleReset}>Reset</Button>
+          </div>
+        ) : (
+          <div>
+            <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+            <div>
+              <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
+                Back
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleNext}
+                className={classes.button}
               >
-                {label}
-              </StepButton>
-            </Step>
-          ))}
-        </Stepper>
-        <Divider />
-        <div>
-          {this.allStepsCompleted() ? (
-            <div>
-              <Typography className={classes.instructions}>
-                All steps completed - you&quot;re finished
-              </Typography>
-              <Button onClick={this.handleReset}>Reset</Button>
+                Next
+              </Button>
+              {activeStep !== steps.length
+                && (completed[activeStep] ? (
+                  <Typography variant="caption" className={classes.completed}>
+                    Step
+                    {' '}
+                    {activeStep + 1}
+                    {' '}
+already completed
+                  </Typography>
+                ) : (
+                  <Button variant="contained" color="primary" onClick={handleComplete}>
+                    {completedSteps() === totalSteps() - 1 ? 'Finish' : 'Complete Step'}
+                  </Button>
+                ))}
             </div>
-          ) : (
-            <div>
-              <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
-              <div>
-                <Button
-                  disabled={activeStep === 0}
-                  onClick={this.handleBack}
-                  className={classes.button}
-                >
-                  Back
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={this.handleNext}
-                  className={classes.button}
-                >
-                  Next
-                </Button>
-                {activeStep !== steps.length && (
-                  completed[activeStep] ? (
-                    <Typography variant="caption" className={classes.completed}>
-                      Step&nbsp;
-                      {activeStep + 1}
-                      &nbsp;already completed
-                    </Typography>
-                  ) : (
-                    <Button variant="contained" color="primary" onClick={this.handleComplete}>
-                      {this.completedSteps() === this.totalSteps() - 1 ? 'Finish' : 'Complete Step'}
-                    </Button>
-                  ))}
-              </div>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
-    );
-  }
+    </div>
+  );
 }
-
-HorizontalNonLinear.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(HorizontalNonLinear);

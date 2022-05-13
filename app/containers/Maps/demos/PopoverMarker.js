@@ -1,56 +1,55 @@
-import React from 'react';
-import { compose, withStateHandlers } from 'recompose';
+import React, { useState } from 'react';
 import LocalDining from '@material-ui/icons/LocalDining';
-import {
-  withScriptjs,
-  withGoogleMap,
-  GoogleMap,
-  Marker,
-  InfoWindow
-} from 'react-google-maps';
+import { GoogleMap, InfoWindow, Marker } from '@react-google-maps/api';
+import GoogleMapWrapper from './GoogleMapWrapper';
 
-const MapWithAMakredInfoWindow = compose(
-  withStateHandlers(() => ({
-    isOpen: false,
-  }), {
-    onToggleOpen: ({ isOpen }) => () => ({
-      isOpen: !isOpen,
-    })
-  }),
-  withScriptjs,
-  withGoogleMap
-)(props => (
-  <GoogleMap
-    defaultZoom={8}
-    defaultCenter={{ lat: -34.397, lng: 150.644 }}
-  >
-    <Marker
-      position={{ lat: -34.397, lng: 150.644 }}
-      onClick={props.onToggleOpen}
-    >
-      {props.isOpen && (
-        <InfoWindow onCloseClick={props.onToggleOpen}>
-          <span>
-            <LocalDining />
-            &nbsp;A marked place
-          </span>
-        </InfoWindow>
-      )}
-    </Marker>
-  </GoogleMap>
-));
+const containerStyle = {
+  height: '400px'
+};
 
-class PopoverMarker extends React.Component {
-  render() {
-    return (
-      <MapWithAMakredInfoWindow
-        googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
-        loadingElement={<div style={{ height: '100%' }} />}
-        containerElement={<div style={{ height: '400px' }} />}
-        mapElement={<div style={{ height: '100%' }} />}
-      />
-    );
-  }
+const divStyle = {
+  background: 'white',
+  padding: 15
+};
+
+const MapWithAMakredInfoWindow = props => {
+  const [open, setOpen] = useState(false);
+  const handleToggle = () => {
+    setOpen(!open);
+  };
+  return (
+    <GoogleMapWrapper>
+      <GoogleMap
+        {...props}
+        zoom={7}
+        center={{
+          lat: -34.300,
+          lng: 119.344
+        }}
+      >
+        <Marker position={{ lat: -34.300, lng: 119.344 }} onClick={handleToggle}>
+          {open && (
+            <InfoWindow>
+              <div style={divStyle}>
+                <LocalDining />
+                &nbsp;A marked place
+              </div>
+            </InfoWindow>
+          )}
+        </Marker>
+      </GoogleMap>
+    </GoogleMapWrapper>
+  );
+};
+
+function PopoverMarker() {
+  return (
+    <MapWithAMakredInfoWindow
+      loadingElement={<div style={{ height: '100%' }} />}
+      mapContainerStyle={containerStyle}
+      mapElement={<div style={{ height: '100%' }} />}
+    />
+  );
 }
 
 export default PopoverMarker;

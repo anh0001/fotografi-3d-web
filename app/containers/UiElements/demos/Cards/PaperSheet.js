@@ -5,11 +5,17 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
-  root: theme.mixins.gutters({
+  root: {
+    marginTop: theme.spacing(3),
     paddingTop: 16,
     paddingBottom: 16,
-    marginTop: theme.spacing(3),
-  }),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      paddingLeft: theme.spacing(3),
+      paddingRight: theme.spacing(3),
+    },
+  },
 });
 
 function PaperSheet(props) {

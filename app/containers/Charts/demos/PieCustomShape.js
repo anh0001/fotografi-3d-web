@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 import ThemePallete from 'enl-api/palette/themePalette';
 import {
   PieChart,
@@ -9,7 +9,7 @@ import {
 } from 'recharts';
 import { data6 } from './sampleData';
 
-const theme = createMuiTheme(ThemePallete.greenTheme);
+const theme = createTheme(ThemePallete.greenTheme);
 const color = ({
   primary: theme.palette.primary.main,
   secondary: theme.palette.secondary.main,
@@ -98,47 +98,40 @@ renderActiveShape.defaultProps = {
   value: 0,
 };
 
-class PieCustomShape extends React.Component {
-  state = {
-    activeIndex: 0
+function PieCustomShape() {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const onPieEnter = (evt) => {
+    const index = data6.findIndex(p => p.name === evt.name);
+    setActiveIndex(index);
   };
 
-  onPieEnter(evt) {
-    const index = data6.findIndex(p => p.name === evt.name);
-    this.setState({
-      activeIndex: index,
-    });
-  }
-
-  render() {
-    const { activeIndex } = this.state;
-    return (
-      <PieChart
-        width={800}
-        height={400}
-        margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5
-        }}
-      >
-        <Pie
-          dataKey="value"
-          activeIndex={activeIndex}
-          activeShape={renderActiveShape}
-          data={data6}
-          cx={150}
-          cy={200}
-          innerRadius={60}
-          outerRadius={100}
-          fill={color.secondary}
-          fillOpacity="0.8"
-          onMouseEnter={(event) => this.onPieEnter(event)}
-        />
-      </PieChart>
-    );
-  }
+  return (
+    <PieChart
+      width={800}
+      height={400}
+      margin={{
+        top: 5,
+        right: 30,
+        left: 20,
+        bottom: 5
+      }}
+    >
+      <Pie
+        dataKey="value"
+        activeIndex={activeIndex}
+        activeShape={renderActiveShape}
+        data={data6}
+        cx={150}
+        cy={200}
+        innerRadius={60}
+        outerRadius={100}
+        fill={color.secondary}
+        fillOpacity="0.8"
+        onMouseEnter={(event) => onPieEnter(event)}
+      />
+    </PieChart>
+  );
 }
 
 export default PieCustomShape;

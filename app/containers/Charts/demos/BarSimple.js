@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { createMuiTheme, withStyles } from '@material-ui/core/styles';
+import { createTheme, withStyles } from '@material-ui/core/styles';
 import ThemePallete from 'enl-api/palette/themePalette';
 import {
   BarChart,
@@ -16,7 +16,7 @@ import {
 import { data1 } from './sampleData';
 import styles from './fluidChart-jss';
 
-const theme = createMuiTheme(ThemePallete.magentaTheme);
+const theme = createTheme(ThemePallete.magentaTheme);
 const color = ({
   primary: theme.palette.primary.main,
   primaryDark: theme.palette.primary.dark,
@@ -28,7 +28,7 @@ function BarSimple(props) {
   const { classes } = props;
   return (
     <div className={classes.chartFluid}>
-      <ResponsiveContainer>
+      <ResponsiveContainer width={800} height="80%">
         <BarChart
           width={800}
           height={450}

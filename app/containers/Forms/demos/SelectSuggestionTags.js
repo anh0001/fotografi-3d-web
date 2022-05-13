@@ -1,379 +1,129 @@
+/* eslint-disable no-use-before-define */
 import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import Select from 'react-select';
-import { emphasize, makeStyles, useTheme } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import NoSsr from '@material-ui/core/NoSsr';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
-import Paper from '@material-ui/core/Paper';
-import Chip from '@material-ui/core/Chip';
-import MenuItem from '@material-ui/core/MenuItem';
-import CancelIcon from '@material-ui/icons/Cancel';
 
-const suggestions = [
-  { label: 'Afghanistan' },
-  { label: 'Aland Islands' },
-  { label: 'Albania' },
-  { label: 'Algeria' },
-  { label: 'American Samoa' },
-  { label: 'Andorra' },
-  { label: 'Angola' },
-  { label: 'Anguilla' },
-  { label: 'Antarctica' },
-  { label: 'Antigua and Barbuda' },
-  { label: 'Argentina' },
-  { label: 'Armenia' },
-  { label: 'Aruba' },
-  { label: 'Australia' },
-  { label: 'Austria' },
-  { label: 'Azerbaijan' },
-  { label: 'Bahamas' },
-  { label: 'Bahrain' },
-  { label: 'Bangladesh' },
-  { label: 'Barbados' },
-  { label: 'Belarus' },
-  { label: 'Belgium' },
-  { label: 'Belize' },
-  { label: 'Benin' },
-  { label: 'Bermuda' },
-  { label: 'Bhutan' },
-  { label: 'Bolivia, Plurinational State of' },
-  { label: 'Bonaire, Sint Eustatius and Saba' },
-  { label: 'Bosnia and Herzegovina' },
-  { label: 'Botswana' },
-  { label: 'Bouvet Island' },
-  { label: 'Brazil' },
-  { label: 'British Indian Ocean Territory' },
-  { label: 'Brunei Darussalam' },
-].map(suggestion => ({
-  value: suggestion.label,
-  label: suggestion.label,
-}));
+// Top 100 films as rated by IMDb users. http://www.imdb.com/chart/top
+const top100Films = [
+  { title: 'The Shawshank Redemption', year: 1994 },
+  { title: 'The Godfather', year: 1972 },
+  { title: 'The Godfather: Part II', year: 1974 },
+  { title: 'The Dark Knight', year: 2008 },
+  { title: '12 Angry Men', year: 1957 },
+  { title: "Schindler's List", year: 1993 },
+  { title: 'Pulp Fiction', year: 1994 },
+  { title: 'The Lord of the Rings: The Return of the King', year: 2003 },
+  { title: 'The Good, the Bad and the Ugly', year: 1966 },
+  { title: 'Fight Club', year: 1999 },
+  { title: 'The Lord of the Rings: The Fellowship of the Ring', year: 2001 },
+  { title: 'Star Wars: Episode V - The Empire Strikes Back', year: 1980 },
+  { title: 'Forrest Gump', year: 1994 },
+  { title: 'Inception', year: 2010 },
+  { title: 'The Lord of the Rings: The Two Towers', year: 2002 },
+  { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
+  { title: 'Goodfellas', year: 1990 },
+  { title: 'The Matrix', year: 1999 },
+  { title: 'Seven Samurai', year: 1954 },
+  { title: 'Star Wars: Episode IV - A New Hope', year: 1977 },
+  { title: 'City of God', year: 2002 },
+  { title: 'Se7en', year: 1995 },
+  { title: 'The Silence of the Lambs', year: 1991 },
+  { title: "It's a Wonderful Life", year: 1946 },
+  { title: 'Life Is Beautiful', year: 1997 },
+  { title: 'The Usual Suspects', year: 1995 },
+  { title: 'Léon: The Professional', year: 1994 },
+  { title: 'Spirited Away', year: 2001 },
+  { title: 'Saving Private Ryan', year: 1998 },
+  { title: 'Once Upon a Time in the West', year: 1968 },
+  { title: 'American History X', year: 1998 },
+  { title: 'Interstellar', year: 2014 },
+  { title: 'Casablanca', year: 1942 },
+  { title: 'City Lights', year: 1931 },
+  { title: 'Psycho', year: 1960 },
+  { title: 'The Green Mile', year: 1999 },
+  { title: 'The Intouchables', year: 2011 },
+  { title: 'Modern Times', year: 1936 },
+  { title: 'Raiders of the Lost Ark', year: 1981 },
+  { title: 'Rear Window', year: 1954 },
+  { title: 'The Pianist', year: 2002 },
+  { title: 'The Departed', year: 2006 },
+  { title: 'Terminator 2: Judgment Day', year: 1991 },
+  { title: 'Back to the Future', year: 1985 },
+  { title: 'Whiplash', year: 2014 },
+  { title: 'Gladiator', year: 2000 },
+  { title: 'Memento', year: 2000 },
+  { title: 'The Prestige', year: 2006 },
+  { title: 'The Lion King', year: 1994 },
+  { title: 'Apocalypse Now', year: 1979 },
+  { title: 'Alien', year: 1979 },
+  { title: 'Sunset Boulevard', year: 1950 },
+  { title: 'Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb', year: 1964 },
+  { title: 'The Great Dictator', year: 1940 },
+  { title: 'Cinema Paradiso', year: 1988 },
+  { title: 'The Lives of Others', year: 2006 },
+  { title: 'Grave of the Fireflies', year: 1988 },
+  { title: 'Paths of Glory', year: 1957 },
+  { title: 'Django Unchained', year: 2012 },
+  { title: 'The Shining', year: 1980 },
+  { title: 'WALL·E', year: 2008 },
+  { title: 'American Beauty', year: 1999 },
+  { title: 'The Dark Knight Rises', year: 2012 },
+  { title: 'Princess Mononoke', year: 1997 },
+  { title: 'Aliens', year: 1986 },
+  { title: 'Oldboy', year: 2003 },
+  { title: 'Once Upon a Time in America', year: 1984 },
+  { title: 'Witness for the Prosecution', year: 1957 },
+  { title: 'Das Boot', year: 1981 },
+  { title: 'Citizen Kane', year: 1941 },
+  { title: 'North by Northwest', year: 1959 },
+  { title: 'Vertigo', year: 1958 },
+  { title: 'Star Wars: Episode VI - Return of the Jedi', year: 1983 },
+  { title: 'Reservoir Dogs', year: 1992 },
+  { title: 'Braveheart', year: 1995 },
+  { title: 'M', year: 1931 },
+  { title: 'Requiem for a Dream', year: 2000 },
+  { title: 'Amélie', year: 2001 },
+  { title: 'A Clockwork Orange', year: 1971 },
+  { title: 'Like Stars on Earth', year: 2007 },
+  { title: 'Taxi Driver', year: 1976 },
+  { title: 'Lawrence of Arabia', year: 1962 },
+  { title: 'Double Indemnity', year: 1944 },
+  { title: 'Eternal Sunshine of the Spotless Mind', year: 2004 },
+  { title: 'Amadeus', year: 1984 },
+  { title: 'To Kill a Mockingbird', year: 1962 },
+  { title: 'Toy Story 3', year: 2010 },
+  { title: 'Logan', year: 2017 },
+  { title: 'Full Metal Jacket', year: 1987 },
+  { title: 'Dangal', year: 2016 },
+  { title: 'The Sting', year: 1973 },
+  { title: '2001: A Space Odyssey', year: 1968 },
+  { title: "Singin' in the Rain", year: 1952 },
+  { title: 'Toy Story', year: 1995 },
+  { title: 'Bicycle Thieves', year: 1948 },
+  { title: 'The Kid', year: 1921 },
+  { title: 'Inglourious Basterds', year: 2009 },
+  { title: 'Snatch', year: 2000 },
+  { title: '3 Idiots', year: 2009 },
+  { title: 'Monty Python and the Holy Grail', year: 1975 },
+];
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-    height: 250,
-  },
-  input: {
-    display: 'flex',
-    padding: 0,
-    height: 'auto',
-  },
-  valueContainer: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    flex: 1,
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
-  chip: {
-    margin: theme.spacing(0.5, 0.25),
-  },
-  chipFocused: {
-    backgroundColor: emphasize(
-      theme.palette.type === 'light' ? theme.palette.grey[300] : theme.palette.grey[700],
-      0.08,
-    ),
-  },
-  noOptionsMessage: {
-    padding: theme.spacing(1, 2),
-  },
-  singleValue: {
-    fontSize: 16,
-  },
-  placeholder: {
-    position: 'absolute',
-    left: 8,
-    bottom: 6,
-    fontSize: 16,
-  },
-  paper: {
-    position: 'absolute',
-    zIndex: 1,
-    marginTop: theme.spacing(1),
-    left: 0,
-    right: 0,
-  },
-}));
-
-function NoOptionsMessage(props) {
-  const { selectProps, innerProps, children } = props;
+export default function Tags() {
   return (
-    <Typography
-      color="textSecondary"
-      className={selectProps.classes.noOptionsMessage}
-      {...innerProps}
-    >
-      {children}
-    </Typography>
-  );
-}
-
-NoOptionsMessage.propTypes = {
-  children: PropTypes.node,
-  innerProps: PropTypes.object,
-  selectProps: PropTypes.object.isRequired,
-};
-
-NoOptionsMessage.defaultProps = {
-  children: null,
-  innerProps: null
-};
-
-function inputComponent({ inputRef, ...props }) {
-  return <div ref={inputRef} {...props} />;
-}
-
-inputComponent.propTypes = {
-  inputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-};
-
-inputComponent.defaultProps = {
-  inputRef: undefined
-};
-
-function Control(props) {
-  const {
-    children,
-    innerProps,
-    innerRef,
-    selectProps: { classes, TextFieldProps },
-  } = props;
-
-  return (
-    <TextField
-      fullWidth
-      InputProps={{
-        inputComponent,
-        inputProps: {
-          className: classes.input,
-          ref: innerRef,
-          children,
-          ...innerProps,
-        },
-      }}
-      {...TextFieldProps}
-    />
-  );
-}
-
-Control.propTypes = {
-  children: PropTypes.node,
-  innerProps: PropTypes.object,
-  innerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-  selectProps: PropTypes.object.isRequired,
-};
-
-Control.defaultProps = {
-  children: null,
-  innerProps: null,
-  innerRef: undefined
-};
-
-function Option(props) {
-  const {
-    innerRef,
-    isFocused,
-    isSelected,
-    innerProps,
-    children
-  } = props;
-  return (
-    <MenuItem
-      ref={innerRef}
-      selected={isFocused}
-      component="div"
-      style={{
-        fontWeight: isSelected ? 500 : 400,
-      }}
-      {...innerProps}
-    >
-      {children}
-    </MenuItem>
-  );
-}
-
-Option.propTypes = {
-  children: PropTypes.node,
-  innerProps: PropTypes.object,
-  innerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-  isFocused: PropTypes.bool,
-  isSelected: PropTypes.bool,
-};
-
-Option.defaultProps = {
-  children: null,
-  innerProps: null,
-  innerRef: undefined,
-  isFocused: false,
-  isSelected: false
-};
-
-function Placeholder(props) {
-  const { selectProps, innerProps, children } = props;
-  return (
-    <Typography
-      color="textSecondary"
-      className={selectProps.classes.placeholder}
-      {...innerProps}
-    >
-      {children}
-    </Typography>
-  );
-}
-
-Placeholder.propTypes = {
-  children: PropTypes.node,
-  innerProps: PropTypes.object,
-  selectProps: PropTypes.object.isRequired,
-};
-
-Placeholder.defaultProps = {
-  children: null,
-  innerProps: null,
-};
-
-function SingleValue(props) {
-  const { selectProps, children, innerProps } = props;
-  return (
-    <Typography className={selectProps.classes.singleValue} {...innerProps}>
-      {children}
-    </Typography>
-  );
-}
-
-SingleValue.propTypes = {
-  children: PropTypes.node,
-  innerProps: PropTypes.object,
-  selectProps: PropTypes.object.isRequired,
-};
-
-SingleValue.defaultProps = {
-  children: null,
-  innerProps: null,
-};
-
-function ValueContainer(props) {
-  const { selectProps, children } = props;
-  return <div className={selectProps.classes.valueContainer}>{children}</div>;
-}
-
-ValueContainer.propTypes = {
-  children: PropTypes.node,
-  selectProps: PropTypes.object.isRequired,
-};
-
-ValueContainer.defaultProps = {
-  children: null,
-};
-
-function MultiValue(props) {
-  const {
-    children,
-    selectProps,
-    removeProps,
-    isFocused
-  } = props;
-  return (
-    <Chip
-      tabIndex={-1}
-      label={children}
-      className={classNames(selectProps.classes.chip, {
-        [selectProps.classes.chipFocused]: isFocused,
-      })}
-      onDelete={removeProps.onClick}
-      deleteIcon={<CancelIcon {...removeProps} />}
-    />
-  );
-}
-
-MultiValue.propTypes = {
-  children: PropTypes.node,
-  isFocused: PropTypes.bool,
-  removeProps: PropTypes.object.isRequired,
-  selectProps: PropTypes.object.isRequired,
-};
-
-MultiValue.defaultProps = {
-  children: null,
-  isFocused: false,
-};
-
-function Menu(props) {
-  const { selectProps, innerProps, children } = props;
-  return (
-    <Paper square className={selectProps.classes.paper} {...innerProps}>
-      {children}
-    </Paper>
-  );
-}
-
-Menu.propTypes = {
-  children: PropTypes.node,
-  innerProps: PropTypes.object,
-  selectProps: PropTypes.object,
-};
-
-Menu.defaultProps = {
-  children: null,
-  innerProps: null,
-  selectProps: null,
-};
-
-const components = {
-  Control,
-  Menu,
-  MultiValue,
-  NoOptionsMessage,
-  Option,
-  Placeholder,
-  SingleValue,
-  ValueContainer,
-};
-
-export default function SelectSuggestions() {
-  const classes = useStyles();
-  const theme = useTheme();
-  const [multi, setMulti] = React.useState(null);
-
-  function handleChangeMulti(value) {
-    setMulti(value);
-  }
-
-  const selectStyles = {
-    input: base => ({
-      ...base,
-      color: theme.palette.text.primary,
-      '& input': {
-        font: 'inherit',
-      },
-    }),
-  };
-
-  return (
-    <div className={classes.root}>
-      <NoSsr>
-        <Select
-          classes={classes}
-          styles={selectStyles}
-          inputId="react-select-multiple"
-          TextFieldProps={{
-            label: 'Countries',
-            InputLabelProps: {
-              htmlFor: 'react-select-multiple',
-              shrink: true,
-            },
-            placeholder: 'Select multiple countries',
-          }}
-          options={suggestions}
-          components={components}
-          value={multi}
-          onChange={handleChangeMulti}
-          isMulti
-        />
-      </NoSsr>
+    <div>
+      <Autocomplete
+        multiple
+        id="tags-standard"
+        options={top100Films}
+        getOptionLabel={(option) => option.title}
+        defaultValue={[top100Films[13]]}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Multiple values"
+            placeholder="Favorites"
+          />
+        )}
+      />
     </div>
   );
 }

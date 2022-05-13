@@ -1,4 +1,4 @@
-import { fade } from '@material-ui/core/styles/colorManipulator';
+import { alpha } from '@material-ui/core/styles';
 const styles = theme => ({
   statusWrap: {
     position: 'relative',
@@ -8,7 +8,7 @@ const styles = theme => ({
     },
     '& textarea': {
       border: 'none',
-      padding: '20px 20px 20px 50px',
+      padding: '14px 20px 20px 50px',
       outline: 'none',
       width: '100%',
       resize: 'none',
@@ -27,7 +27,7 @@ const styles = theme => ({
     }
   },
   inputMessage: {
-    backgroundColor: theme.palette.type === 'dark' ? fade(theme.palette.background.paper, 0.85) : fade(theme.palette.background.paper, 0.95)
+    backgroundColor: theme.palette.type === 'dark' ? alpha(theme.palette.background.paper, 0.85) : alpha(theme.palette.background.paper, 0.95)
   },
   avatarMini: {
     width: 30,

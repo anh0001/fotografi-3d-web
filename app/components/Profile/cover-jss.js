@@ -1,4 +1,4 @@
-import { fade, darken } from '@material-ui/core/styles/colorManipulator';
+import { alpha, darken } from '@material-ui/core/styles';
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -27,11 +27,11 @@ const styles = theme => ({
       marginTop: -48,
     },
     borderRadius: `0 0 ${theme.rounded.medium} ${theme.rounded.medium}`,
-    background: fade(theme.palette.background.paper, 0.8),
+    background: alpha(theme.palette.background.paper, 0.8),
     position: 'relative'
   },
   content: {
-    background: fade(theme.palette.secondary.main, 0.3),
+    background: alpha(theme.palette.secondary.main, 0.3),
     height: '100%',
     width: '100%',
     padding: `70px ${theme.spacing(3)}px 30px`

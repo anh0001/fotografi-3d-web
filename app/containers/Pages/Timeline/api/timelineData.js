@@ -3,7 +3,7 @@ import avatarApi from 'enl-api/images/avatars';
 const timelineData = [
   {
     id: '1',
-    name: 'Guest',
+    name: 'John Doe',
     date: 'September, 12 2018',
     time: '08:01',
     icon: 'add_circle',
@@ -37,7 +37,7 @@ const timelineData = [
   },
   {
     id: '2',
-    name: 'Guest',
+    name: 'John Doe',
     date: 'September, 10 2018',
     time: '03:20',
     icon: 'date_range',
@@ -64,7 +64,7 @@ const timelineData = [
   },
   {
     id: '3',
-    name: 'GUest',
+    name: 'John Doe',
     date: 'Aug, 17 2018',
     time: '04:10',
     icon: 'description',
@@ -105,7 +105,7 @@ const timelineData = [
   },
   {
     id: '4',
-    name: 'GUest',
+    name: 'John Doe',
     date: 'Aug, 10 2018',
     time: '08:05',
     icon: 'favorite',
@@ -125,7 +125,7 @@ const timelineData = [
   },
   {
     id: '5',
-    name: 'Guest',
+    name: 'John Doe',
     date: 'Aug, 10 2018',
     time: '02:50',
     icon: 'lock',

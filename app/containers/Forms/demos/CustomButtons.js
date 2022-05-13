@@ -1,7 +1,7 @@
-import React, { Fragment, PureComponent } from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { withStyles, MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -22,7 +22,6 @@ const styles = theme => ({
     height: 'auto',
   },
   divider: {
-    display: 'block',
     margin: `${theme.spacing(3)}px 0`,
   },
   field: {
@@ -84,176 +83,174 @@ const styles = theme => ({
   },
 });
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: green,
   },
 });
 
-class CustomButtons extends PureComponent { // eslint-disable-line
-  render() {
-    const { classes } = this.props;
-    const MyLink = React.forwardRef((props, ref) => <Link innerRef={ref} to="/app/forms/reduxform" {...props} />); // eslint-disable-line
-    return (
-      <Fragment>
+function CustomButtons(props) { // eslint-disable-line
+  const { classes } = props;
+  const MyLink = React.forwardRef((props, ref) => <Link innerRef={ref} to="/app/forms/reduxform" {...props} />); // eslint-disable-line
+  return (
+    <Fragment>
+      <Grid
+        container
+        alignItems="center"
+        justifyContent="flex-start"
+        direction="row"
+        spacing={2}
+      >
         <Grid
-          container
-          alignItems="center"
-          justify="flex-start"
-          direction="row"
-          spacing={2}
+          item
+          md={6}
+          className={classes.demo}
         >
-          <Grid
-            item
-            md={6}
-            className={classes.demo}
-          >
-            <Typography variant="button" className={classes.divider}>Sizes</Typography>
-            <Typography className={classes.divider}>
-              Fancy larger or smaller buttons? Use the size or the mini property.
-            </Typography>
+          <Typography variant="button" className={classes.divider}>Sizes</Typography>
+          <Typography className={classes.divider}>
+            Fancy larger or smaller buttons? Use the size or the mini property.
+          </Typography>
+          <div>
             <div>
-              <div>
-                <Button size="small" className={classes.button}>
-                  Small
-                </Button>
-                <Button size="medium" className={classes.button}>
-                  Medium
-                </Button>
-                <Button size="large" className={classes.button}>
-                  Large
-                </Button>
-              </div>
-              <div>
-                <Button variant="contained" size="small" color="primary" className={classes.button}>
-                  Small
-                </Button>
-                <Button variant="contained" size="medium" color="primary" className={classes.button}>
-                  Medium
-                </Button>
-                <Button variant="contained" size="large" color="primary" className={classes.button}>
-                  Large
-                </Button>
-              </div>
-              <div>
-                <Button variant="outlined" size="small" color="primary" className={classes.button}>
-                  Small
-                </Button>
-                <Button variant="outlined" size="medium" color="primary" className={classes.button}>
-                  Medium
-                </Button>
-                <Button variant="outlined" size="large" color="primary" className={classes.button}>
-                  Large
-                </Button>
-              </div>
-              <div>
-                <Fab size="small" color="secondary" aria-label="add" className={classes.button}>
-                  <AddIcon />
-                </Fab>
-                <Fab color="secondary" aria-label="add" className={classes.button}>
-                  <AddIcon />
-                </Fab>
-              </div>
-            </div>
-          </Grid>
-          <Grid
-            item
-            md={6}
-            className={classes.demo}
-          >
-            <Typography variant="button" className={classes.divider}>Style</Typography>
-            <Typography className={classes.divider}>
-              Here is an example of how you can change the main color of a Button.
-            </Typography>
-            <div>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classNames(classes.margin, classes.cssRoot)}
-              >
-                Custom CSS
+              <Button size="small" className={classes.button}>
+                Small
               </Button>
-              <MuiThemeProvider theme={theme}>
-                <Button variant="contained" color="primary" className={classes.margin}>
-                  MuiThemeProvider
-                </Button>
-              </MuiThemeProvider>
-              <Button
-                variant="contained"
-                color="primary"
-                disableRipple
-                className={classNames(classes.margin, classes.bootstrapRoot)}
-              >
-                Bootstrap
+              <Button size="medium" className={classes.button}>
+                Medium
               </Button>
-              <Button
-                classes={{
-                  root: classNames(classes.gradientBtn, classes.margin), // class name, e.g. `classes-root-x`
-                  label: classes.label, // class name, e.g. `classes-label-x`
-                }}
-              >
-                Gradient Style
+              <Button size="large" className={classes.button}>
+                Large
               </Button>
             </div>
-          </Grid>
-          <Grid
-            item
-            md={6}
-            className={classes.demo}
-          >
-            <Typography variant="button" className={classes.divider}>Linked Button</Typography>
-            <Typography className={classes.divider}>
-              One common use case is to use the button to trigger a navigation to a new page.
-            </Typography>
             <div>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classNames(classes.margin, classes.cssRoot)}
-                component={LinkBtn}
-                to="/app/forms/date-time-picker"
-              >
-                Go To Date Time Picker
+              <Button variant="contained" size="small" color="primary" className={classes.button}>
+                Small
               </Button>
-              <Button color="secondary" variant="contained" component={MyLink}> Go To Redux Form </Button>
+              <Button variant="contained" size="medium" color="primary" className={classes.button}>
+                Medium
+              </Button>
+              <Button variant="contained" size="large" color="primary" className={classes.button}>
+                Large
+              </Button>
             </div>
-          </Grid>
-          <Grid
-            item
-            md={6}
-            className={classes.demo}
-          >
-            <Typography variant="button" className={classes.divider}>Upload Button</Typography>
-            <Typography className={classes.divider}>
-              This a sample to trigger input files from button
-            </Typography>
             <div>
-              <input
-                accept="image/*"
-                className={classes.inputUpload}
-                id="raised-button-file"
-                multiple
-                type="file"
-              />
-              { /* eslint-disable-next-line */ }
-              <label htmlFor="raised-button-file">
-                <Button variant="contained" component="span" id="raised-button-file" className={classes.button}>
-                  Upload
-                </Button>
-              </label>
-              <input accept="image/*" className={classes.inputUpload} id="icon-button-file" type="file" />
-              { /* eslint-disable-next-line */ }
-              <label htmlFor="icon-button-file">
-                <IconButton color="primary" id="uploadBtnIcon" className={classes.button} component="span">
-                  <FileUpload />
-                </IconButton>
-              </label>
+              <Button variant="outlined" size="small" color="primary" className={classes.button}>
+                Small
+              </Button>
+              <Button variant="outlined" size="medium" color="primary" className={classes.button}>
+                Medium
+              </Button>
+              <Button variant="outlined" size="large" color="primary" className={classes.button}>
+                Large
+              </Button>
             </div>
-          </Grid>
+            <div>
+              <Fab size="small" color="secondary" aria-label="add" className={classes.button}>
+                <AddIcon />
+              </Fab>
+              <Fab color="secondary" aria-label="add" className={classes.button}>
+                <AddIcon />
+              </Fab>
+            </div>
+          </div>
         </Grid>
-      </Fragment>
-    );
-  }
+        <Grid
+          item
+          md={6}
+          className={classes.demo}
+        >
+          <Typography variant="button" className={classes.divider}>Style</Typography>
+          <Typography className={classes.divider}>
+            Here is an example of how you can change the main color of a Button.
+          </Typography>
+          <div>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classNames(classes.margin, classes.cssRoot)}
+            >
+              Custom CSS
+            </Button>
+            <MuiThemeProvider theme={theme}>
+              <Button variant="contained" color="primary" className={classes.margin}>
+                MuiThemeProvider
+              </Button>
+            </MuiThemeProvider>
+            <Button
+              variant="contained"
+              color="primary"
+              disableRipple
+              className={classNames(classes.margin, classes.bootstrapRoot)}
+            >
+              Bootstrap
+            </Button>
+            <Button
+              classes={{
+                root: classNames(classes.gradientBtn, classes.margin), // class name, e.g. `classes-root-x`
+                label: classes.label, // class name, e.g. `classes-label-x`
+              }}
+            >
+              Gradient Style
+            </Button>
+          </div>
+        </Grid>
+        <Grid
+          item
+          md={6}
+          className={classes.demo}
+        >
+          <Typography variant="button" className={classes.divider}>Linked Button</Typography>
+          <Typography className={classes.divider}>
+            One common use case is to use the button to trigger a navigation to a new page.
+          </Typography>
+          <div>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classNames(classes.margin, classes.cssRoot)}
+              component={LinkBtn}
+              to="/app/forms/date-time-picker"
+            >
+              Go To Date Time Picker
+            </Button>
+            <Button color="secondary" variant="contained" component={MyLink}> Go To Redux Form </Button>
+          </div>
+        </Grid>
+        <Grid
+          item
+          md={6}
+          className={classes.demo}
+        >
+          <Typography variant="button" className={classes.divider}>Upload Button</Typography>
+          <Typography className={classes.divider}>
+            This a sample to trigger input files from button
+          </Typography>
+          <div>
+            <input
+              accept="image/*"
+              className={classes.inputUpload}
+              id="raised-button-file"
+              multiple
+              type="file"
+            />
+            { /* eslint-disable-next-line */ }
+            <label htmlFor="raised-button-file">
+              <Button variant="contained" component="span" id="raised-button-file" className={classes.button}>
+                Upload
+              </Button>
+            </label>
+            <input accept="image/*" className={classes.inputUpload} id="icon-button-file" type="file" />
+            { /* eslint-disable-next-line */ }
+            <label htmlFor="icon-button-file">
+              <IconButton color="primary" id="uploadBtnIcon" className={classes.button} component="span">
+                <FileUpload />
+              </IconButton>
+            </label>
+          </div>
+        </Grid>
+      </Grid>
+    </Fragment>
+  );
 }
 
 CustomButtons.propTypes = {

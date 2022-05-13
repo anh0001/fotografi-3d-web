@@ -30,7 +30,6 @@ const contactList = new ContactModels({
   onRemove: deleteActionSuccess
 }, Init);
 
-
 function subscribe() {
   return eventChannel(emit => contactList.subscribe(emit));
 }
@@ -54,7 +53,6 @@ function* write(context, method, onError, ...params) {
 const createContact = write.bind(null, contactList, contactList.push, createActionFailed);
 const removeContact = write.bind(null, contactList, contactList.remove, deleteActionFailed);
 const updateContact = write.bind(null, contactList, contactList.update, updateActionFailed);
-
 
 //= ====================================
 //  WATCHERS
@@ -90,7 +88,6 @@ function* watchUpdateContact() {
     yield fork(updateContact, payload.contact.key, payload.changes);
   }
 }
-
 
 //= ====================================
 //  CONTACT SAGAS

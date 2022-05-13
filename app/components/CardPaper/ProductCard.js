@@ -12,102 +12,91 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Chip from '@material-ui/core/Chip';
 import AddShoppingCart from '@material-ui/icons/AddShoppingCart';
-import EditIcon from '@material-ui/icons/Edit';
 import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 import Type from 'enl-styles/Typography.scss';
-import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
-import messages from './messages';
+import Rating from '../Rating/Rating';
 import styles from './cardStyle-jss';
 
-class ProductCard extends React.Component {
-  render() {
-    const {
-      classes,
-      discount,
-      soldout,
-      thumbnail,
-      name,
-      desc,
-      price,
-      prevPrice,
-      list,
-      detailOpen,
-      addToCart,
-      handleClickEditButton,
-      noCart,
-      noEditButton,
-      width,
-      intl
-    } = this.props;
-    return (
-      <Card className={classNames(classes.cardProduct, isWidthUp('sm', width) && list ? classes.cardList : '')}>
-        <div className={classes.status}>
-          {discount !== '' && (
-            <Chip label={'Discount ' + discount} className={classes.chipDiscount} />
-          )}
-          {soldout && (
-            <Chip label="Sold Out" className={classes.chipSold} />
-          )}
+function ProductCard(props) {
+  const {
+    classes,
+    discount,
+    soldout,
+    thumbnail,
+    name,
+    desc,
+    rating,
+    price,
+    prevPrice,
+    list,
+    detailOpen,
+    addToCart,
+    width,
+  } = props;
+  return (
+    <Card className={classNames(classes.cardProduct, isWidthUp('sm', width) && list ? classes.cardList : '')}>
+      <div className={classes.status}>
+        {discount !== '' && (
+          <Chip label={'Discount ' + discount} className={classes.chipDiscount} />
+        )}
+        {soldout && (
+          <Chip label="Sold Out" className={classes.chipSold} />
+        )}
+      </div>
+      <CardMedia
+        className={classes.mediaProduct}
+        image={thumbnail}
+        title={name}
+      />
+      <CardContent className={classes.floatingButtonWrap}>
+        {!soldout && (
+          <Tooltip title="Add to cart" placement="top">
+            <Fab onClick={addToCart} size="small" color="secondary" aria-label="add" className={classes.buttonAdd}>
+              <AddShoppingCart />
+            </Fab>
+          </Tooltip>
+        )}
+        <Typography noWrap gutterBottom variant="h5" className={classes.title} component="h2">
+          {name}
+        </Typography>
+        <Typography component="p" className={classes.desc}>
+          {desc}
+        </Typography>
+        <div className={classes.ratting}>
+          {rating > 0 ? <Rating value={rating} max={5} readOnly /> : <div className={classes.emptyRating} />}
         </div>
-        <CardMedia
-          className={classes.mediaProduct}
-          image={thumbnail}
-          title={name}
-        />
-        <CardContent className={classes.floatingButtonWrap}>
-          {!soldout && !noCart && (
-            <Tooltip title={intl.formatMessage(messages.add_cart)} placement="top">
-              <Fab onClick={addToCart} size="small" color="secondary" aria-label="add" className={classes.buttonAdd}>
-                <AddShoppingCart />
-              </Fab>
-            </Tooltip>
-          )}
-          {!noEditButton && (
-            <Tooltip title={"Edit"} placement="top">
-              <Fab onClick={handleClickEditButton} size="small" color="secondary" aria-label="edit" className={classes.buttonAdd}>
-                <EditIcon />
-              </Fab>
-            </Tooltip>
-          )}
-          <Typography noWrap gutterBottom variant="h5" className={classes.title} component="h2">
-            {name}
-          </Typography>
-          <Typography component="p" className={classes.desc}>
-            {desc}
-          </Typography>
-        </CardContent>
-        <CardActions className={classes.price}>
-          <Typography variant="h5">
-            <span>
-              Rp. 
-              {price.toLocaleString()}
+      </CardContent>
+      <CardActions className={classes.price}>
+        <Typography variant="h5">
+          <span>
+            $
+            {price}
+          </span>
+        </Typography>
+        {prevPrice > 0 && (
+          <Typography variant="caption" component="h5">
+            <span className={Type.lineThrought}>
+              $
+              {prevPrice}
             </span>
           </Typography>
-          {prevPrice > 0 && prevPrice != price && (
-            <Typography variant="caption" component="h5">
-              <span className={Type.lineThrought}>
-                Rp. 
-                {prevPrice.toLocaleString()}
-              </span>
-            </Typography>
+        )}
+        <div className={classes.rightAction}>
+          <Button size="small" variant="outlined" color="secondary" onClick={detailOpen}>
+            See Detail
+          </Button>
+          {!soldout && (
+            <Tooltip title="Add to cart" placement="top">
+              <IconButton color="secondary" onClick={addToCart} className={classes.buttonAddList}>
+                <AddShoppingCart />
+              </IconButton>
+            </Tooltip>
           )}
-          <div className={classes.rightAction}>
-            <Button size="small" variant="outlined" color="secondary" onClick={detailOpen}>
-              <FormattedMessage {...messages.see_detail} />
-            </Button>
-            {!soldout && (
-              <Tooltip title="Add to cart" placement="top">
-                <IconButton color="secondary" onClick={addToCart} className={classes.buttonAddList}>
-                  <AddShoppingCart />
-                </IconButton>
-              </Tooltip>
-            )}
-          </div>
-        </CardActions>
-      </Card>
-    );
-  }
+        </div>
+      </CardActions>
+    </Card>
+  );
 }
 
 ProductCard.propTypes = {
@@ -118,15 +107,12 @@ ProductCard.propTypes = {
   thumbnail: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   desc: PropTypes.string.isRequired,
+  rating: PropTypes.number.isRequired,
   price: PropTypes.number.isRequired,
   prevPrice: PropTypes.number,
   list: PropTypes.bool,
   detailOpen: PropTypes.func,
   addToCart: PropTypes.func,
-  handleClickEditButton: PropTypes.func,
-  noCart: PropTypes.bool,
-  noEditButton: PropTypes.bool,
-  intl: intlShape.isRequired
 };
 
 ProductCard.defaultProps = {
@@ -134,12 +120,9 @@ ProductCard.defaultProps = {
   soldout: false,
   prevPrice: 0,
   list: false,
-  noCart: false,
-  noEditButton: true,
   detailOpen: () => (false),
   addToCart: () => (false),
-  handleClickEditButton: () => (false),
 };
 
 const ProductCardResponsive = withWidth()(ProductCard);
-export default withStyles(styles)(injectIntl(ProductCardResponsive));
+export default withStyles(styles)(ProductCardResponsive);

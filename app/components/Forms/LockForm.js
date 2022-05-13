@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Field, reduxForm } from 'redux-form/immutable';
+import { Field, reduxForm } from 'redux-form';
 import Fab from '@material-ui/core/Fab';
 import Popover from '@material-ui/core/Popover';
 import FormControl from '@material-ui/core/FormControl';
@@ -13,7 +13,7 @@ import Help from '@material-ui/icons/Help';
 import Avatar from '@material-ui/core/Avatar';
 import dummy from 'enl-api/dummy/dummyContents';
 import avatarApi from 'enl-api/images/avatars';
-import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { TextFieldRedux } from './ReduxFormMUI';
 import messages from './messages';
 import styles from './user-jss';
@@ -21,90 +21,76 @@ import styles from './user-jss';
 // validation functions
 const required = value => (value === null ? <FormattedMessage {...messages.requiredForm} /> : undefined);
 
-class LockForm extends React.Component {
-  state = {
-    anchorEl: null,
-  };
+function LockForm(props) {
+  const {
+    classes,
+    handleSubmit,
+    pristine,
+    submitting,
+    intl
+  } = props;
+  const [anchorEl, setAnchorEl] = useState(null);
 
-  handleShowHint = event => {
-    this.setState({
-      anchorEl: event.currentTarget,
-    });
-  };
+  const handleShowHint = event => setAnchorEl(event.currentTarget);
+  const handleClose = () => setAnchorEl(null);
 
-  handleClose = () => {
-    this.setState({
-      anchorEl: null,
-    });
-  };
-
-  render() {
-    const {
-      classes,
-      handleSubmit,
-      pristine,
-      submitting,
-      intl
-    } = this.props;
-    const { anchorEl } = this.state;
-    return (
-      <div>
-        <form onSubmit={handleSubmit}>
-          <section className={classes.lockWrap}>
-            <Avatar alt="Guest" src={avatarApi[6]} className={classes.avatar} />
-            <div>
-              <Typography className={classes.userName} variant="h5">{dummy.user.name}</Typography>
-              <div className={classes.lockForm}>
-                <FormControl className={classes.lockField}>
-                  <Field
-                    name="password"
-                    component={TextFieldRedux}
-                    type="password"
-                    label={intl.formatMessage(messages.loginFieldPassword)}
-                    required
-                    validate={required}
-                    className={classes.field}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="Helper Hint"
-                            onClick={this.handleShowHint}
-                          >
-                            <Help />
-                          </IconButton>
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                </FormControl>
-                <Fab size="small" color="secondary" type="submit" disabled={submitting || pristine}>
-                  <ArrowForward className={classes.signArrow} />
-                </Fab>
-                <Popover
-                  open={Boolean(anchorEl)}
-                  anchorEl={anchorEl}
-                  onClose={this.handleClose}
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'center',
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <section className={classes.lockWrap}>
+          <Avatar alt="John Doe" src={avatarApi[6]} className={classes.avatar} />
+          <div>
+            <Typography className={classes.userName} variant="h5">{dummy.user.name}</Typography>
+            <div className={classes.lockForm}>
+              <FormControl className={classes.lockField}>
+                <Field
+                  name="password"
+                  component={TextFieldRedux}
+                  type="password"
+                  label={intl.formatMessage(messages.loginFieldPassword)}
+                  required
+                  validate={required}
+                  className={classes.field}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="Helper Hint"
+                          onClick={handleShowHint}
+                        >
+                          <Help />
+                        </IconButton>
+                      </InputAdornment>
+                    )
                   }}
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'center',
-                  }}
-                >
-                  <Typography className={classes.hint}>
-                    <FormattedMessage {...messages.lockHint} />
-                  </Typography>
-                </Popover>
-              </div>
+                />
+              </FormControl>
+              <Fab size="small" color="secondary" type="submit" disabled={submitting || pristine}>
+                <ArrowForward className={classes.signArrow} />
+              </Fab>
+              <Popover
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center',
+                }}
+              >
+                <Typography className={classes.hint}>
+                  <FormattedMessage {...messages.lockHint} />
+                </Typography>
+              </Popover>
             </div>
-          </section>
-        </form>
-      </div>
-    );
-  }
+          </div>
+        </section>
+      </form>
+    </div>
+  );
 }
 
 LockForm.propTypes = {
@@ -112,11 +98,11 @@ LockForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   pristine: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
-  intl: intlShape.isRequired
+  intl: PropTypes.object.isRequired
 };
 
 const LockFormReduxed = reduxForm({
-  form: 'immutableELockFrm',
+  form: 'lockFrm',
   enableReinitialize: true,
 })(LockForm);
 

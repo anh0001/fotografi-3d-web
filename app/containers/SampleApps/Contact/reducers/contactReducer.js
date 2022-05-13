@@ -1,4 +1,4 @@
-import { fromJS, List, Map } from 'immutable';
+import produce from 'immer';
 import notif from 'enl-api/ui/notifMessage';
 import { CLOSE_NOTIF } from 'enl-redux/constants/notifConstants';
 import {
@@ -11,12 +11,12 @@ import {
   DELETE_CONTACT,
   TOGGLE_FAVORITE,
   ADD_CONTACT,
-  CLOSE_CONTACT_FORM,
+  CLOSE_CONTACT_FORM
 } from './contactConstants';
 
 const initialState = {
-  contactList: List([]),
-  formValues: Map(),
+  contactList: [],
+  formValues: null,
   selectedIndex: 0,
   selectedId: '',
   keywordValue: '',
@@ -27,106 +27,93 @@ const initialState = {
 };
 let editingIndex = 0;
 
-const initialImmutableState = fromJS(initialState);
-
-export default function reducer(state = initialImmutableState, action = {}) {
+/* eslint-disable default-case, no-param-reassign */
+const contactReducer = (state = initialState, action = {}) => produce(state, draft => {
   switch (action.type) {
     case FETCH_CONTACT_DATA:
-      return state.withMutations((mutableState) => {
-        const items = fromJS(action.items);
-        mutableState.set('contactList', items);
-      });
-    case SEARCH_CONTACT:
-      return state.withMutations((mutableState) => {
-        action.keyword.persist();
-        const keyword = action.keyword.target.value.toLowerCase();
-        mutableState.set('keywordValue', keyword);
-      });
+      draft.contactList = action.items;
+      break;
+    case SEARCH_CONTACT: {
+      action.keyword.persist();
+      const keyword = action.keyword.target.value.toLowerCase();
+      draft.keywordValue = keyword;
+      break;
+    }
     case ADD_CONTACT:
-      return state.withMutations((mutableState) => {
-        mutableState
-          .set('openFrm', true)
-          .set('formValues', null)
-          .set('avatarInit', '');
-      });
+      draft.openFrm = true;
+      draft.formValues = {};
+      draft.avatarInit = '';
+      break;
     case CLOSE_CONTACT_FORM:
-      return state.withMutations((mutableState) => {
-        mutableState
-          .set('openFrm', false)
-          .set('formValues', Map([]))
-          .set('avatarInit', '')
-          .set('notifMsg', notif.discard);
-      });
-    case EDIT_CONTACT:
-      return state.withMutations((mutableState) => {
-        editingIndex = state.get('contactList').indexOf(action.item);
-        console.log(action.item.get('avatar'));
-        mutableState
-          .set('openFrm', true)
-          .set('selectedId', action.item.get('id'))
-          .set('formValues', action.item)
-          .set('avatarInit', action.item.get('avatar'));
-      });
-    case SUBMIT_CONTACT:
-      return state.withMutations((mutableState) => {
-        const initItem = Map(action.newData);
-        if (state.get('selectedId') === action.newData.get('id')) {
-          // Update data
-          const avatar = action.avatar !== '' ? action.avatar : state.get('avatarInit');
-          const newItem = initItem.update((initUpdated) => (initUpdated.set('avatar', avatar)));
-          mutableState
-            .update('contactList', contactList => contactList.setIn(
-              [editingIndex], newItem
-            ))
-            .set('notifMsg', notif.updated);
-        } else {
-          // Insert data
-          const avatar = action.avatar !== '' ? action.avatar : '/images/pp_boy.svg';
-          const id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
-          const newItem = initItem
-            .update('key', (val = id) => val)
-            .update('avatar', (val = avatar) => val)
-            .update('favorited', (val = false) => val);
-          mutableState
-            .update('contactList', contactList => contactList.unshift(newItem))
-            .set('selectedIndex', 0)
-            .set('notifMsg', notif.saved);
-        }
-        mutableState
-          .set('formValues', Map([]))
-          .set('avatarInit', '')
-          .set('openFrm', false);
-      });
-    case SHOW_DETAIL_CONTACT:
-      return state.withMutations((mutableState) => {
-        const index = state.get('contactList').indexOf(action.item);
-        mutableState
-          .set('selectedIndex', index)
-          .set('showMobileDetail', true);
-      });
+      draft.openFrm = false;
+      draft.formValues = null;
+      draft.avatarInit = '';
+      draft.notifMsg = notif.discard;
+      break;
+    case EDIT_CONTACT: {
+      editingIndex = draft.contactList.findIndex((obj) => obj.key === action.item.key);
+      draft.openFrm = true;
+      draft.selectedId = action.item.key;
+      draft.formValues = action.item;
+      draft.avatarInit = action.item.avatar;
+      break;
+    }
+    case SUBMIT_CONTACT: {
+      const initItem = action.newData;
+      if (draft.selectedId === action.newData.key) {
+        // Update data
+        const avatar = action.avatar !== '' ? action.avatar : state.avatarInit;
+        const newItem = {
+          ...initItem,
+          avatar
+        };
+        draft.contactList[editingIndex] = newItem;
+        draft.notifMsg = notif.updated;
+      } else {
+        // Insert data
+        const avatar = action.avatar !== '' ? action.avatar : '/images/pp_boy.svg';
+        const key = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
+        const newItem = {
+          ...initItem,
+          key,
+          avatar,
+          favorited: false
+        };
+        draft.contactList.unshift(newItem);
+        draft.selectedIndex = 0;
+        draft.notifMsg = notif.saved;
+      }
+      draft.formValues = null;
+      draft.avatarInit = '';
+      draft.openFrm = false;
+      break;
+    }
+    case SHOW_DETAIL_CONTACT: {
+      const index = state.contactList.indexOf(action.item);
+      draft.selectedIndex = index || 0;
+      draft.showMobileDetail = true;
+      break;
+    }
     case HIDE_DETAIL:
-      return state.withMutations((mutableState) => {
-        mutableState.set('showMobileDetail', false);
-      });
-    case DELETE_CONTACT:
-      return state.withMutations((mutableState) => {
-        const index = state.get('contactList').indexOf(action.item);
-        mutableState
-          .update('contactList', contactList => contactList.splice(index, 1))
-          .set('notifMsg', notif.removed);
-      });
-    case TOGGLE_FAVORITE:
-      return state.withMutations((mutableState) => {
-        const index = state.get('contactList').indexOf(action.item);
-        mutableState.update('contactList', contactList => contactList
-          .setIn([index, 'favorited'], !state.getIn(['contactList', index, 'favorited']))
-        );
-      });
+      draft.showMobileDetail = false;
+      break;
+    case DELETE_CONTACT: {
+      const index = draft.contactList.findIndex((obj) => obj.key === action.item.key);
+      draft.contactList.splice(index, 1);
+      draft.notifMsg = notif.removed;
+      break;
+    }
+    case TOGGLE_FAVORITE: {
+      const index = draft.contactList.findIndex((obj) => obj.key === action.item.key);
+      draft.contactList[index].favorited = !draft.contactList[index].favorited;
+      break;
+    }
     case CLOSE_NOTIF:
-      return state.withMutations((mutableState) => {
-        mutableState.set('notifMsg', '');
-      });
+      draft.notifMsg = '';
+      break;
     default:
-      return state;
+      break;
   }
-}
+});
+
+export default contactReducer;

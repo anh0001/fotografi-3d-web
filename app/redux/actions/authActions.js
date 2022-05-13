@@ -36,18 +36,11 @@ export const loginWithEmailFailure = error => ({
   error
 });
 
-export const registerWithEmail = (username, name, email, password, usertype) => ({
+export const registerWithEmail = (name, email, password) => ({
   type: types.REGISTER_WITH_EMAIL_REQUEST,
-  username,
   name,
   email,
-  password,
-  usertype
-});
-
-export const usernameAlreadyExist = error => ({
-  type: types.USERNAME_ALREADY_EXIST,
-  error
+  password
 });
 
 export const registerWithEmailSuccess = credential => ({
@@ -105,7 +98,6 @@ export const syncUser = user => ({
 export const closeMsgAction = () => ({
   type: types.HIDE_MSG
 });
-
 
 //= ====================================
 //  SOCIAL AUTH

@@ -73,7 +73,6 @@ export const composeAction = {
   type: types.COMPOSE_MAIL,
 };
 
-
 export const discardAction = {
   type: types.DISCARD_MESSAGE,
 };

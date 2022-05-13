@@ -55,13 +55,12 @@ export const deleteActionFailed = error => ({
   payload: { error },
 });
 
-
 /*---------------------*/
 /* UI constant */
 /*---------------------*/
 
 export const showDetailAction = item => ({
-  type: types.SHOW_DETAIL_CONTACT,
+  type: types.SHOW_DETAIL_CONTACT_FIREBASE,
   item,
 });
 
@@ -74,7 +73,7 @@ export const addAction = {
 };
 
 export const editAction = item => ({
-  type: types.EDIT_CONTACT,
+  type: types.EDIT_CONTACT_FIREBASE,
   item,
 });
 

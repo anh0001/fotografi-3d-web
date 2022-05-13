@@ -1,4 +1,4 @@
-import { fromJS, List, Map } from 'immutable';
+import produce from 'immer';
 import notif from 'enl-api/ui/notifMessage';
 import { CLOSE_NOTIF } from 'enl-redux/constants/notifConstants';
 import {
@@ -7,12 +7,12 @@ import {
   UPDATE_ROW,
   REMOVE_ROW,
   EDIT_ROW,
-  SAVE_ROW,
+  SAVE_ROW
 } from './crudTbConstants';
 
 const initialState = {
-  dataTable: List([]),
-  dataInit: List([
+  dataTable: [],
+  dataInit: [
     {
       id: 0,
       category: '',
@@ -23,12 +23,12 @@ const initialState = {
       available: false,
       edited: true,
     }
-  ]),
+  ],
   notifMsg: '',
 };
 
 const initialItem = (keyTemplate, anchor) => {
-  const [...rawKey] = keyTemplate.keys();
+  const [...rawKey] = Object.keys(keyTemplate);
   const staticKey = {
     id: (+new Date() + Math.floor(Math.random() * 999999)).toString(36),
   };
@@ -40,67 +40,65 @@ const initialItem = (keyTemplate, anchor) => {
   // Push another static key
   staticKey.edited = true;
 
-  return Map(staticKey);
+  return staticKey;
 };
 
-const initialImmutableState = fromJS(initialState);
-
-export default function reducer(state = initialImmutableState, action = {}) {
+/* eslint-disable default-case, no-param-reassign */
+const crudTbReducer = (state = initialState, action = {}) => produce(state, draft => {
   const { branch } = action;
   switch (action.type) {
     case `${branch}/${FETCH_DATA}`:
-      return state.withMutations((mutableState) => {
-        const items = fromJS(action.items);
-        mutableState.set('dataTable', items);
-      });
-    case `${branch}/${ADD_EMPTY_ROW}`:
-      return state.withMutations((mutableState) => {
-        const raw = fromJS(state.get('dataInit').last());
-        const initial = initialItem(raw, action.anchor);
-        mutableState.update('dataTable', dataTable => dataTable.unshift(initial));
-      });
-    case `${branch}/${REMOVE_ROW}`:
-      return state.withMutations((mutableState) => {
-        const index = state.get('dataTable').indexOf(action.item);
-        mutableState
-          .update('dataTable', dataTable => dataTable.splice(index, 1))
-          .set('notifMsg', notif.removed);
-      });
-    case `${branch}/${UPDATE_ROW}`:
-      return state.withMutations((mutableState) => {
-        const index = state.get('dataTable').indexOf(action.item);
-        const cellTarget = action.event.target.name;
-        const newVal = type => {
-          if (type === 'checkbox') {
-            return action.event.target.checked;
-          }
-          return action.event.target.value;
-        };
-        mutableState.update('dataTable', dataTable => dataTable
-          .setIn([index, cellTarget], newVal(action.event.target.type))
-        );
-      });
-    case `${branch}/${EDIT_ROW}`:
-      return state.withMutations((mutableState) => {
-        const index = state.get('dataTable').indexOf(action.item);
-        mutableState.update('dataTable', dataTable => dataTable
-          .setIn([index, 'edited'], true)
-        );
-      });
-    case `${branch}/${SAVE_ROW}`:
-      return state.withMutations((mutableState) => {
-        const index = state.get('dataTable').indexOf(action.item);
-        mutableState
-          .update('dataTable', dataTable => dataTable
-            .setIn([index, 'edited'], false)
-          )
-          .set('notifMsg', notif.saved);
-      });
+      draft.dataTable = action.items;
+      break;
+    case `${branch}/${ADD_EMPTY_ROW}`: {
+      const raw = state.dataInit[state.dataInit.length - 1];
+      const initial = initialItem(raw, action.anchor);
+      draft.dataTable.unshift(initial);
+      break;
+    }
+    case `${branch}/${REMOVE_ROW}`: {
+      const index = draft.dataTable.findIndex(item => item.id === action.item.id);
+      if (index !== -1) {
+        draft.dataTable.splice(index, 1);
+        draft.notifMsg = notif.removed;
+      }
+      break;
+    }
+    case `${branch}/${UPDATE_ROW}`: {
+      const index = draft.dataTable.findIndex(item => item.id === action.item.id);
+      const cellTarget = action.event.target.name;
+      const newVal = type => {
+        if (type === 'checkbox') {
+          return action.event.target.checked;
+        }
+        return action.event.target.value;
+      };
+      if (index !== -1) {
+        draft.dataTable[index][cellTarget] = newVal(action.event.target.type);
+      }
+      break;
+    }
+    case `${branch}/${EDIT_ROW}`: {
+      const index = draft.dataTable.findIndex(item => item.id === action.item.id);
+      if (index !== -1) {
+        draft.dataTable[index].edited = true;
+      }
+      break;
+    }
+    case `${branch}/${SAVE_ROW}`: {
+      const index = draft.dataTable.findIndex(item => item.id === action.item.id);
+      if (index !== -1) {
+        draft.dataTable[index].edited = false;
+        draft.notifMsg = notif.saved;
+      }
+      break;
+    }
     case `${branch}/${CLOSE_NOTIF}`:
-      return state.withMutations((mutableState) => {
-        mutableState.set('notifMsg', '');
-      });
+      draft.notifMsg = '';
+      break;
     default:
-      return state;
+      break;
   }
-}
+});
+
+export default crudTbReducer;

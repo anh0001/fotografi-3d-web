@@ -8,4 +8,4 @@ export FullHeader from './FullHeader';
 export Breakpoint from './Breakpoint';
 export BreakpointGrid from './BreakpointGrid';
 export MediaQueries from './MediaQueries';
-export WIthWIdth from './WIthWIdth';
+export WithWidth from './WithWidth';

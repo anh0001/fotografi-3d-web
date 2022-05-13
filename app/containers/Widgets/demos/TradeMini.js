@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { TradingFormWidget } from 'enl-components';
@@ -10,15 +10,13 @@ const styles = {
   }
 };
 
-class TradeMini extends PureComponent {
-  render() {
-    const { classes } = this.props;
-    return (
-      <div className={classes.miniWrap}>
-        <TradingFormWidget />
-      </div>
-    );
-  }
+function TradeMini(props) {
+  const { classes } = props;
+  return (
+    <div className={classes.miniWrap}>
+      <TradingFormWidget />
+    </div>
+  );
 }
 
 TradeMini.propTypes = {

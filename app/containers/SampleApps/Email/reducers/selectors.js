@@ -5,11 +5,11 @@ export function getEmail(state) {
 }
 
 export function getEmailList(state) {
-  return getEmail(state).get('inbox');
+  return getEmail(state).inbox;
 }
 
 export function getEmailCategory(state) {
-  return getEmail(state).get('currentPage');
+  return getEmail(state).currentPage;
 }
 
 // =====================================
@@ -22,21 +22,21 @@ export const getVisibleMail = createSelector(
   (category, emailList) => {
     switch (category) {
       case 'inbox':
-        return emailList.filter(item => item.get('category') !== 'sent' && item.get('category') !== 'spam');
+        return emailList.filter(item => item.category !== 'sent' && item.category !== 'spam');
       case 'stared':
-        return emailList.filter(item => item.get('stared'));
+        return emailList.filter(item => item.stared);
       case 'sent':
-        return emailList.filter(item => item.get('category') === 'sent');
+        return emailList.filter(item => item.category === 'sent');
       case 'spam':
-        return emailList.filter(item => item.get('category') === 'spam');
+        return emailList.filter(item => item.category === 'spam');
       case 'updates':
-        return emailList.filter(item => item.get('category') === 'updates');
+        return emailList.filter(item => item.category === 'updates');
       case 'social':
-        return emailList.filter(item => item.get('category') === 'social');
+        return emailList.filter(item => item.category === 'social');
       case 'forums':
-        return emailList.filter(item => item.get('category') === 'forums');
+        return emailList.filter(item => item.category === 'forums');
       case 'promos':
-        return emailList.filter(item => item.get('category') === 'promos');
+        return emailList.filter(item => item.category === 'promos');
       default:
         return emailList;
     }

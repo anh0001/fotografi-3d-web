@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -25,97 +25,94 @@ const optionsOpt = [
 
 const ITEM_HEIGHT = 48;
 
-class PostCard extends React.Component {
-  state = { anchorElOpt: null };
+function PostCard(props) {
+  const [anchorElOpt, setAchorElOpt] = useState(null);
 
-  handleClickOpt = event => {
-    this.setState({ anchorElOpt: event.currentTarget });
+  const handleClickOpt = event => {
+    setAchorElOpt(event.currentTarget);
   };
 
-  handleCloseOpt = () => {
-    this.setState({ anchorElOpt: null });
+  const handleCloseOpt = () => {
+    setAchorElOpt(null);
   };
 
-  render() {
-    const {
-      classes,
-      avatar,
-      name,
-      date,
-      image,
-      content,
-      liked,
-      shared,
-      commented
-    } = this.props;
-    const { anchorElOpt } = this.state;
-    return (
-      <Card className={classes.cardSocmed}>
-        <CardHeader
-          avatar={
-            <Avatar alt="avatar" src={avatar} className={classes.avatar} />
-          }
-          action={(
-            <IconButton
-              aria-label="More"
-              aria-owns={anchorElOpt ? 'long-menu' : null}
-              aria-haspopup="true"
-              className={classes.button}
-              onClick={this.handleClickOpt}
-            >
-              <MoreVertIcon />
-            </IconButton>
-          )}
-          title={name}
-          subheader={date}
-        />
-        <Menu
-          id="long-menu"
-          anchorEl={anchorElOpt}
-          open={Boolean(anchorElOpt)}
-          onClose={this.handleCloseOpt}
-          PaperProps={{
-            style: {
-              maxHeight: ITEM_HEIGHT * 4.5,
-              width: 200,
-            },
-          }}
-        >
-          {optionsOpt.map(option => (
-            <MenuItem key={option} selected={option === 'Edit Profile'} onClick={this.handleCloseOpt}>
-              {option}
-            </MenuItem>
-          ))}
-        </Menu>
-        { image !== '' && (
-          <CardMedia
-            className={classes.media}
-            image={image}
-            title="Contemplative Reptile"
-          />
+  const {
+    classes,
+    avatar,
+    name,
+    date,
+    image,
+    content,
+    liked,
+    shared,
+    commented
+  } = props;
+  return (
+    <Card className={classes.cardSocmed}>
+      <CardHeader
+        avatar={
+          <Avatar alt="avatar" src={avatar} className={classes.avatar} />
+        }
+        action={(
+          <IconButton
+            aria-label="More"
+            aria-owns={anchorElOpt ? 'long-menu' : null}
+            aria-haspopup="true"
+            className={classes.button}
+            onClick={handleClickOpt}
+          >
+            <MoreVertIcon />
+          </IconButton>
         )}
-        <CardContent>
-          <Typography component="p">
-            {content}
-          </Typography>
-        </CardContent>
-        <CardActions className={classes.actions}>
-          <IconButton aria-label="Add to favorites" className={classes.button}>
-            <FavoriteIcon className={liked > 0 && classes.liked} />
-            <span className={classes.num}>{liked}</span>
-          </IconButton>
-          <IconButton aria-label="Share" className={classes.button}>
-            <ShareIcon className={shared > 0 && classes.shared} />
-            <span className={classes.num}>{shared}</span>
-          </IconButton>
-          <IconButton aria-label="Comment" className={classes.rightIcon}>
-            <Comment />
-            <span className={classes.num}>{commented}</span>
-          </IconButton>
-        </CardActions>
-      </Card>
-    );
-  }
+        title={name}
+        subheader={date}
+      />
+      <Menu
+        id="long-menu"
+        anchorEl={anchorElOpt}
+        open={Boolean(anchorElOpt)}
+        onClose={handleCloseOpt}
+        PaperProps={{
+          style: {
+            maxHeight: ITEM_HEIGHT * 4.5,
+            width: 200,
+          },
+        }}
+      >
+        {optionsOpt.map(option => (
+          <MenuItem key={option} selected={option === 'Edit Profile'} onClick={handleCloseOpt}>
+            {option}
+          </MenuItem>
+        ))}
+      </Menu>
+      {image !== '' && (
+        <CardMedia
+          className={classes.media}
+          image={image}
+          title="Contemplative Reptile"
+        />
+      )}
+      <CardContent>
+        <Typography component="p">
+          {content}
+        </Typography>
+      </CardContent>
+      <CardActions className={classes.actions}>
+        <IconButton aria-label="Add to favorites" className={classes.button}>
+          <FavoriteIcon className={liked > 0 && classes.liked} />
+          <span className={classes.num}>{liked}</span>
+        </IconButton>
+        <IconButton aria-label="Share" className={classes.button}>
+          <ShareIcon className={shared > 0 && classes.shared} />
+          <span className={classes.num}>{shared}</span>
+        </IconButton>
+        <IconButton aria-label="Comment" className={classes.rightIcon}>
+          <Comment />
+          <span className={classes.num}>{commented}</span>
+        </IconButton>
+      </CardActions>
+    </Card>
+  );
 }
 
 PostCard.propTypes = {

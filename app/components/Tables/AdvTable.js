@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useReducer, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
@@ -12,36 +12,47 @@ import EnhancedTableHead from './tableParts/TableHeader';
 import EnhancedTableToolbar from './tableParts/TableToolbar';
 import styles from './tableStyle-jss';
 
-class AdvTable extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    const {
-      order,
-      orderBy,
-      selected,
-      data,
-      page,
-      rowsPerPage,
-      defaultPerPage,
-      filterText
-    } = this.props;
+/* ESLint error https://github.com/yannickcr/eslint-plugin-react/issues/885 */
+function AdvTable(props) {
+  const reducer = (state, action) => {
+    const { type, payload } = action;
+    switch (type) {
+      case 'SET_ORDER':
+        return { ...state, order: payload };
+      case 'SET_ORDERBY':
+        return { ...state, orderBy: payload };
+      case 'SET_SELECTED':
+        return { ...state, selected: payload };
+      case 'SET_DATA':
+        return { ...state, data: payload };
+      case 'SET_PAGE':
+        return { ...state, page: payload };
+      case 'SET_ROWSPERPAGE':
+        return { ...state, rowsPerpage: payload };
+      case 'SET_FILTERTEXT':
+        return { ...state, filterText: payload };
+      default:
+        return state;
+    }
+  };
 
-    this.state = {
-      order,
-      orderBy,
-      selected,
-      data: data.sort((a, b) => (a.calories < b.calories ? -1 : 1)),
-      page,
-      rowsPerPage,
-      defaultPerPage,
-      filterText,
-    };
-  }
+  const [state, dispatch] = useReducer(reducer, props);
 
-  handleRequestSort = (event, property) => {
+  const {
+    orderBy, order, data,
+    selected, defaultPerPage,
+    columnData, rowsPerPage,
+    page, filterText
+  } = state;
+
+  const { classes } = props;
+  useEffect(() => {
+    dispatch({ type: 'SET_DATA', payload: data.sort((a, b) => (a.calories < b.calories ? -1 : 1)) });
+  }, []);
+
+  const handleRequestSort = useCallback((event, property) => {
     const orderByAlias = property;
     let orderLet = 'desc';
-    const { orderBy, order, data } = this.state;
     if (orderBy === property && order === 'desc') {
       orderLet = 'asc';
     }
@@ -50,20 +61,19 @@ class AdvTable extends React.Component {
       ? data.sort((a, b) => (b[orderByAlias] < a[orderByAlias] ? -1 : 1))
       : data.sort((a, b) => (a[orderByAlias] < b[orderByAlias] ? -1 : 1));
 
-    this.setState({ data: dataAlias, order: orderLet, orderBy: orderByAlias });
-  };
+    dispatch({ type: 'SET_DATA', payload: dataAlias });
+    dispatch({ type: 'SET_ORDER', payload: orderLet });
+    dispatch({ type: 'SET_ORDERBY', payload: orderByAlias });
+  }, [orderBy, order, data]);
 
-  handleSelectAllClick = (event, checked) => {
-    const { data } = this.state;
+  const handleSelectAllClick = useCallback((event, checked) => {
     if (checked) {
-      this.setState({ selected: data.map(n => n.id) });
-      return;
+      dispatch({ type: 'SET_SELECTED', payload: data.map(n => n.id) });
     }
-    this.setState({ selected: [] });
-  };
+    dispatch({ type: 'SET_SELECTED', payload: [] });
+  }, [data]);
 
-  handleClick = (event, id) => {
-    const { selected } = this.state;
+  const handleClick = useCallback((event, id) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
@@ -80,131 +90,106 @@ class AdvTable extends React.Component {
       );
     }
 
-    this.setState({ selected: newSelected });
-  };
+    dispatch({ type: 'SET_SELECTED', payload: newSelected });
+  }, [selected]);
 
-  handleChangePage = (event, page) => {
-    this.setState({ page });
-  };
+  const handleChangePage = useCallback((event, selectedPage) => {
+    dispatch({ type: 'SET_PAGE', payload: selectedPage });
+  }, []);
 
-  handleChangeRowsPerPage = event => {
-    this.setState({ rowsPerPage: event.target.value });
-  };
+  const handleChangeRowsPerPage = useCallback(event => {
+    dispatch({ type: 'SET_ROWSPERPAGE', payload: event.target.value });
+  }, []);
 
   // eslint-disable-next-line
-  isSelected = id => this.state.selected.indexOf(id) !== -1;
+  const isSelected = id => selected.indexOf(id) !== -1;
 
-  handleUserInput(value) {
-    const { data, defaultPerPage } = this.state;
+  const handleUserInput = useCallback((value) => {
     // Show all item first
     if (value !== '') {
-      this.setState({ rowsPerPage: data.length });
+      dispatch({ type: 'SET_ROWSPERPAGE', payload: data.length });
     } else {
-      this.setState({ rowsPerPage: defaultPerPage });
+      dispatch({ type: 'SET_ROWSPERPAGE', payload: defaultPerPage });
     }
+    dispatch({ type: 'SET_FILTERTEXT', payload: value.toLowerCase() });
+  }, [data, defaultPerPage]);
 
-    // Show result base on keyword
-    this.setState({ filterText: value.toLowerCase() });
-  }
-
-  render() {
-    const { classes } = this.props;
-    const {
-      data,
-      order,
-      orderBy,
-      selected,
-      rowsPerPage,
-      page,
-      filterText
-    } = this.state;
-    const { columnData } = this.props;
-    const checkcell = true;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - (page * rowsPerPage));
-    const renderCell = (dataArray, keyArray) => keyArray.map((itemCell, index) => (
-      <TableCell align={itemCell.numeric ? 'right' : 'left'} key={index.toString()}>{dataArray[itemCell.id]}</TableCell>
-    ));
-    return (
-      <div className={classes.rootTable}>
-        <EnhancedTableToolbar
-          numSelected={selected.length}
-          filterText={filterText}
-          onUserInput={(event) => this.handleUserInput(event)}
-          title="Nutrition"
-          placeholder="Search Nutrition"
-        />
-        <div className={classes.tableWrapper}>
-          <Table className={classNames(classes.table, classes.stripped, classes.hover)}>
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={this.handleSelectAllClick}
-              onRequestSort={this.handleRequestSort}
-              rowCount={data.length}
-              columnData={columnData}
-              checkcell={checkcell}
-            />
-            <TableBody>
-              {data.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(n => {
-                const isSelected = this.isSelected(n.id);
-                if (n.name.toLowerCase().indexOf(filterText) === -1) {
-                  return false;
-                }
-                return (
-                  <TableRow
-                    onClick={event => this.handleClick(event, n.id)}
-                    role="checkbox"
-                    aria-checked={isSelected}
-                    tabIndex={-1}
-                    key={n.id}
-                    selected={isSelected}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox checked={isSelected} />
-                    </TableCell>
-                    {renderCell(n, columnData)}
-                  </TableRow>
-                );
-              })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={6} />
+  const checkcell = true;
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - (page * rowsPerPage));
+  const renderCell = (dataArray, keyArray) => keyArray.map((itemCell, index) => (
+    <TableCell align={itemCell.numeric ? 'right' : 'left'} key={index.toString()}>{dataArray[itemCell.id]}</TableCell>
+  ));
+  return (
+    <div className={classes.rootTable}>
+      <EnhancedTableToolbar
+        numSelected={selected.length}
+        filterText={filterText}
+        onUserInput={handleUserInput}
+        title="Nutrition"
+        placeholder="Search Nutrition"
+      />
+      <div className={classes.tableWrapper}>
+        <Table className={classNames(classes.table, classes.stripped, classes.hover)}>
+          <EnhancedTableHead
+            numSelected={selected.length}
+            order={order}
+            orderBy={orderBy}
+            onSelectAllClick={handleSelectAllClick}
+            onRequestSort={handleRequestSort}
+            rowCount={data.length}
+            columnData={columnData}
+            checkcell={checkcell}
+          />
+          <TableBody>
+            {data.slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage).map(n => {
+              const flagSelected = isSelected(n.id);
+              if (n.name.toLowerCase().indexOf(filterText) === -1) {
+                return false;
+              }
+              return (
+                <TableRow
+                  onClick={event => handleClick(event, n.id)}
+                  role="checkbox"
+                  aria-checked={flagSelected}
+                  tabIndex={-1}
+                  key={n.id}
+                  selected={flagSelected}
+                >
+                  <TableCell padding="checkbox">
+                    <Checkbox checked={flagSelected} />
+                  </TableCell>
+                  {renderCell(n, columnData)}
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-        <TablePagination
-          component="div"
-          count={data.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          backIconButtonProps={{
-            'aria-label': 'Previous Page',
-          }}
-          nextIconButtonProps={{
-            'aria-label': 'Next Page',
-          }}
-          onChangePage={this.handleChangePage}
-          onChangeRowsPerPage={this.handleChangeRowsPerPage}
-        />
+              );
+            })}
+            {emptyRows > 0 && (
+              <TableRow style={{ height: 49 * emptyRows }}>
+                <TableCell colSpan={6} />
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       </div>
-    );
-  }
+      <TablePagination
+        component="div"
+        count={data.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        backIconButtonProps={{
+          'aria-label': 'Previous Page',
+        }}
+        nextIconButtonProps={{
+          'aria-label': 'Next Page',
+        }}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+    </div>
+  );
 }
 
 AdvTable.propTypes = {
-  classes: PropTypes.object.isRequired,
-  data: PropTypes.array.isRequired,
-  order: PropTypes.string.isRequired,
-  orderBy: PropTypes.string.isRequired,
-  selected: PropTypes.array.isRequired,
-  rowsPerPage: PropTypes.number.isRequired,
-  page: PropTypes.number.isRequired,
-  defaultPerPage: PropTypes.number.isRequired,
-  filterText: PropTypes.string.isRequired,
-  columnData: PropTypes.array.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(AdvTable);

@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import brand from 'enl-api/dummy/brand';
 import {
@@ -23,160 +22,124 @@ import {
   addAction,
   closeAction,
   searchAction,
-  closeNotifAction
+  closeNotifAction,
 } from './reducers/contactActions';
 import uploadImg from './helpers/uploadImg';
 
-class Contact extends React.Component {
-  state = {
-    uploadSubmiting: false
-  };
+function Contact(props) {
+  const { classes } = props;
+  const title = brand.name + ' - Contact';
+  const description = brand.desc;
+  const [uploadSubmiting, setUploadSubmiting] = useState(false);
 
-  submitContact = (item, avatar) => {
-    const {
-      create, update,
-      dataContact, itemSelected, selectedId,
-    } = this.props;
+  // Redux State
+  const avatarInit = useSelector(state => state.contactFullstack.avatarInit);
+  const dataContact = useSelector(state => state.contactFullstack.contactList);
+  const itemSelected = useSelector(state => state.contactFullstack.selectedIndex);
+  const selectedId = useSelector(state => state.contactFullstack.selectedId);
+  const keyword = useSelector(state => state.contactFullstack.keywordValue);
+  const loading = useSelector(state => state.contactFullstack.loading);
+  const open = useSelector(state => state.contactFullstack.openFrm);
+  const showMobileDetail = useSelector(state => state.contactFullstack.showMobileDetail);
+  const messageNotif = useSelector(state => state.contactFullstack.notifMsg);
 
-    const value = item.toJS();
-    this.setState({ uploadSubmiting: true });
-    console.log(avatar);
+  // Dispatcher
+  const showDetail = useDispatch();
+  const hideDetail = useDispatch();
+  const edit = useDispatch();
+  const add = useDispatch();
+  const close = useDispatch();
+  const create = useDispatch();
+  const update = useDispatch();
+  const remove = useDispatch();
+  const search = useDispatch();
+  const closeNotif = useDispatch();
+
+  const submitContact = (item, avatar) => {
+    const value = item;
+    setUploadSubmiting(true);
     if (value.key === selectedId) { // Update contact
-      const contact = dataContact.get(itemSelected);
-      uploadImg(avatar, async (url) => {
-        value.avatar = url || null;
-        update(contact, value);
-        this.setState({ uploadSubmiting: false });
-      });
+      const contact = dataContact[itemSelected].toJS();
+      if (avatar) {
+        uploadImg(avatar, async (url) => {
+          value.avatar = url || null;
+          update(updateAction(contact, value));
+          setUploadSubmiting(false);
+        });
+      } else {
+        value.avatar = value.avatar || null;
+        update(updateAction(contact, value));
+        setUploadSubmiting(false);
+      }
     } else { // Create new contact
       uploadImg(avatar, async (url) => {
         value.avatar = url || null;
-        create(value);
-        this.setState({ uploadSubmiting: false });
+        create(createAction(value));
+        setUploadSubmiting(false);
       });
     }
-  }
+  };
 
-  render() {
-    const title = brand.name + ' - Contact';
-    const description = brand.desc;
-    const {
-      classes,
-      dataContact, itemSelected,
-      showDetail, hideDetail,
-      avatarInit,
-      open, showMobileDetail,
-      add, edit, close,
-      remove, update,
-      keyword, search, loading,
-      closeNotif, messageNotif
-    } = this.props;
-    const { uploadSubmiting } = this.state;
-    return (
-      <div>
-        <Helmet>
-          <title>{title}</title>
-          <meta name="description" content={description} />
-          <meta property="og:title" content={title} />
-          <meta property="og:description" content={description} />
-          <meta property="twitter:title" content={title} />
-          <meta property="twitter:description" content={description} />
-        </Helmet>
-        <Notification close={() => closeNotif()} message={messageNotif} />
-        <div className={classNames(classes.root, classes.padding)}>
-          <ContactList
-            addFn
-            total={dataContact.size}
-            addContact={add}
-            clippedRight
-            itemSelected={itemSelected}
-            dataContact={dataContact}
-            showDetail={showDetail}
-            search={search}
-            keyword={keyword}
-            loading={loading}
-          />
-          <ContactDetail
-            showMobileDetail={showMobileDetail}
-            hideDetail={hideDetail}
-            dataContact={dataContact}
-            itemSelected={itemSelected}
-            edit={edit}
-            remove={remove}
-            favorite={update}
-            loading={loading}
-          />
-        </div>
-        <AddContact
-          addContact={add}
-          openForm={open}
-          closeForm={close}
-          submit={this.submitContact}
-          avatarInit={avatarInit}
-          processing={uploadSubmiting}
+  const updateFavourite = (item) => {
+    const contact = dataContact[itemSelected];
+    const value = item.toJS();
+    value.favorited = !contact.favorited;
+    update(updateAction(contact, value));
+  };
+
+  return (
+    <div>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="twitter:title" content={title} />
+        <meta property="twitter:description" content={description} />
+      </Helmet>
+      <Notification close={() => closeNotif(closeNotifAction)} message={messageNotif} />
+      <div className={classNames(classes.root, classes.padding)}>
+        <ContactList
+          addFn
+          total={dataContact.length}
+          addContact={() => add(addAction)}
+          clippedRight
+          itemSelected={itemSelected}
+          dataContact={dataContact}
+          showDetail={(payload) => showDetail(showDetailAction(payload))}
+          search={(payload) => search(searchAction(payload))}
+          keyword={keyword}
+          loading={loading}
+        />
+        <ContactDetail
+          showMobileDetail={showMobileDetail}
+          hideDetail={() => hideDetail(hideDetailAction)}
+          dataContact={dataContact}
+          itemSelected={itemSelected}
+          edit={(payload) => edit(editAction(payload))}
+          remove={(payload) => remove(deleteAction(payload))}
+          favorite={(payload) => updateFavourite(payload)}
+          loading={loading}
         />
       </div>
-    );
-  }
+      <AddContact
+        addContact={() => add(addAction)}
+        openForm={open}
+        closeForm={() => close(closeAction)}
+        submit={submitContact}
+        avatarInit={avatarInit}
+        processing={uploadSubmiting}
+      />
+    </div>
+  );
 }
 
 Contact.propTypes = {
   classes: PropTypes.object.isRequired,
-  dataContact: PropTypes.object.isRequired,
-  create: PropTypes.func.isRequired,
-  update: PropTypes.func.isRequired,
-  remove: PropTypes.func.isRequired,
-  selectedId: PropTypes.string.isRequired,
-  avatarInit: PropTypes.string.isRequired,
-  showDetail: PropTypes.func.isRequired,
-  hideDetail: PropTypes.func.isRequired,
-  keyword: PropTypes.string.isRequired,
-  open: PropTypes.bool.isRequired,
-  loading: PropTypes.bool,
-  showMobileDetail: PropTypes.bool.isRequired,
-  add: PropTypes.func.isRequired,
-  close: PropTypes.func.isRequired,
-  edit: PropTypes.func.isRequired,
-  search: PropTypes.func.isRequired,
-  itemSelected: PropTypes.number.isRequired,
-  closeNotif: PropTypes.func.isRequired,
-  messageNotif: PropTypes.string.isRequired,
 };
 
 Contact.defaultProps = {
   loading: false
 };
 
-const reducer = 'contactFullstack';
-const mapStateToProps = state => ({
-  selectedId: state.getIn([reducer, 'selectedId']),
-  avatarInit: state.getIn([reducer, 'avatarInit']),
-  dataContact: state.getIn([reducer, 'contactList']),
-  itemSelected: state.getIn([reducer, 'selectedIndex']),
-  keyword: state.getIn([reducer, 'keywordValue']),
-  loading: state.getIn([reducer, 'loading']),
-  open: state.getIn([reducer, 'openFrm']),
-  showMobileDetail: state.getIn([reducer, 'showMobileDetail']),
-  messageNotif: state.getIn([reducer, 'notifMsg']),
-  ...state
-});
-
-const constDispatchToProps = dispatch => ({
-  create: bindActionCreators(createAction, dispatch),
-  update: bindActionCreators(updateAction, dispatch),
-  remove: bindActionCreators(deleteAction, dispatch),
-  hideDetail: () => dispatch(hideDetailAction),
-  showDetail: bindActionCreators(showDetailAction, dispatch),
-  edit: bindActionCreators(editAction, dispatch),
-  add: () => dispatch(addAction),
-  close: () => dispatch(closeAction),
-  search: bindActionCreators(searchAction, dispatch),
-  closeNotif: () => dispatch(closeNotifAction),
-});
-
-const ContactMapped = connect(
-  mapStateToProps,
-  constDispatchToProps
-)(Contact);
-
-export default withStyles(styles)(ContactMapped);
+export default withStyles(styles)(Contact);

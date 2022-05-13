@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { createMuiTheme, withStyles } from '@material-ui/core/styles';
+import { createTheme, withStyles } from '@material-ui/core/styles';
 import ThemePallete from 'enl-api/palette/themePalette';
 import {
   AreaChart,
@@ -16,7 +16,7 @@ import green from '@material-ui/core/colors/green';
 import { data1 } from './sampleData';
 import styles from './fluidChart-jss';
 
-const theme = createMuiTheme(ThemePallete.yellowCyanTheme);
+const theme = createTheme(ThemePallete.yellowCyanTheme);
 const color = ({
   primary: theme.palette.primary.main,
   primarydark: theme.palette.primary.dark,
@@ -30,7 +30,7 @@ function AreaStacked(props) {
   const { classes } = props;
   return (
     <div className={classes.chartFluid}>
-      <ResponsiveContainer>
+      <ResponsiveContainer width={800} height="80%">
         <AreaChart
           width={800}
           height={450}

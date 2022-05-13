@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import CountUp from 'react-countup';
 import { withStyles } from '@material-ui/core/styles';
@@ -99,89 +99,87 @@ const styles = theme => ({
   }
 });
 
-class CounterTrading extends PureComponent {
-  render() {
-    const {
-      classes,
-      color,
-      start,
-      end,
-      duration,
-      logo,
-      title,
-      children,
-      unitBefore,
-      unitAfter,
-      position,
-      value,
-      lowest,
-      highest,
-    } = this.props;
-    const getCondition = (pos, val) => {
-      if (pos === 'up') {
-        return (
-          <span className={classes.up}>
-            <TrendingUp />
-            &nbsp;
-            {val}
-            %
-          </span>
-        );
-      }
-      if (pos === 'down') {
-        return (
-          <span className={classes.down}>
-            <TrendingDown />
-            &nbsp;
-            {val}
-            %
-          </span>
-        );
-      }
+function CounterTrading(props) {
+  const {
+    classes,
+    color,
+    start,
+    end,
+    duration,
+    logo,
+    title,
+    children,
+    unitBefore,
+    unitAfter,
+    position,
+    value,
+    lowest,
+    highest,
+  } = props;
+  const getCondition = (pos, val) => {
+    if (pos === 'up') {
       return (
-        <span className={classes.flat}>
-          <TrendingFlat />
-          &nbsp;0%
+        <span className={classes.up}>
+          <TrendingUp />
+            &nbsp;
+          {val}
+            %
         </span>
       );
-    };
+    }
+    if (pos === 'down') {
+      return (
+        <span className={classes.down}>
+          <TrendingDown />
+            &nbsp;
+          {val}
+            %
+        </span>
+      );
+    }
     return (
-      <Paper className={classes.root}>
-        <header className={classes.header}>
-          <Avatar
-            alt="bitcoin"
-            src={logo}
-            className={classes.avatar}
-          />
-          <div className={classes.title}>
-            <Typography className={classes.title} noWrap variant="subtitle1">{title}</Typography>
-            {getCondition(position, value)}
-          </div>
-          <Typography className={classes.counter}>
-            { unitBefore }
-            <CountUp start={start} end={end} duration={duration} useEasing />
-            { unitAfter }
-          </Typography>
-        </header>
-        <div className={classes.content} style={{ backgroundColor: color }}>
-          <span className={classes.decoration} style={{ backgroundColor: color }} />
-          <div className={classes.extend}>
-            <ul>
-              <li>
-                Lowest: $&nbsp;
-                {lowest}
-              </li>
-              <li>
-                Highest: $&nbsp;
-                {highest}
-              </li>
-            </ul>
-          </div>
-          {children}
-        </div>
-      </Paper>
+      <span className={classes.flat}>
+        <TrendingFlat />
+          &nbsp;0%
+      </span>
     );
-  }
+  };
+  return (
+    <Paper className={classes.root}>
+      <header className={classes.header}>
+        <Avatar
+          alt="bitcoin"
+          src={logo}
+          className={classes.avatar}
+        />
+        <div className={classes.title}>
+          <Typography className={classes.title} noWrap variant="subtitle1">{title}</Typography>
+          {getCondition(position, value)}
+        </div>
+        <Typography className={classes.counter}>
+          {unitBefore}
+          <CountUp start={start} end={end} duration={duration} useEasing />
+          {unitAfter}
+        </Typography>
+      </header>
+      <div className={classes.content} style={{ backgroundColor: color }}>
+        <span className={classes.decoration} style={{ backgroundColor: color }} />
+        <div className={classes.extend}>
+          <ul>
+            <li>
+              Lowest: $&nbsp;
+              {lowest}
+            </li>
+            <li>
+              Highest: $&nbsp;
+              {highest}
+            </li>
+          </ul>
+        </div>
+        {children}
+      </div>
+    </Paper>
+  );
 }
 
 CounterTrading.propTypes = {

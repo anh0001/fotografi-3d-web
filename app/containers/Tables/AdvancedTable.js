@@ -1,45 +1,44 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import brand from 'enl-api/dummy/brand';
 import { SourceReader, PapperBlock } from 'enl-components';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import messages from './messages';
 import { AdvFilter } from './demos';
 
-class AdvancedTable extends Component {
-  render() {
-    const title = brand.name + ' - Table';
-    const description = brand.desc;
-    const docSrc = 'containers/Tables/demos/';
-    const { intl } = this.props;
-    return (
-      <div>
-        <Helmet>
-          <title>{title}</title>
-          <meta name="description" content={description} />
-          <meta property="og:title" content={title} />
-          <meta property="og:description" content={description} />
-          <meta property="twitter:title" content={title} />
-          <meta property="twitter:description" content={description} />
-        </Helmet>
-        <PapperBlock
-          whiteBg
-          icon="table_chart"
-          title={intl.formatMessage(messages.advancedTitle)}
-          desc={intl.formatMessage(messages.advancedDesc)}
-        >
-          <div>
-            <AdvFilter />
-            <SourceReader componentName={docSrc + 'AdvFilter.js'} />
-          </div>
-        </PapperBlock>
-      </div>
-    );
-  }
+function AdvancedTable(props) {
+  const title = brand.name + ' - Table';
+  const description = brand.desc;
+  const docSrc = 'containers/Tables/demos/';
+  const { intl } = props;
+  return (
+    <div>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="twitter:title" content={title} />
+        <meta property="twitter:description" content={description} />
+      </Helmet>
+      <PapperBlock
+        whiteBg
+        icon="table_chart"
+        title={intl.formatMessage(messages.advancedTitle)}
+        desc={intl.formatMessage(messages.advancedDesc)}
+      >
+        <div>
+          <AdvFilter />
+          <SourceReader componentName={docSrc + 'AdvFilter.js'} />
+        </div>
+      </PapperBlock>
+    </div>
+  );
 }
 
 AdvancedTable.propTypes = {
-  intl: intlShape.isRequired
+  intl: PropTypes.object.isRequired
 };
 
 export default injectIntl(AdvancedTable);

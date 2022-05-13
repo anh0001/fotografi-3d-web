@@ -17,7 +17,6 @@ const useStyles = makeStyles(theme => ({
     height: 'auto',
   },
   divider: {
-    display: 'block',
     margin: `${theme.spacing(3)}px 0`,
   },
 }));
@@ -67,7 +66,7 @@ export default function ContinuousSlider() {
       <Grid
         container
         alignItems="flex-start"
-        justify="space-around"
+        justifyContent="space-around"
         direction="row"
         spacing={3}
       >

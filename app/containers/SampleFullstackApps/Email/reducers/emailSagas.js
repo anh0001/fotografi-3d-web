@@ -30,7 +30,6 @@ const emailList = new EmailModels({
   onRemove: deleteActionSuccess
 }, Init);
 
-
 function subscribe() {
   return eventChannel(emit => emailList.subscribe(emit));
 }
@@ -54,7 +53,6 @@ function* write(context, method, onError, ...params) {
 const sendMail = write.bind(null, emailList, emailList.push, sendActionFailed);
 const removeMail = write.bind(null, emailList, emailList.remove, deleteActionFailed);
 const updateMail = write.bind(null, emailList, emailList.update, updateActionFailed);
-
 
 //= ====================================
 //  WATCHERS
@@ -90,7 +88,6 @@ function* watchUpdateEmail() {
     yield fork(updateMail, payload.mail.key, payload.changes);
   }
 }
-
 
 //= ====================================
 //  EMAIL SAGAS

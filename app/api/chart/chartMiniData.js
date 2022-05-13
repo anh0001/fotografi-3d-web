@@ -48,7 +48,6 @@ export const data2 = [
   }
 ];
 
-
 export const cryptoData = [
   {
     btc: 7300,

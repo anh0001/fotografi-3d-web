@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
@@ -19,99 +19,93 @@ const styles = theme => ({
     right: theme.spacing(3),
   },
   divider: {
-    display: 'block',
     margin: `${theme.spacing(3)}px 0`,
     textAlign: 'center'
   },
 });
 
-class SimpleTooltips extends React.Component {
-  state = {
-    open: false,
+function SimpleTooltips(props) {
+  const [open, setOpen] = useState(false);
+
+  const handleTooltipClose = () => {
+    setOpen(false);
   };
 
-  handleTooltipClose = () => {
-    this.setState({ open: false });
+  const handleTooltipOpen = () => {
+    setOpen(true);
   };
 
-  handleTooltipOpen = () => {
-    this.setState({ open: true });
-  };
-
-  render() {
-    const { classes } = this.props;
-    const { open } = this.state;
-    return (
-      <div>
+  const { classes } = props;
+  return (
+    <div>
+      <Grid
+        container
+        alignItems="flex-start"
+        justifyContent="flex-start"
+        direction="row"
+        spacing={2}
+      >
         <Grid
-          container
-          alignItems="flex-start"
-          justify="flex-start"
-          direction="row"
-          spacing={2}
+          item
+          md={6}
         >
+          <Typography variant="button" display="block" className={classes.divider}>Simple Tooltips</Typography>
           <Grid
-            item
-            md={6}
+            container
+            alignItems="center"
+            justifyContent="center"
+            direction="row"
+            spacing={2}
           >
-            <Typography variant="button" className={classes.divider}>Simple Tooltips</Typography>
-            <Grid
-              container
-              alignItems="center"
-              justify="center"
-              direction="row"
-              spacing={2}
-            >
-              <Tooltip title="Delete">
-                <IconButton aria-label="Delete">
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Add">
-                <Fab color="primary" aria-label="Add" className={classes.fab}>
-                  <AddIcon />
-                </Fab>
-              </Tooltip>
-              <br />
-              <br />
-              <Tooltip title="FAB 'position: absolute;'">
-                <Fab color="secondary" className={classes.fixed}>
-                  <AddIcon />
-                </Fab>
-              </Tooltip>
-            </Grid>
-          </Grid>
-          <Grid
-            item
-            md={6}
-          >
-            <Typography variant="button" className={classes.divider}>Delayed Tooltips</Typography>
-            <Grid
-              container
-              alignItems="center"
-              justify="center"
-              direction="row"
-              spacing={2}
-            >
-              <Tooltip
-                enterDelay={300}
-                leaveDelay={300}
-                onClose={this.handleTooltipClose}
-                onOpen={this.handleTooltipOpen}
-                open={open}
-                placement="bottom"
-                title="Delete"
-              >
-                <IconButton aria-label="Delete">
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
-            </Grid>
+            <Tooltip title="Delete">
+              <IconButton aria-label="Delete">
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Add">
+              <Fab color="primary" aria-label="Add" className={classes.fab}>
+                <AddIcon />
+              </Fab>
+            </Tooltip>
+            <br />
+            <br />
+            <Tooltip title="FAB 'position: absolute;'">
+              <Fab color="secondary" className={classes.fixed}>
+                <AddIcon />
+              </Fab>
+            </Tooltip>
           </Grid>
         </Grid>
-      </div>
-    );
-  }
+        <Grid
+          item
+          md={6}
+        >
+          <Typography variant="button" display="block" className={classes.divider}>Delayed Tooltips</Typography>
+          <Grid
+            container
+            alignItems="center"
+            justifyContent="center"
+            direction="row"
+            spacing={2}
+          >
+            <Tooltip
+              enterDelay={300}
+              leaveDelay={300}
+              onClose={() => handleTooltipClose()}
+              onOpen={() => handleTooltipOpen()}
+              open={open}
+              placement="bottom"
+              title="Delete"
+            >
+              <IconButton aria-label="Delete">
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+        </Grid>
+      </Grid>
+    </div>
+  );
 }
 
 SimpleTooltips.propTypes = {

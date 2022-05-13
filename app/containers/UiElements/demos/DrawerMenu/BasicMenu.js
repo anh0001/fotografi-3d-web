@@ -1,78 +1,93 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import PropTypes from 'prop-types';
-import Menu from '@material-ui/core/Menu';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Grow from '@material-ui/core/Grow';
+import Paper from '@material-ui/core/Paper';
+import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
-const styles = theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
   },
   paper: {
     marginRight: theme.spacing(2),
   },
-  popperClose: {
-    pointerEvents: 'none',
-  },
-});
+}));
 
-class BasicMenu extends React.Component {
-  state = {
-    anchorEl: null,
+export default function MenuListComposition() {
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef(null);
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
   };
 
-  handleClick = event => {
-    this.setState({ anchorEl: event.currentTarget });
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
   };
 
-  handleClose = () => {
-    this.setState({ anchorEl: null });
-  };
-
-  render() {
-    const { anchorEl } = this.state;
-    const { classes } = this.props;
-    return (
-      <Grid container spacing={2}>
-        <Grid item md={6}>
-          <Paper className={classes.paper}>
-            <MenuList>
-              <MenuItem>Profile</MenuItem>
-              <MenuItem>My account</MenuItem>
-              <MenuItem>Logout</MenuItem>
-            </MenuList>
-          </Paper>
-        </Grid>
-        <Grid item md={6}>
-          <Button
-            aria-owns={anchorEl ? 'simple-menu' : null}
-            aria-haspopup="true"
-            onClick={this.handleClick}
-          >
-            Open Menu
-          </Button>
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={this.handleClose}
-          >
-            <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-            <MenuItem onClick={this.handleClose}>My account</MenuItem>
-            <MenuItem onClick={this.handleClose}>Logout</MenuItem>
-          </Menu>
-        </Grid>
-      </Grid>
-    );
+  function handleListKeyDown(event) {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      setOpen(false);
+    }
   }
+
+  // return focus to the button when we transitioned from !open -> open
+  const prevOpen = React.useRef(open);
+  React.useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current.focus();
+    }
+
+    prevOpen.current = open;
+  }, [open]);
+
+  return (
+    <div className={classes.root}>
+      <Paper className={classes.paper}>
+        <MenuList>
+          <MenuItem>Profile</MenuItem>
+          <MenuItem>My account</MenuItem>
+          <MenuItem>Logout</MenuItem>
+        </MenuList>
+      </Paper>
+      <div>
+        <Button
+          ref={anchorRef}
+          aria-controls={open ? 'menu-list-grow' : undefined}
+          aria-haspopup="true"
+          onClick={handleToggle}
+        >
+          Toggle Menu Grow
+        </Button>
+        <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+          {({ TransitionProps, placement }) => (
+            <Grow
+              {...TransitionProps}
+              style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+            >
+              <Paper>
+                <ClickAwayListener onClickAway={handleClose}>
+                  <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+                    <MenuItem onClick={handleClose}>Profile</MenuItem>
+                    <MenuItem onClick={handleClose}>My account</MenuItem>
+                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                  </MenuList>
+                </ClickAwayListener>
+              </Paper>
+            </Grow>
+          )}
+        </Popper>
+      </div>
+    </div>
+  );
 }
-
-BasicMenu.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(BasicMenu);

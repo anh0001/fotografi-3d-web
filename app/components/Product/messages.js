@@ -55,29 +55,5 @@ export default defineMessages({
   spesification: {
     id: `${scope}.Detail.spesification`,
     defaultMessage: 'Specification',
-  },
-  add: {
-    id: `${scope}.add`,
-    defaultMessage: 'Add',
-  },
-  cancel: {
-    id: `${scope}.cancel`,
-    defaultMessage: 'Cancel',
-  },
-  reset: {
-    id: `${scope}.reset`,
-    defaultMessage: 'Reset',
-  },
-  product_name: {
-    id: `${scope}.product_name`,
-    defaultMessage: 'Product Name',
-  },
-  add_new_product_form_title: {
-    id: `${scope}.add_new_product_form_title`,
-    defaultMessage: 'New Product',
-  },
-  open_add_new_product_tooltip: {
-    id: `${scope}.open_add_new_product_tooltip`,
-    defaultMessage: 'Add New Product',
-  },
+  }
 });

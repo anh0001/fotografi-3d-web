@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
@@ -16,103 +16,97 @@ import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import styles from '../tableStyle-jss';
 
-class TableToolbar extends React.Component {
-  state = {
-    showSearch: false,
-  }
+function TableToolbar(props) {
+  const {
+    numSelected,
+    classes,
+    filterText,
+    placeholder,
+    title,
+    onUserInput
+  } = props;
 
-  toggleSearch() {
-    const { showSearch } = this.state;
-    this.setState({ showSearch: !showSearch });
-  }
+  const [showSearch, setShowSearch] = useState(false);
 
-  handleChange(event) {
-    const { onUserInput } = this.props;
+  const toggleSearch = useCallback(() => {
+    setShowSearch(show => !show);
+  }, []);
+
+  const handleChange = useCallback((event) => {
     event.persist();
     onUserInput(event.target.value);
-  }
+  }, [onUserInput]);
 
-  render() {
-    const {
-      numSelected,
-      classes,
-      filterText,
-      placeholder,
-      title,
-    } = this.props;
-    const { showSearch } = this.state;
-
-    return (
-      <Toolbar
-        className={classNames(classes.toolbar, {
-          [classes.highlight]: numSelected > 0,
-        })}
-      >
-        <div className={classes.title}>
-          {numSelected > 0 ? (
-            <Typography color="inherit" variant="subtitle1">
-              {numSelected}
+  return (
+    <Toolbar
+      className={classNames(classes.toolbar, {
+        [classes.highlight]: numSelected > 0,
+      })}
+    >
+      <div className={classes.title}>
+        {numSelected > 0 ? (
+          <Typography color="inherit" variant="subtitle1">
+            {numSelected}
               &nbsp;selected
-            </Typography>
-          ) : (
-            <Typography variant="h6">{title}</Typography>
-          )}
-        </div>
-        <div className={classes.spacer} />
-        <div className={classes.actionsToolbar}>
-          {numSelected > 0 ? (
-            <div>
-              <Tooltip title="Bookmark">
-                <IconButton aria-label="Bookmark">
-                  <BookmarkIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Archive">
-                <IconButton aria-label="Archive">
-                  <ArchiveIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Delete">
-                <IconButton aria-label="Delete">
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
-            </div>
-          ) : (
-            <div className={classes.actions}>
-              {showSearch && (
-                <FormControl className={classNames(classes.textField)}>
-                  <Input
-                    id="search_filter"
-                    type="text"
-                    placeholder={placeholder}
-                    value={filterText}
-                    onChange={(event) => this.handleChange(event)}
-                    endAdornment={(
-                      <InputAdornment position="end">
-                        <IconButton aria-label="Search filter">
-                          <SearchIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    )}
-                  />
-                </FormControl>
-              )}
-              <Tooltip title="Filter list">
-                <IconButton
-                  aria-label="Filter list"
-                  className={classes.filterBtn}
-                  onClick={() => this.toggleSearch()}
-                >
-                  <FilterListIcon />
-                </IconButton>
-              </Tooltip>
-            </div>
-          )}
-        </div>
-      </Toolbar>
-    );
-  }
+          </Typography>
+        ) : (
+          <Typography variant="h6">{title}</Typography>
+        )}
+      </div>
+      <div className={classes.spacer} />
+      <div className={classes.actionsToolbar}>
+        {numSelected > 0 ? (
+          <div>
+            <Tooltip title="Bookmark">
+              <IconButton aria-label="Bookmark">
+                <BookmarkIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Archive">
+              <IconButton aria-label="Archive">
+                <ArchiveIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Delete">
+              <IconButton aria-label="Delete">
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          </div>
+        ) : (
+          <div className={classes.actions}>
+            {showSearch && (
+              <FormControl className={classNames(classes.textField)}>
+                <Input
+                  id="search_filter"
+                  type="text"
+                  placeholder={placeholder}
+                  value={filterText}
+                  onChange={(event) => handleChange(event)}
+                  endAdornment={(
+                    <InputAdornment position="end">
+                      <IconButton aria-label="Search filter">
+                        <SearchIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  )}
+                />
+              </FormControl>
+            )}
+            <Tooltip title="Filter list">
+              <IconButton
+                aria-label="Filter list"
+                className={classes.filterBtn}
+                onClick={() => toggleSearch()}
+              >
+                <FilterListIcon />
+              </IconButton>
+            </Tooltip>
+          </div>
+        )}
+      </div>
+    </Toolbar>
+  );
 }
 
 TableToolbar.propTypes = {

@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { ContactWidget } from 'enl-components';
@@ -10,15 +10,13 @@ const styles = {
   }
 };
 
-class ContactsMini extends PureComponent {
-  render() {
-    const { classes } = this.props;
-    return (
-      <div className={classes.miniWrap}>
-        <ContactWidget />
-      </div>
-    );
-  }
+function ContactsMini(props) {
+  const { classes } = props;
+  return (
+    <div className={classes.miniWrap}>
+      <ContactWidget />
+    </div>
+  );
 }
 
 ContactsMini.propTypes = {

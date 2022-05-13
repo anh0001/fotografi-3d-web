@@ -4,9 +4,6 @@ import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 import Switch from '@material-ui/core/Switch';
-import 'date-fns';
-import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 
 /* Textfield */
 export const TextFieldRedux = ({ meta: { touched, error }, input, ...rest }) => (
@@ -23,28 +20,6 @@ TextFieldRedux.propTypes = {
 };
 
 TextFieldRedux.defaultProps = {
-  meta: null,
-};
-/* End */
-
-/* DatePicker */
-export const DatePickerRedux = ({ meta: { touched, error }, input, ...rest }) => (
-  <MuiPickersUtilsProvider utils={DateFnsUtils}>
-    <KeyboardDatePicker
-      {...rest}
-      {...input}
-      format="dd/MM/yyyy"
-      error={touched && Boolean(error)}
-    />
-  </MuiPickersUtilsProvider>
-);
-
-DatePickerRedux.propTypes = {
-  input: PropTypes.object.isRequired,
-  meta: PropTypes.object,
-};
-
-DatePickerRedux.defaultProps = {
   meta: null,
 };
 /* End */

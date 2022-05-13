@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -15,67 +15,60 @@ const styles = theme => ({
     width: 'auto',
   },
   divider: {
-    display: 'block',
     margin: `${theme.spacing(3)}px 0`,
   }
 });
 
-class BottomNav extends React.Component {
-  state = {
-    value: 0,
-    value2: 'recents',
+function BottomNav(props) {
+  const [value, setValue] = useState(0);
+  const [value2, setValue2] = useState('recents');
+
+  const handleChange = (event, val) => {
+    setValue(val);
   };
 
-  handleChange = (event, value) => {
-    this.setState({ value });
+  const handleChange2 = (event, val2) => {
+    setValue2(val2);
   };
 
-  handleChange2 = (event, value2) => {
-    this.setState({ value2 });
-  };
+  const { classes } = props;
 
-
-  render() {
-    const { classes } = this.props;
-    const { value, value2 } = this.state;
-
-    return (
-      <Grid
-        container
-        alignItems="flex-start"
-        justify="flex-start"
-        direction="row"
-        spacing={2}
-      >
-        <Grid item md={6} xs={12}>
-          <Typography variant="button" className={classes.divider}>With Label</Typography>
-          <div>
-            <BottomNavigation
-              value={value}
-              onChange={this.handleChange}
-              showLabels
-              className={classes.root}
-            >
-              <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
-              <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
-              <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} />
-            </BottomNavigation>
-          </div>
-        </Grid>
-        <Grid item md={6} xs={12}>
-          <Typography variant="button" className={classes.divider}>Without Label</Typography>
-          <div>
-            <BottomNavigation value={value2} onChange={this.handleChange2} className={classes.root}>
-              <BottomNavigationAction label="Recents" value="recents" icon={<RestoreIcon />} />
-              <BottomNavigationAction label="Favorites" value="favorites" icon={<FavoriteIcon />} />
-              <BottomNavigationAction label="Nearby" value="nearby" icon={<LocationOnIcon />} />
-              <BottomNavigationAction label="Folder" value="folder" icon={<Icon>folder</Icon>} />
-            </BottomNavigation>
-          </div>
-        </Grid>
+  return (
+    <Grid
+      container
+      alignItems="flex-start"
+      justifyContent="flex-start"
+      direction="row"
+      spacing={2}
+    >
+      <Grid item md={6} xs={12}>
+        <Typography variant="button" className={classes.divider}>With Label</Typography>
+        <div>
+          <BottomNavigation
+            value={value}
+            onChange={handleChange}
+            showLabels
+            className={classes.root}
+          >
+            <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
+            <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
+            <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} />
+          </BottomNavigation>
+        </div>
       </Grid>
-    );
-  }
+      <Grid item md={6} xs={12}>
+        <Typography variant="button" className={classes.divider}>Without Label</Typography>
+        <div>
+          <BottomNavigation value={value2} onChange={handleChange2} className={classes.root}>
+            <BottomNavigationAction label="Recents" value="recents" icon={<RestoreIcon />} />
+            <BottomNavigationAction label="Favorites" value="favorites" icon={<FavoriteIcon />} />
+            <BottomNavigationAction label="Nearby" value="nearby" icon={<LocationOnIcon />} />
+            <BottomNavigationAction label="Folder" value="folder" icon={<Icon>folder</Icon>} />
+          </BottomNavigation>
+        </div>
+      </Grid>
+    </Grid>
+  );
 }
 
 BottomNav.propTypes = {

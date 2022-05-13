@@ -1,56 +1,46 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
-const styles = {
+const useStyles = makeStyles({
   root: {
-    flexGrow: 1,
+    width: '100%',
   },
-};
+});
 
-class LinearBuffer extends React.Component {
-  state = {
-    completed: 0,
-    buffer: 10,
-  };
+export default function LinearBuffer() {
+  const classes = useStyles();
+  const [progress, setProgress] = React.useState(0);
+  const [buffer, setBuffer] = React.useState(10);
 
-  timer = null;
+  const progressRef = React.useRef(() => {});
+  React.useEffect(() => {
+    progressRef.current = () => {
+      if (progress > 100) {
+        setProgress(0);
+        setBuffer(10);
+      } else {
+        const diff = Math.random() * 10;
+        const diff2 = Math.random() * 10;
+        setProgress(progress + diff);
+        setBuffer(progress + diff + diff2);
+      }
+    };
+  });
 
-  componentDidMount() {
-    this.timer = setInterval(this.progress, 500);
-  }
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      progressRef.current();
+    }, 500);
 
-  componentWillUnmount() {
-    clearInterval(this.timer);
-  }
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
 
-  progress = () => {
-    const { completed } = this.state;
-    if (completed > 100) {
-      this.setState({ completed: 0, buffer: 10 });
-    } else {
-      const diff = Math.random() * 10;
-      const diff2 = Math.random() * 10;
-      this.setState({ completed: completed + diff, buffer: completed + diff + diff2 });
-    }
-  };
-
-  render() {
-    const { classes } = this.props;
-    const { completed, buffer } = this.state;
-    return (
-      <div className={classes.root}>
-        <LinearProgress variant="buffer" value={completed} valueBuffer={buffer} />
-        <br />
-        <LinearProgress color="secondary" variant="buffer" value={completed} valueBuffer={buffer} />
-      </div>
-    );
-  }
+  return (
+    <div className={classes.root}>
+      <LinearProgress variant="buffer" value={progress} valueBuffer={buffer} />
+    </div>
+  );
 }
-
-LinearBuffer.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(LinearBuffer);

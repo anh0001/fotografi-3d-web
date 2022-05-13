@@ -54,7 +54,7 @@ function SimpleTable(props) {
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
-            <TableCell>Dessert (100g serving)</TableCell>
+            <TableCell padding="normal">Dessert (100g serving)</TableCell>
             <TableCell align="right">Calories</TableCell>
             <TableCell align="right">Fat (g)</TableCell>
             <TableCell align="right">Carbs (g)</TableCell>
@@ -64,7 +64,7 @@ function SimpleTable(props) {
         <TableBody>
           {data.map(n => ([
             <TableRow key={n.id}>
-              <TableCell>{n.name}</TableCell>
+              <TableCell padding="normal">{n.name}</TableCell>
               <TableCell align="right">{n.calories}</TableCell>
               <TableCell align="right">{n.fat}</TableCell>
               <TableCell align="right">{n.carbs}</TableCell>

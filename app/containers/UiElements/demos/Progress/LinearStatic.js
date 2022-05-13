@@ -9,7 +9,7 @@ const styles = {
   },
 };
 
-function LinearIndeterminate(props) {
+function LinearStatic(props) {
   const { classes } = props;
   return (
     <div className={classes.root}>
@@ -20,8 +20,8 @@ function LinearIndeterminate(props) {
   );
 }
 
-LinearIndeterminate.propTypes = {
+LinearStatic.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(LinearIndeterminate);
+export default withStyles(styles)(LinearStatic);

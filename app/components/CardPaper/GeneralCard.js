@@ -10,37 +10,35 @@ import ShareIcon from '@material-ui/icons/Share';
 import Comment from '@material-ui/icons/Comment';
 import styles from './cardStyle-jss';
 
-class GeneralCard extends React.Component {
-  render() {
-    const {
-      classes,
-      children,
-      liked,
-      shared,
-      commented
-    } = this.props;
-    return (
-      <Card className={classes.card}>
-        <CardContent>
-          {children}
-        </CardContent>
-        <CardActions className={classes.actions}>
-          <IconButton aria-label="Add to favorites" className={classes.button}>
-            <FavoriteIcon className={liked > 0 && classes.liked} />
-            <span className={classes.num}>{liked}</span>
-          </IconButton>
-          <IconButton aria-label="Share" className={classes.button}>
-            <ShareIcon className={shared > 0 && classes.shared} />
-            <span className={classes.num}>{shared}</span>
-          </IconButton>
-          <IconButton aria-label="Comment" className={classes.rightIcon}>
-            <Comment />
-            <span className={classes.num}>{commented}</span>
-          </IconButton>
-        </CardActions>
-      </Card>
-    );
-  }
+function GeneralCard(props) {
+  const {
+    classes,
+    children,
+    liked,
+    shared,
+    commented
+  } = props;
+  return (
+    <Card className={classes.card}>
+      <CardContent>
+        {children}
+      </CardContent>
+      <CardActions className={classes.actions}>
+        <IconButton aria-label="Add to favorites" className={classes.button}>
+          <FavoriteIcon className={liked > 0 && classes.liked} />
+          <span className={classes.num}>{liked}</span>
+        </IconButton>
+        <IconButton aria-label="Share" className={classes.button}>
+          <ShareIcon className={shared > 0 && classes.shared} />
+          <span className={classes.num}>{shared}</span>
+        </IconButton>
+        <IconButton aria-label="Comment" className={classes.rightIcon}>
+          <Comment />
+          <span className={classes.num}>{commented}</span>
+        </IconButton>
+      </CardActions>
+    </Card>
+  );
 }
 
 GeneralCard.propTypes = {

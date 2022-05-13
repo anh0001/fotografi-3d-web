@@ -1,9 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import ConfirmationDialog from './ConfirmationDialog';
 
 const styles = theme => ({
@@ -18,49 +16,31 @@ const styles = theme => ({
   },
 });
 
-class SelectRadioDialog extends React.Component {
-  state = {
-    open: false,
-    value: 'Dione',
+function SelectRadioDialog(props) {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState('Dione');
+
+  const handleClose = val => {
+    setValue(val);
+    setOpen(false);
   };
 
-  button = undefined;
+  const { classes } = props;
 
-  handleClickListItem = () => {
-    this.setState({ open: true });
-  };
-
-  handleClose = value => {
-    this.setState({ value, open: false });
-  };
-
-  render() {
-    const { classes } = this.props;
-    const { value, open } = this.state;
-    return (
-      <div className={classes.root}>
-        <List>
-          <ListItem
-            button
-            aria-haspopup="true"
-            aria-controls="ringtone-menu"
-            aria-label="Phone ringtone"
-            onClick={this.handleClickListItem}
-          >
-            <ListItemText primary="Phone ringtone" secondary={value} />
-          </ListItem>
-          <ConfirmationDialog
-            classes={{
-              paper: classes.dialog,
-            }}
-            open={open}
-            onClose={this.handleClose}
-            value={value}
-          />
-        </List>
-      </div>
-    );
-  }
+  return (
+    <div className={classes.root}>
+      <List>
+        <ConfirmationDialog
+          classes={{
+            paper: classes.dialog,
+          }}
+          open={open}
+          onClose={handleClose}
+          value={value}
+        />
+      </List>
+    </div>
+  );
 }
 
 SelectRadioDialog.propTypes = {

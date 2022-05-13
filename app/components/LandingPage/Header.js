@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import Scrollspy from 'react-scrollspy';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
@@ -20,7 +20,6 @@ import SelectLanguage from '../SelectLanguage';
 import SideNavMobile from './SideNavMobile';
 import styles from './landingStyle-jss';
 
-
 let counter = 0;
 function createData(name, url) {
   counter += 1;
@@ -31,109 +30,104 @@ function createData(name, url) {
   };
 }
 
-class Header extends React.Component {
-  state = {
-    open: false,
-    menuList: [
-      createData('feature', '#feature'),
-      createData('showcase', '#showcase'),
-      createData('technology', '#tech'),
-      createData('contact', '#contact'),
-    ]
-  }
+function Header(props) {
+  const { classes, turnDarker } = props;
+  const [open, setOpen] = useState(false);
+  const menuList = [
+    createData('feature', '#feature'),
+    createData('showcase', '#showcase'),
+    createData('technology', '#tech'),
+    createData('contact', '#contact')
+  ];
 
-  toggleDrawerOpen = () => {
-    this.setState({ open: true });
-  }
+  const toggleDrawerOpen = () => {
+    setOpen(true);
+  };
 
-  toggleDrawerClose = () => {
-    this.setState({ open: false });
-  }
+  const toggleDrawerClose = () => {
+    setOpen(false);
+  };
 
-  render() {
-    const { menuList, open } = this.state;
-    const { classes, turnDarker } = this.props;
-    return (
-      <Fragment>
-        <Hidden lgUp>
-          <SwipeableDrawer
-            onClose={this.toggleDrawerClose}
-            onOpen={this.toggleDrawerOpen}
-            open={open}
-            anchor="left"
-          >
-            <SideNavMobile menuList={menuList} closeDrawer={this.toggleDrawerClose} />
-          </SwipeableDrawer>
-        </Hidden>
-        <AppBar
-          className={
-            classNames(
-              classes.header,
-              turnDarker && classes.darker,
-              classes.solid
-            )
-          }
+  return (
+    <Fragment>
+      <Hidden lgUp>
+        <SwipeableDrawer
+          onClose={toggleDrawerClose}
+          onOpen={toggleDrawerOpen}
+          open={open}
+          anchor="left"
         >
-          <Hidden lgUp>
-            <IconButton
-              className={classes.menuButton}
-              aria-label="Menu"
-              onClick={this.toggleDrawerOpen}
-            >
-              <MenuIcon />
-            </IconButton>
-          </Hidden>
-          <div className={classes.container}>
-            <div className={classes.spaceContainer}>
-              <nav>
-                <Scrollspy items={['banner']}>
-                  <AnchorLink href="#banner" className={classes.brand}>
-                    <img src={logo} alt={brand.name} />
-                    {brand.name}
-                  </AnchorLink>
-                </Scrollspy>
-                <Hidden mdDown>
-                  <Scrollspy items={['feature', 'showcase', 'tech', 'contact']} currentClassName="active">
-                    { menuList.map(item => (
-                      <li key={item.id.toString()}>
-                        <Button component={AnchorLink} href={item.url}>
-                          <FormattedMessage {...messages[item.name]} />
-                        </Button>
-                      </li>
-                    )) }
-                  </Scrollspy>
-                </Hidden>
-              </nav>
+          <SideNavMobile menuList={menuList} closeDrawer={toggleDrawerClose} />
+        </SwipeableDrawer>
+      </Hidden>
+      <AppBar
+        className={
+          classNames(
+            classes.header,
+            turnDarker && classes.darker,
+            classes.solid
+          )
+        }
+      >
+        <Hidden lgUp>
+          <IconButton
+            className={classes.menuButton}
+            aria-label="Menu"
+            onClick={toggleDrawerOpen}
+          >
+            <MenuIcon />
+          </IconButton>
+        </Hidden>
+        <div className={classes.container}>
+          <div className={classes.spaceContainer}>
+            <nav>
+              <Scrollspy items={['banner']}>
+                <AnchorLink href="#banner" className={classes.brand}>
+                  <img src={logo} alt={brand.name} />
+                  {brand.name}
+                </AnchorLink>
+              </Scrollspy>
               <Hidden mdDown>
-                <div>
-                  <div className={classes.lang}>
-                    {/* <SelectLanguage /> */}
-                  </div>
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    className={classes.button}
-                    component={Link}
-                    to={link.register}
-                  >
-                    <FormattedMessage {...messages.register} />
-                  </Button>
-                  <Button
-                    color="secondary"
-                    className={classes.button}
-                    component={Link}
-                    to={link.login}
-                  >
-                    <FormattedMessage {...messages.login} />
-                  </Button>
-                </div>
+                <Scrollspy items={['feature', 'showcase', 'tech', 'contact']} currentClassName="active">
+                  { menuList.map(item => (
+                    <li key={item.id.toString()}>
+                      <Button component={AnchorLink} href={item.url}>
+                        <FormattedMessage {...messages[item.name]} />
+                      </Button>
+                    </li>
+                  )) }
+                </Scrollspy>
               </Hidden>
-            </div>
+            </nav>
+            <Hidden mdDown>
+              <div className={classes.flex}>
+                <div className={classes.lang}>
+                  <SelectLanguage />
+                </div>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  className={classes.button}
+                  component={Link}
+                  to={link.register}
+                >
+                  <FormattedMessage {...messages.register} />
+                </Button>
+                <Button
+                  color="secondary"
+                  className={classes.button}
+                  component={Link}
+                  to={link.login}
+                >
+                  <FormattedMessage {...messages.login} />
+                </Button>
+              </div>
+            </Hidden>
           </div>
-        </AppBar>
-      </Fragment>
-    );
-  }
+        </div>
+      </AppBar>
+    </Fragment>
+  );
 }
 
 Header.propTypes = {

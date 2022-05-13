@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import compose from 'recompose/compose';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -60,4 +59,4 @@ GridIntegration.propTypes = {
   width: PropTypes.string.isRequired,
 };
 
-export default compose(withStyles(styles), withWidth())(GridIntegration);
+export default withWidth()(withStyles(styles)(GridIntegration));

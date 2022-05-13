@@ -63,7 +63,7 @@ export const dataApi = [
   {
     id: '1',
     text: 'Just write',
-    email: 'mail@nge-labs.com',
+    email: 'mail@enlite.com',
     radio: 'option2',
     selection: 'option1',
     onof: false,

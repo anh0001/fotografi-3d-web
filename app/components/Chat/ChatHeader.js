@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
@@ -23,102 +23,101 @@ const optionsOpt = [
 
 const ITEM_HEIGHT = 48;
 
-class ChatHeader extends React.Component {
-  state = {
-    anchorElOpt: null,
+function ChatHeader(props) {
+  const [anchorElOpt, setAnchorElOpt] = useState(null);
+
+  const handleClickOpt = event => {
+    setAnchorElOpt(event.currentTarget);
   };
 
-  handleClickOpt = event => {
-    this.setState({ anchorElOpt: event.currentTarget });
+  const handleCloseOpt = () => {
+    setAnchorElOpt(null);
   };
 
-  handleCloseOpt = () => {
-    this.setState({ anchorElOpt: null });
-  };
-
-  handleRemove = (person) => {
-    const { remove } = this.props;
+  const handleRemove = (person) => {
+    const { remove } = props;
     remove(person);
-  }
+  };
 
-  render() {
-    const {
-      classes,
-      chatSelected,
-      dataContact,
-      showMobileDetail,
-      hideDetail,
-    } = this.props;
-    const { anchorElOpt } = this.state;
-    return (
-      <AppBar
-        position="absolute"
-        className={classNames(classes.appBar, classes.fixHeight, classes.appBarShift)}
-      >
-        <div className={classes.cover}>
-          {showMobileDetail && (
-            <IconButton
-              aria-label="open drawer"
-              onClick={() => hideDetail()}
-              className={classes.navIconHide}
-            >
-              <ArrowBack />
-            </IconButton>
-          )}
-          <Avatar alt="avatar" src={dataContact.getIn([chatSelected, 'avatar'])} className={classes.avatar} />
-          <Typography variant="h6" component="h2" color="inherit" noWrap>
-            {dataContact.getIn([chatSelected, 'name'])}
-            <Typography variant="caption" className={classes.status} color="inherit" noWrap>
-              <span className={classNames(classes.statusLine, classes.online)} />
-              &nbsp;
-              <FormattedMessage {...messages.online} />
-            </Typography>
-          </Typography>
+  const {
+    classes,
+    chatSelected,
+    dataContact,
+    showMobileDetail,
+    hideDetail,
+  } = props;
+  return (
+    <AppBar
+      position="absolute"
+      className={classNames(classes.appBar, classes.fixHeight, classes.appBarShift)}
+    >
+      <div className={classes.cover}>
+        {showMobileDetail && (
           <IconButton
-            aria-label="More"
-            aria-owns={anchorElOpt ? 'long-menu' : null}
-            aria-haspopup="true"
-            className={classes.button}
-            onClick={this.handleClickOpt}
+            aria-label="open drawer"
+            onClick={() => hideDetail()}
+            className={classes.navIconHide}
           >
-            <MoreVertIcon color="inherit" />
+            <ArrowBack />
           </IconButton>
-          <Menu
-            id="long-menu"
-            anchorEl={anchorElOpt}
-            open={Boolean(anchorElOpt)}
-            onClose={this.handleCloseOpt}
-            PaperProps={{
-              style: {
-                maxHeight: ITEM_HEIGHT * 4.5,
-                width: 200,
-              },
-            }}
-          >
-            {optionsOpt.map(option => {
-              if (option === 'Delete Conversation') {
-                return (
-                  <MenuItem key={option} onClick={this.handleRemove}>
-                    <FormattedMessage {...messages.delete} />
-                  </MenuItem>
-                );
-              }
+        )}
+        {dataContact.length > 0 && (
+          <Fragment>
+            <Avatar alt="avatar" src={dataContact[chatSelected].avatar} className={classes.avatar} />
+            <Typography variant="h6" component="h2" color="inherit" noWrap>
+              {dataContact[chatSelected].name}
+              <Typography variant="caption" display="block" className={classes.status} color="inherit" noWrap>
+                <span className={classes.online} />
+                &nbsp;
+                <FormattedMessage {...messages.online} />
+              </Typography>
+            </Typography>
+          </Fragment>
+        )}
+        <IconButton
+          aria-label="More"
+          aria-owns={anchorElOpt ? 'long-menu' : null}
+          aria-haspopup="true"
+          className={classes.button}
+          onClick={handleClickOpt}
+        >
+          <MoreVertIcon color="inherit" />
+        </IconButton>
+        <Menu
+          id="long-menu"
+          anchorEl={anchorElOpt}
+          open={Boolean(anchorElOpt)}
+          onClose={handleCloseOpt}
+          PaperProps={{
+            style: {
+              maxHeight: ITEM_HEIGHT * 4.5,
+              width: 200,
+            },
+          }}
+        >
+          {optionsOpt.map(option => {
+            if (option === 'Delete Conversation') {
               return (
-                <MenuItem key={option} onClick={this.handleCloseOpt}>
-                  {option}
+                <MenuItem key={option} onClick={handleRemove}>
+                  <FormattedMessage {...messages.delete} />
                 </MenuItem>
               );
-            })}
-          </Menu>
-        </div>
-      </AppBar>
-    );
-  }
+            }
+            return (
+              <MenuItem key={option} selected={option === 'Edit Profile'} onClick={handleCloseOpt}>
+                {option}
+              </MenuItem>
+            );
+          })}
+        </Menu>
+      </div>
+    </AppBar>
+  );
 }
 
 ChatHeader.propTypes = {
   classes: PropTypes.object.isRequired,
-  dataContact: PropTypes.object.isRequired,
+  dataContact: PropTypes.array.isRequired,
   showMobileDetail: PropTypes.bool.isRequired,
   hideDetail: PropTypes.func.isRequired,
   remove: PropTypes.func.isRequired,

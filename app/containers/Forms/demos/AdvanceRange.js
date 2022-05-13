@@ -20,7 +20,6 @@ const useStyles = makeStyles(theme => ({
     height: 'auto',
   },
   divider: {
-    display: 'block',
     margin: `${theme.spacing(3)}px 0`,
   }
 }));
@@ -56,7 +55,7 @@ function ValueLabelComponent(props) {
     if (popperRef.current) {
       popperRef.current.update();
     }
-  });
+  }, []);
 
   return (
     <Tooltip
@@ -250,7 +249,7 @@ export default function AdvanceRange() {
       <Grid
         container
         alignItems="flex-start"
-        justify="space-around"
+        justifyContent="space-around"
         direction="row"
         spacing={3}
       >

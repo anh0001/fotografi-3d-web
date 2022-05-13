@@ -22,7 +22,7 @@ const applicationTheme = (color, mode, direction) => ({
     fontWeightMedium: 700,
   },
   shade: {
-    light: '0 10px 15px -5px rgba(62, 57, 107, .07)',
+    light: '0 10px 15px -2px rgba(62, 57, 107, .07)',
   },
   glow: {
     light: `0 2px 20px -5px ${themePalette(color, mode).palette.primary.main}`,
@@ -131,6 +131,18 @@ const applicationTheme = (color, mode, direction) => ({
         fontWeight: 600,
       },
     },
+    MuiAutocomplete: {
+      inputRoot: {
+        padding: '24px 8px',
+        top: -3,
+        '& $endAdornment': {
+          paddingTop: 0
+        }
+      },
+      tag: {
+        padding: '0 !important'
+      }
+    },
     MuiInput: {
       root: {
         border:
@@ -138,6 +150,7 @@ const applicationTheme = (color, mode, direction) => ({
             ? '1px solid rgba(255,255,255,0.32)'
             : '1px solid rgba(0,0,0,0.32)',
         borderRadius: 8,
+        overflow: 'hidden',
         alignItems: 'center',
         transition: 'border 0.3s ease',
       },
@@ -184,6 +197,14 @@ const applicationTheme = (color, mode, direction) => ({
           transform: 'translate(4px, -16px) scale(0.75)',
         },
       },
+      root: {
+        '& + div': {
+          '& .MuiSelect-root': {
+            paddingBottom: 0,
+            paddingTop: '24px'
+          }
+        }
+      }
     },
     MuiFormLabel: {
       root: {
@@ -215,7 +236,7 @@ const applicationTheme = (color, mode, direction) => ({
             alignItems: 'flex-start',
           },
           paddingBottom: 4,
-          '& input, > div, > select': {
+          '& input, > .MuiInputAdornment-positionStart, > select': {
             padding: '24px 8px 0',
           },
         },
@@ -226,7 +247,7 @@ const applicationTheme = (color, mode, direction) => ({
         alignItems: 'flex-end',
         paddingLeft: 0,
         paddingRight: 0,
-        height: 'auto',
+        height: 'auto !important',
         '& button': {
           width: 32,
           height: 32,
@@ -242,10 +263,11 @@ const applicationTheme = (color, mode, direction) => ({
         }
       },
       positionStart: {
-        marginLeft: 0,
+        marginRight: 0,
+        paddingRight: '0 !important'
       },
       positionEnd: {
-        marginRight: 0,
+        marginLeft: 0
       },
     },
     MuiToolbar: {
@@ -321,7 +343,7 @@ const applicationTheme = (color, mode, direction) => ({
         color: themePalette(color, mode).palette.primary.main,
       },
     },
-    MuiExpansionPanel: {
+    MuiAccordion: {
       root: {
         '&:first-child': {
           borderTopLeftRadius: 8,
@@ -404,6 +426,11 @@ const applicationTheme = (color, mode, direction) => ({
         '&$selected': {
           backgroundColor: mode === 'dark' ? themePalette(color, mode).palette.primary.dark : themePalette(color, mode).palette.primary.light
         }
+      }
+    },
+    MUIDataTableToolbar: {
+      filterPaper: {
+        maxWidth: 'none'
       }
     },
     MUIDataTableToolbarSelect: {

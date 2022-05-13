@@ -1,6 +1,5 @@
 import { createSelector } from 'reselect';
 
-
 export function getTasks(state) {
   return state;
 }
@@ -12,7 +11,6 @@ export function getTaskFilter(state) {
 export function getTaskList(state) {
   return getTasks(state).list;
 }
-
 
 // =====================================
 //  MEMOIZED SELECTORS

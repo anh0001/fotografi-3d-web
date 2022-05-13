@@ -1,5 +1,5 @@
 import React from 'react';
-import { createMuiTheme, withStyles } from '@material-ui/core/styles';
+import { createTheme, withStyles } from '@material-ui/core/styles';
 import ThemePallete from 'enl-api/palette/themePalette';
 import PropTypes from 'prop-types';
 import {
@@ -15,7 +15,7 @@ import {
 import { data1 } from './sampleData';
 import styles from './fluidChart-jss';
 
-const theme = createMuiTheme(ThemePallete.cyanTheme);
+const theme = createTheme(ThemePallete.cyanTheme);
 const color = ({
   primary: theme.palette.primary.main,
   secondary: theme.palette.secondary.main,
@@ -25,7 +25,7 @@ function LineVertical(props) {
   const { classes } = props;
   return (
     <div className={classes.chartFluid}>
-      <ResponsiveContainer>
+      <ResponsiveContainer width={800} height="80%">
         <LineChart
           width={800}
           height={450}

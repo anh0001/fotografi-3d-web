@@ -16,7 +16,7 @@ function PositionedTooltips(props) {
   const { classes } = props;
   return (
     <div className={classes.root}>
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item>
           <Tooltip id="tooltip-top-start" title="Add" placement="top-start">
             <Button>top-start</Button>
@@ -29,7 +29,7 @@ function PositionedTooltips(props) {
           </Tooltip>
         </Grid>
       </Grid>
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item xs={6}>
           <Tooltip id="tooltip-left-start" title="Add" placement="left-start">
             <Button>left-start</Button>
@@ -61,7 +61,7 @@ function PositionedTooltips(props) {
           </Grid>
         </Grid>
       </Grid>
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item>
           <Tooltip id="tooltip-bottom-start" title="Add" placement="bottom-start">
             <Button>bottom-start</Button>

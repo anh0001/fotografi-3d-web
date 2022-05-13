@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -76,100 +76,85 @@ function getStepContent(step) {
   }
 }
 
-class Checkout extends React.Component {
-  state = {
-    activeStep: 0,
+function Checkout(props) {
+  const [activeStep, setActiveStep] = useState(0);
+
+  const handleNext = () => {
+    setActiveStep(activeStep + 1);
   };
 
-  handleNext = () => {
-    this.setState(state => ({
-      activeStep: state.activeStep + 1,
-    }));
+  const handleBack = () => {
+    setActiveStep(activeStep - 1);
   };
 
-  handleBack = () => {
-    this.setState(state => ({
-      activeStep: state.activeStep - 1,
-    }));
-  };
-
-  handleReset = () => {
-    this.setState({
-      activeStep: 0,
-    });
-  };
-
-  render() {
-    const { classes, width } = this.props;
-    const { activeStep } = this.state;
-    return (
-      <Fragment>
-        <CssBaseline />
-        <main className={classes.layout}>
-          <Paper className={classes.paper}>
-            <Fragment>
-              {activeStep === steps.length ? (
-                <div className={classes.finishMessage}>
-                  <Typography variant="h4" gutterBottom>
-                    <span>
-                      <CheckCircle />
-                    </span>
-                    <FormattedMessage {...messages.thank} />
-                  </Typography>
-                  <Typography variant="subtitle1">
-                    <FormattedMessage {...messages.your_order} />
-                    &nbsp;
-                    <strong>#2001539</strong>
-                    .&nbsp;
-                    <FormattedMessage {...messages.we_have} />
-                  </Typography>
-                  <Button variant="contained" color="primary" href="/app/pages/ecommerce" className={classes.button}>
-                    <FormattedMessage {...messages.shopping_again} />
+  const { classes, width } = props;
+  return (
+    <Fragment>
+      <CssBaseline />
+      <main className={classes.layout}>
+        <Paper className={classes.paper}>
+          <Fragment>
+            {activeStep === steps.length ? (
+              <div className={classes.finishMessage}>
+                <Typography variant="h4" gutterBottom>
+                  <span>
+                    <CheckCircle />
+                  </span>
+                  <FormattedMessage {...messages.thank} />
+                </Typography>
+                <Typography variant="subtitle1">
+                  <FormattedMessage {...messages.your_order} />
+                  &nbsp;
+                  <strong>#2001539</strong>
+                  .&nbsp;
+                  <FormattedMessage {...messages.we_have} />
+                </Typography>
+                <Button variant="contained" color="primary" href="/app/pages/ecommerce" className={classes.button}>
+                  <FormattedMessage {...messages.shopping_again} />
+                </Button>
+              </div>
+            ) : (
+              <Fragment>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={7}>
+                    <Stepper activeStep={activeStep} className={classes.stepper} alternativeLabel={isWidthDown('sm', width)}>
+                      {steps.map(label => (
+                        <Step key={label}>
+                          <StepLabel>
+                            <FormattedMessage {...messages[label]} />
+                          </StepLabel>
+                        </Step>
+                      ))}
+                    </Stepper>
+                    {getStepContent(activeStep)}
+                  </Grid>
+                  <Grid item xs={12} md={5}>
+                    <SideReview />
+                  </Grid>
+                </Grid>
+                <div className={classes.buttons}>
+                  {activeStep !== 0 && (
+                    <Button onClick={handleBack} className={classes.button}>
+                      <FormattedMessage {...messages.back} />
+                    </Button>
+                  )}
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleNext}
+                    className={classes.button}
+                    size="large"
+                  >
+                    {activeStep === steps.length - 1 ? <FormattedMessage {...messages.place} /> : <FormattedMessage {...messages.next} />}
                   </Button>
                 </div>
-              ) : (
-                <Fragment>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12} md={7}>
-                      <Stepper activeStep={activeStep} className={classes.stepper} alternativeLabel={isWidthDown('sm', width)}>
-                        {steps.map(label => (
-                          <Step key={label}>
-                            <StepLabel>
-                              <FormattedMessage {...messages[label]} />
-                            </StepLabel>
-                          </Step>
-                        ))}
-                      </Stepper>
-                      {getStepContent(activeStep)}
-                    </Grid>
-                    <Grid item xs={12} md={5}>
-                      <SideReview />
-                    </Grid>
-                  </Grid>
-                  <div className={classes.buttons}>
-                    {activeStep !== 0 && (
-                      <Button onClick={this.handleBack} className={classes.button}>
-                        <FormattedMessage {...messages.back} />
-                      </Button>
-                    )}
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={this.handleNext}
-                      className={classes.button}
-                      size="large"
-                    >
-                      {activeStep === steps.length - 1 ? <FormattedMessage {...messages.place} /> : <FormattedMessage {...messages.next} />}
-                    </Button>
-                  </div>
-                </Fragment>
-              )}
-            </Fragment>
-          </Paper>
-        </main>
-      </Fragment>
-    );
-  }
+              </Fragment>
+            )}
+          </Fragment>
+        </Paper>
+      </main>
+    </Fragment>
+  );
 }
 
 Checkout.propTypes = {

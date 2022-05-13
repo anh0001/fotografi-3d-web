@@ -6,52 +6,51 @@ import Toolbar from '@material-ui/core/Toolbar';
 import SearchIcon from '@material-ui/icons/Search';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import messages from './messages';
 import styles from './email-jss';
 
-class EmailHeader extends React.Component {
-  render() {
-    const {
-      classes,
-      search,
-      handleDrawerToggle,
-      intl
-    } = this.props;
-    return (
-      <AppBar position="absolute" className={classes.appBar}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={() => handleDrawerToggle()}
-            className={classes.navIconHide}
-          >
-            <MenuIcon />
-          </IconButton>
-          <div className={classes.flex}>
-            <div className={classes.wrapper}>
-              <div className={classes.search}>
-                <SearchIcon />
-              </div>
-              <input
-                className={classes.input}
-                onChange={(event) => search(event)}
-                placeholder={intl.formatMessage(messages.search)}
-              />
+function EmailHeader(props) {
+  const {
+    classes,
+    search,
+    handleDrawerToggle,
+    intl
+  } = props;
+
+  return (
+    <AppBar position="absolute" className={classes.appBar}>
+      <Toolbar>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          onClick={() => handleDrawerToggle()}
+          className={classes.navIconHide}
+        >
+          <MenuIcon />
+        </IconButton>
+        <div className={classes.flex}>
+          <div className={classes.wrapper}>
+            <div className={classes.search}>
+              <SearchIcon />
             </div>
+            <input
+              className={classes.input}
+              onChange={(event) => search(event)}
+              placeholder={intl.formatMessage(messages.search)}
+            />
           </div>
-        </Toolbar>
-      </AppBar>
-    );
-  }
+        </div>
+      </Toolbar>
+    </AppBar>
+  );
 }
 
 EmailHeader.propTypes = {
   classes: PropTypes.object.isRequired,
   search: PropTypes.func.isRequired,
   handleDrawerToggle: PropTypes.func.isRequired,
-  intl: intlShape.isRequired
+  intl: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(injectIntl(EmailHeader));

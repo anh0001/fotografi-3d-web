@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -76,45 +76,38 @@ SimpleDialog.propTypes = {
 
 const SimpleDialogWrapped = withStyles(styles)(SimpleDialog);
 
-class SelectDialog extends React.Component {
-  state = {
-    open: false,
-    selectedValue: emails[1],
+function SelectDialog() {
+  const [open, setOpen] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(emails[1]);
+
+  const handleClickOpen = () => {
+    setOpen(true);
   };
 
-  handleClickOpen = () => {
-    this.setState({
-      open: true,
-    });
+  const handleClose = value => {
+    setSelectedValue(value);
+    setOpen(false);
   };
 
-  handleClose = value => {
-    this.setState({ selectedValue: value, open: false });
-  };
-
-  render() {
-    const { selectedValue, open } = this.state;
-    return (
-      <div>
-        <Grid container justify="center" direction="column">
-          <Typography variant="subtitle1">
-            Selected:&nbsp;
-            <strong>
-              {selectedValue}
-            </strong>
-          </Typography>
-          <br />
-          <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>Open simple dialog</Button>
-          <SimpleDialogWrapped
-            selectedValue={selectedValue}
-            open={open}
-            onClose={this.handleClose}
-          />
-        </Grid>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <Grid container justifyContent="center" direction="column">
+        <Typography variant="subtitle1">
+          Selected:&nbsp;
+          <strong>
+            {selectedValue}
+          </strong>
+        </Typography>
+        <br />
+        <Button variant="outlined" color="primary" onClick={() => handleClickOpen()}>Open simple dialog</Button>
+        <SimpleDialogWrapped
+          selectedValue={selectedValue}
+          open={open}
+          onClose={handleClose}
+        />
+      </Grid>
+    </div>
+  );
 }
-
 
 export default SelectDialog;

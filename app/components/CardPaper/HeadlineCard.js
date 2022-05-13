@@ -9,50 +9,48 @@ import Hidden from '@material-ui/core/Hidden';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './cardStyle-jss';
 
-class HeadlineCard extends React.Component {
-  render() {
-    const {
-      classes,
-      thumbnail,
-      title,
-      desc,
-    } = this.props;
-    return (
-      <Paper className={classes.mainFeaturedPost}>
-        <ButtonBase
-          focusRipple
-          className={classes.imageFull}
-          focusVisibleClassName={classes.focusVisible}
-          component={Link}
-          to="/blog/article"
-        >
-          <div className={classes.mainFeaturedPostContent}>
-            <span
-              className={classes.imageSrc}
-              style={{
-                backgroundImage: `url(${thumbnail})`
-              }}
-            />
-            <span className={classes.imageBackdrop} />
-            <div className={classes.imageButton}>
-              <Grid container>
-                <Grid item md={6}>
-                  <Typography component="h1" variant="h2" color="inherit" gutterBottom>
-                    {title}
+function HeadlineCard(props) {
+  const {
+    classes,
+    thumbnail,
+    title,
+    desc,
+  } = props;
+  return (
+    <Paper className={classes.mainFeaturedPost}>
+      <ButtonBase
+        focusRipple
+        className={classes.imageFull}
+        focusVisibleClassName={classes.focusVisible}
+        component={Link}
+        to="/blog/article"
+      >
+        <div className={classes.mainFeaturedPostContent}>
+          <span
+            className={classes.imageSrc}
+            style={{
+              backgroundImage: `url(${thumbnail})`
+            }}
+          />
+          <span className={classes.imageBackdrop} />
+          <div className={classes.imageButton}>
+            <Grid container>
+              <Grid item md={6}>
+                <Typography component="h1" variant="h2" color="inherit" gutterBottom>
+                  {title}
+                </Typography>
+                <Hidden smDown>
+                  <Typography component="p" variant="subtitle1" color="inherit" paragraph>
+                    {desc}
                   </Typography>
-                  <Hidden smDown>
-                    <Typography component="p" variant="subtitle1" color="inherit" paragraph>
-                      {desc}
-                    </Typography>
-                  </Hidden>
-                </Grid>
+                </Hidden>
               </Grid>
-            </div>
+            </Grid>
           </div>
-        </ButtonBase>
-      </Paper>
-    );
-  }
+        </div>
+      </ButtonBase>
+    </Paper>
+  );
 }
 
 HeadlineCard.propTypes = {

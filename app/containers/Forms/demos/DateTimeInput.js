@@ -1,125 +1,116 @@
-import React, { Fragment, PureComponent } from 'react';
-import { DateTimePicker, MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import React, { Fragment, useState } from 'react';
+import { DateTimePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
-import { IconButton, Icon, InputAdornment } from '@material-ui/core';
+import AlarmIcon from '@material-ui/icons/AddAlarm';
+import Icon from '@material-ui/core/Icon';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 const styles = theme => ({
   demo: {
     height: 'auto',
   },
   divider: {
-    display: 'block',
     margin: `${theme.spacing(3)}px 0`,
   },
   picker: {
     margin: `${theme.spacing(3)}px 5px`,
-  },
-  icon: {
-    top: theme.spacing(2)
   }
 });
 
-class DateTimeInput extends PureComponent {
-  state = {
-    selectedDate: new Date(),
-  }
+function DateTimeInput(props) {
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
-  handleDateChange = (date) => {
-    this.setState({ selectedDate: date });
-  }
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
 
-  render() {
-    const { selectedDate } = this.state;
-    const { classes } = this.props;
-    return (
-      <Fragment>
+  const { classes } = props;
+  return (
+    <Fragment>
+      <Grid
+        container
+        alignItems="flex-start"
+        justifyContent="space-around"
+        direction="row"
+        spacing={3}
+      >
         <Grid
-          container
-          alignItems="flex-start"
-          justify="space-around"
-          direction="row"
-          spacing={3}
+          item
+          md={6}
+          className={classes.demo}
         >
-          <Grid
-            item
-            md={6}
-            className={classes.demo}
-          >
-            <Typography variant="button" className={classes.divider}>Basic usage</Typography>
-            <div className={classes.picker}>
-              <MuiPickersUtilsProvider utils={MomentUtils}>
-                <DateTimePicker
-                  value={selectedDate}
-                  disablePast
-                  onChange={this.handleDateChange}
-                  label="DateTimePicker"
-                />
-              </MuiPickersUtilsProvider>
-            </div>
+          <Typography variant="button" className={classes.divider}>Basic usage</Typography>
+          <div className={classes.picker}>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <DateTimePicker
+                value={selectedDate}
+                disablePast
+                onChange={handleDateChange}
+                label="DateTimePicker"
+              />
+            </MuiPickersUtilsProvider>
+          </div>
 
-            <div className={classes.picker}>
-              <MuiPickersUtilsProvider utils={MomentUtils}>
-                <DateTimePicker
-                  autoOk
-                  ampm={false}
-                  disableFuture
-                  value={selectedDate}
-                  onChange={this.handleDateChange}
-                  label="24h clock"
-                />
-              </MuiPickersUtilsProvider>
-            </div>
-          </Grid>
-          <Grid
-            item
-            md={6}
-            className={classes.demo}
-          >
-            <Typography variant="button" className={classes.divider}>Customization</Typography>
-            <div className={classes.picker}>
-              <MuiPickersUtilsProvider utils={MomentUtils}>
-                <DateTimePicker
-                  autoOk
-                  ampm={false}
-                  showTabs={false}
-                  disableFuture
-                  value={selectedDate}
-                  onChange={this.handleDateChange}
-                  helperText="Hardcoded helper text"
-                  leftArrowIcon={<Icon> add_alarm </Icon>}
-                  rightArrowIcon={<Icon> snooze </Icon>}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton className={classes.icon}>
-                          <Icon>add_alarm</Icon>
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </MuiPickersUtilsProvider>
-            </div>
-            <div className={classes.picker}>
-              <MuiPickersUtilsProvider utils={MomentUtils}>
-                <KeyboardDatePicker
-                  label="Keyboard input"
-                  value={selectedDate}
-                  onChange={this.handleDateChange}
-                  format="YYYY/MM/DD hh:mm A"
-                  mask={[/\d/, /\d/, /\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, ' ', /\d/, /\d/, ':', /\d/, /\d/, ' ', /a|p/i, 'M']}
-                />
-              </MuiPickersUtilsProvider>
-            </div>
-          </Grid>
+          <div className={classes.picker}>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <DateTimePicker
+                autoOk
+                ampm={false}
+                disableFuture
+                value={selectedDate}
+                onChange={handleDateChange}
+                label="24h clock"
+              />
+            </MuiPickersUtilsProvider>
+          </div>
         </Grid>
-      </Fragment>
-    );
-  }
+        <Grid
+          item
+          md={6}
+          className={classes.demo}
+        >
+          <Typography variant="button" className={classes.divider}>Customization</Typography>
+          <div className={classes.picker}>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <DateTimePicker
+                autoOk
+                ampm={false}
+                showTabs={false}
+                disableFuture
+                value={selectedDate}
+                onChange={handleDateChange}
+                helperText="Hardcoded helper text"
+                leftArrowIcon={<Icon> add_alarm </Icon>}
+                rightArrowIcon={<Icon> snooze </Icon>}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <AlarmIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </MuiPickersUtilsProvider>
+          </div>
+          <div className={classes.picker}>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <KeyboardDateTimePicker
+                label="Keyboard input"
+                value={selectedDate}
+                onChange={handleDateChange}
+                format="YYYY/MM/DD hh:mm A"
+                mask={[/\d/, /\d/, /\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, ' ', /\d/, /\d/, ':', /\d/, /\d/, ' ', /a|p/i, 'M']}
+              />
+            </MuiPickersUtilsProvider>
+          </div>
+        </Grid>
+      </Grid>
+    </Fragment>
+  );
 }
 
 DateTimeInput.propTypes = {

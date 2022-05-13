@@ -16,29 +16,27 @@ const styles = ({
   }
 });
 
-class VerticalCarousel extends React.Component {
-  render() {
-    const { classes } = this.props;
-    const settings = {
-      infinite: true,
-      slidesToShow: 2,
-      slidesToScroll: 1,
-      vertical: true,
-      verticalSwiping: true,
-      swipeToSlide: true,
-    };
-    return (
-      <div className="container">
-        <Slider {...settings}>
-          {imgData.map((item, index) => (
-            <div key={index.toString()} className={classes.item}>
-              <img src={item.img} alt={item.title} />
-            </div>
-          ))}
-        </Slider>
-      </div>
-    );
-  }
+function VerticalCarousel(props) {
+  const { classes } = props;
+  const settings = {
+    infinite: true,
+    slidesToShow: 2,
+    slidesToScroll: 1,
+    vertical: true,
+    verticalSwiping: true,
+    swipeToSlide: true,
+  };
+  return (
+    <div className="container">
+      <Slider {...settings}>
+        {imgData.map((item, index) => (
+          <div key={index.toString()} className={classes.item}>
+            <img src={item.img} alt={item.title} />
+          </div>
+        ))}
+      </Slider>
+    </div>
+  );
 }
 
 VerticalCarousel.propTypes = {

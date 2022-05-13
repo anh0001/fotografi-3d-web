@@ -74,7 +74,7 @@ function StatusLabel(props) {
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
-            <CustomTableCell>Dessert (100g serving)</CustomTableCell>
+            <CustomTableCell padding="normal">Dessert (100g serving)</CustomTableCell>
             <CustomTableCell>Progress</CustomTableCell>
             <CustomTableCell>Status</CustomTableCell>
           </TableRow>
@@ -82,7 +82,7 @@ function StatusLabel(props) {
         <TableBody>
           {data.map(n => ([
             <TableRow key={n.id} className={getStatus(n.status)}>
-              <TableCell>{n.name}</TableCell>
+              <TableCell padding="normal">{n.name}</TableCell>
               <TableCell align="right">
                 <LinearProgress variant="determinate" className={getProgress(n.status)} value={n.progress} />
               </TableCell>

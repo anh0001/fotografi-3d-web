@@ -5,40 +5,38 @@ import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './landingStyle-jss';
 
-class Title extends React.Component {
-  render() {
-    const {
-      classes,
-      title,
-      desc,
-      align,
-      nomargin,
-    } = this.props;
-    const getAlignment = alignment => {
-      switch (alignment) {
-        case 'center':
-          return classes.center;
-        case 'right':
-          return classes.right;
-        default:
-          return classes.left;
+function Title(props) {
+  const {
+    classes,
+    title,
+    desc,
+    align,
+    nomargin,
+  } = props;
+  const getAlignment = alignment => {
+    switch (alignment) {
+      case 'center':
+        return classes.center;
+      case 'right':
+        return classes.right;
+      default:
+        return classes.left;
+    }
+  };
+  return (
+    <div
+      className={
+        classNames(
+          classes.title,
+          getAlignment(align),
+          nomargin && classes.nomargin,
+        )
       }
-    };
-    return (
-      <div
-        className={
-          classNames(
-            classes.title,
-            getAlignment(align),
-            nomargin && classes.nomargin,
-          )
-        }
-      >
-        <Typography component="h2" variant="h4" gutterBottom>{title}</Typography>
-        {desc !== '' && (<Typography component="p" variant="h5">{desc}</Typography>)}
-      </div>
-    );
-  }
+    >
+      <Typography component="h2" variant="h4" gutterBottom>{title}</Typography>
+      {desc !== '' && (<Typography component="p" variant="h5">{desc}</Typography>)}
+    </div>
+  );
 }
 
 Title.propTypes = {

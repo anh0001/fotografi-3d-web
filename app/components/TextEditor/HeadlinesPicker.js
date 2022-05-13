@@ -1,38 +1,36 @@
-import React, { Component } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import {
   HeadlineOneButton,
   HeadlineTwoButton,
   HeadlineThreeButton,
-} from 'draft-js-buttons';
+} from '@draft-js-plugins/buttons';
 
-class HeadlinesPicker extends Component {
-  componentDidMount() {
-    setTimeout(() => { window.addEventListener('click', this.onWindowClick); });
-  }
+function HeadlinesPicker(props) {
+  const { onOverrideContent } = props;
 
-  componentWillUnmount() {
-    window.removeEventListener('click', this.onWindowClick);
-  }
-
-  onWindowClick = () => {
+  const onWindowClick = useCallback(() => {
     // Call `onOverrideContent` again with `undefined`
     // so the toolbar can show its regular content again.
-    const { onOverrideContent } = this.props;
     onOverrideContent(undefined);
-  }
+  }, [onOverrideContent]);
 
-  render() {
-    const buttons = [HeadlineOneButton, HeadlineTwoButton, HeadlineThreeButton];
-    return (
-      <div>
-        {buttons.map((Button, i) => // eslint-disable-next-line
-          <Button key={i} {...this.props} />
-        )}
-      </div>
-    );
-  }
+  useEffect(() => {
+    setTimeout(() => { window.addEventListener('click', onWindowClick); });
+    return () => {
+      window.removeEventListener('click', onWindowClick);
+    };
+  }, []);
+
+  const buttons = [HeadlineOneButton, HeadlineTwoButton, HeadlineThreeButton];
+  return (
+    <div>
+      {buttons.map((Button, i) => // eslint-disable-next-line
+        <Button key={i} {...props} />
+      )}
+    </div>
+  );
 }
 
 HeadlinesPicker.propTypes = {

@@ -1,44 +1,43 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import brand from 'enl-api/dummy/brand';
 import { SourceReader, PapperBlock } from 'enl-components';
-import { injectIntl, intlShape } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import messages from './messages';
 import { ToggleBtn } from './demos';
 
-class ToggleButton extends React.Component {
-  render() {
-    const title = brand.name + ' - Form';
-    const description = brand.desc;
-    const docSrc = 'containers/Forms/demos/';
-    const { intl } = this.props;
-    return (
-      <div>
-        <Helmet>
-          <title>{title}</title>
-          <meta name="description" content={description} />
-          <meta property="og:title" content={title} />
-          <meta property="og:description" content={description} />
-          <meta property="twitter:title" content={title} />
-          <meta property="twitter:description" content={description} />
-        </Helmet>
-        <PapperBlock
-          title={intl.formatMessage(messages.toggleButtonTitle)}
-          icon="iso"
-          desc={intl.formatMessage(messages.toggleButtonTitle)}
-        >
-          <div>
-            <ToggleBtn />
-            <SourceReader componentName={docSrc + 'ToggleBtn.js'} />
-          </div>
-        </PapperBlock>
-      </div>
-    );
-  }
+function ToggleButton(props) {
+  const title = brand.name + ' - Form';
+  const description = brand.desc;
+  const docSrc = 'containers/Forms/demos/';
+  const { intl } = props;
+  return (
+    <div>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="twitter:title" content={title} />
+        <meta property="twitter:description" content={description} />
+      </Helmet>
+      <PapperBlock
+        title={intl.formatMessage(messages.toggleButtonTitle)}
+        icon="iso"
+        desc={intl.formatMessage(messages.toggleButtonTitle)}
+      >
+        <div>
+          <ToggleBtn />
+          <SourceReader componentName={docSrc + 'ToggleBtn.js'} />
+        </div>
+      </PapperBlock>
+    </div>
+  );
 }
 
 ToggleButton.propTypes = {
-  intl: intlShape.isRequired
+  intl: PropTypes.object.isRequired
 };
 
 export default injectIntl(ToggleButton);

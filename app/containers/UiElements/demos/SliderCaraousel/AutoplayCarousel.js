@@ -16,33 +16,31 @@ const styles = ({
   }
 });
 
-class AutoplayCarousel extends React.Component {
-  render() {
-    const { classes } = this.props;
-    const settings = {
-      dots: true,
-      infinite: true,
-      centerMode: false,
-      speed: 500,
-      autoplaySpeed: 2000,
-      pauseOnHover: true,
-      autoplay: true,
-      slidesToShow: 3,
-      slidesToScroll: 1,
-      cssEase: 'ease-out'
-    };
-    return (
-      <div className="container">
-        <Slider {...settings}>
-          {imgData.map((item, index) => (
-            <div key={index.toString()} className={classes.item}>
-              <img src={item.img} alt={item.title} />
-            </div>
-          ))}
-        </Slider>
-      </div>
-    );
-  }
+function AutoplayCarousel(props) {
+  const { classes } = props;
+  const settings = {
+    dots: true,
+    infinite: true,
+    centerMode: false,
+    speed: 500,
+    autoplaySpeed: 2000,
+    pauseOnHover: true,
+    autoplay: true,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    cssEase: 'ease-out'
+  };
+  return (
+    <div className="container">
+      <Slider {...settings}>
+        {imgData.map((item, index) => (
+          <div key={index.toString()} className={classes.item}>
+            <img src={item.img} alt={item.title} />
+          </div>
+        ))}
+      </Slider>
+    </div>
+  );
 }
 
 AutoplayCarousel.propTypes = {

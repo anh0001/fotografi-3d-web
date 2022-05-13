@@ -8,40 +8,38 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import styles from './cardStyle-jss';
 
-class HorizontalNewsCard extends React.Component {
-  render() {
-    const {
-      classes,
-      thumbnail,
-      title,
-      desc,
-    } = this.props;
-    return (
-      <Card className={classes.newsList}>
-        <CardContent className={classes.newsListContent}>
-          <Typography noWrap gutterBottom variant="h5" className={classes.title} component="h2">
-            {title}
-          </Typography>
-          <Typography component="p" className={classes.desc}>
-            {desc}
-          </Typography>
-          <div className={classes.actionArea}>
-            <Button size="small" color="primary">
-              Share
-            </Button>
-            <Button size="small" color="primary">
-              Read More
-            </Button>
-          </div>
-        </CardContent>
-        <CardMedia
-          className={classes.mediaNews}
-          image={thumbnail}
-          title={title}
-        />
-      </Card>
-    );
-  }
+function HorizontalNewsCard(props) {
+  const {
+    classes,
+    thumbnail,
+    title,
+    desc,
+  } = props;
+  return (
+    <Card className={classes.newsList}>
+      <CardContent className={classes.newsListContent}>
+        <Typography noWrap gutterBottom variant="h5" className={classes.title} component="h2">
+          {title}
+        </Typography>
+        <Typography component="p" className={classes.desc}>
+          {desc}
+        </Typography>
+        <div className={classes.actionArea}>
+          <Button size="small" color="primary">
+            Share
+          </Button>
+          <Button size="small" color="primary">
+            Read More
+          </Button>
+        </div>
+      </CardContent>
+      <CardMedia
+        className={classes.mediaNews}
+        image={thumbnail}
+        title={title}
+      />
+    </Card>
+  );
 }
 
 HorizontalNewsCard.propTypes = {

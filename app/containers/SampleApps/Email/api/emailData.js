@@ -3,7 +3,7 @@ const emailData = [
   {
     key: '1',
     avatar: avatarApi[6],
-    name: 'Guest',
+    name: 'John Doe',
     date: 'May, 11 2018',
     subject: 'Lorem ipsum dolor sit amet',
     category: '',

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import Dropzone from 'react-dropzone';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -39,157 +39,147 @@ const styles = theme => ({
   }
 });
 
-class MaterialDropZone extends React.Component {
-  constructor(props) {
-    super(props);
+function MaterialDropZone(props) {
+  const [openSnackBar, setOpenSnackbar] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [files, setFiles] = useState(props.files); // eslint-disable-line
+  const [acceptedFiles] = useState(props.acceptedFiles); // eslint-disable-line
 
-    this.state = {
-      openSnackBar: false,
-      errorMessage: '',
-      files: this.props.files, // eslint-disable-line
-      acceptedFiles: this.props.acceptedFiles // eslint-disable-line
-    };
-    this.onDrop = this.onDrop.bind(this);
-  }
+  const {
+    classes,
+    showPreviews,
+    maxSize,
+    text,
+    showButton,
+    filesLimit,
+    ...rest
+  } = props;
 
-  onDrop(filesVal) {
-    const { files } = this.state;
-    const { filesLimit } = this.props;
+  const onDrop = useCallback((filesVal) => {
     let oldFiles = files;
     const filesLimitVal = filesLimit || '3';
     oldFiles = oldFiles.concat(filesVal);
     if (oldFiles.length > filesLimit) {
-      this.setState({
-        openSnackBar: true,
-        errorMessage: 'Cannot upload more than ' + filesLimitVal + ' items.',
-      });
+      setOpenSnackbar(true);
+      setErrorMessage(`Cannot upload more than ${filesLimitVal} items.`);
     } else {
-      this.setState({ files: oldFiles });
+      setFiles(oldFiles);
     }
-  }
+  }, [files, filesLimit]);
 
-  onDropRejected() {
-    this.setState({
-      openSnackBar: true,
-      errorMessage: 'File too big, max size is 3MB',
-    });
-  }
-
-  handleRequestCloseSnackBar = () => {
-    this.setState({
-      openSnackBar: false,
-    });
+  const onDropRejected = () => {
+    setOpenSnackbar(true);
+    setErrorMessage('File too big, max size is 3MB');
   };
 
-  handleRemove(file, fileIndex) {
-    const thisFiles = this.state.files; // eslint-disable-line
+  const handleRequestCloseSnackBar = () => {
+    setOpenSnackbar(false);
+  };
+
+  const handleRemove = useCallback((file, fileIndex) => {
     // This is to prevent memory leaks.
     window.URL.revokeObjectURL(file.preview);
 
-    thisFiles.splice(fileIndex, 1);
-    this.setState({ files: thisFiles });
-  }
+    setFiles(thisFiles => {
+      const tempFiles = [...thisFiles];
+      tempFiles.splice(fileIndex, 1);
+      return tempFiles;
+    });
+  }, [files]);
 
-  render() {
-    const {
-      classes,
-      showPreviews,
-      maxSize,
-      text,
-      showButton,
-      filesLimit,
-      ...rest
-    } = this.props;
+  const fileSizeLimit = maxSize || 3000000;
+  const DeleteBtn = ({ file, index }) => (
+    <div className="middle">
+      <IconButton onClick={() => handleRemove(file, index)}>
+        <ActionDelete className="removeBtn" />
+      </IconButton>
+    </div>
+  );
 
-    const {
-      acceptedFiles,
-      files,
-      openSnackBar,
-      errorMessage
-    } = this.state;
-    const fileSizeLimit = maxSize || 3000000;
-    const deleteBtn = (file, index) => (
-      <div className="middle">
-        <IconButton onClick={() => this.handleRemove(file, index)}>
-          <ActionDelete className="removeBtn" />
-        </IconButton>
-      </div>
-    );
-    const previews = filesArray => filesArray.map((file, index) => {
-      const base64Img = URL.createObjectURL(file);
-      if (isImage(file)) {
-        return (
-          <div key={index.toString()}>
-            <div className="imageContainer col fileIconImg">
-              <figure className="imgWrap"><img className="smallPreviewImg" src={base64Img} alt="preview" /></figure>
-              {deleteBtn(file, index)}
-            </div>
-          </div>
-        );
-      }
+  DeleteBtn.propTypes = {
+    file: PropTypes.object.isRequired,
+    index: PropTypes.number.isRequired
+  };
+
+  const Previews = ({ filesArray }) => filesArray.map((file, index) => {
+    const base64Img = URL.createObjectURL(file);
+    if (isImage(file)) {
       return (
         <div key={index.toString()}>
           <div className="imageContainer col fileIconImg">
-            <FileIcon className="smallPreviewImg" alt="preview" />
-            {deleteBtn(file, index)}
+            <figure className="imgWrap"><img className="smallPreviewImg" src={base64Img} alt="preview" /></figure>
+            <DeleteBtn file={file} index={index} />
           </div>
         </div>
       );
-    });
-    let dropzoneRef;
+    }
     return (
-      <div>
-        <Dropzone
-          accept={acceptedFiles.join(',')}
-          onDrop={this.onDrop}
-          onDropRejected={this.onDropRejected}
-          acceptClassName="stripes"
-          rejectClassName="rejectStripes"
-          maxSize={fileSizeLimit}
-          ref={(node) => { dropzoneRef = node; }}
-          {...rest}
-        >
-          {({ getRootProps, getInputProps }) => (
-            <div {...getRootProps()} className={classNames(classes.dropItem, 'dropZone')}>
-              <div className="dropzoneTextStyle">
-                <input {...getInputProps()} />
-                <p className="dropzoneParagraph">{text}</p>
-                <div className={classes.uploadIconSize}>
-                  <CloudUpload />
-                </div>
-              </div>
-            </div>
-          )}
-          {/* end */}
-        </Dropzone>
-        {showButton && (
-          <Button
-            className={classes.button}
-            fullWidth
-            variant="contained"
-            onClick={() => {
-              dropzoneRef.open();
-            }}
-            color="secondary"
-          >
-            Click to upload file(s)
-            <span className={classes.rightIcon}>
-              <CloudUpload />
-            </span>
-          </Button>
-        )}
-        <div className="row preview">
-          {showPreviews && previews(files)}
+      <div key={index.toString()}>
+        <div className="imageContainer col fileIconImg">
+          <FileIcon className="smallPreviewImg" alt="preview" />
+          <DeleteBtn file={file} index={index} />
         </div>
-        <Snackbar
-          open={openSnackBar}
-          message={errorMessage}
-          autoHideDuration={4000}
-          onClose={this.handleRequestCloseSnackBar}
-        />
       </div>
     );
-  }
+  });
+
+  Previews.propTypes = {
+    filesArray: PropTypes.array.isRequired
+  };
+
+  let dropzoneRef;
+  return (
+    <div>
+      <Dropzone
+        accept={acceptedFiles.join(',')}
+        onDrop={onDrop}
+        onDropRejected={onDropRejected}
+        acceptClassName="stripes"
+        rejectClassName="rejectStripes"
+        maxSize={fileSizeLimit}
+        ref={(node) => { dropzoneRef = node; }}
+        {...rest}
+      >
+        {({ getRootProps, getInputProps }) => (
+          <div {...getRootProps()} className={classNames(classes.dropItem, 'dropZone')}>
+            <div className="dropzoneTextStyle">
+              <input {...getInputProps()} />
+              <p className="dropzoneParagraph">{text}</p>
+              <div className={classes.uploadIconSize}>
+                <CloudUpload />
+              </div>
+            </div>
+          </div>
+        )}
+        {/* end */}
+      </Dropzone>
+      {showButton && (
+        <Button
+          className={classes.button}
+          fullWidth
+          variant="contained"
+          onClick={() => {
+            dropzoneRef.open();
+          }}
+          color="secondary"
+        >
+          Click to upload file(s)
+          <span className={classes.rightIcon}>
+            <CloudUpload />
+          </span>
+        </Button>
+      )}
+      <div className="row preview">
+        {showPreviews && <Previews filesArray={files} />}
+      </div>
+      <Snackbar
+        open={openSnackBar}
+        message={errorMessage}
+        autoHideDuration={4000}
+        onClose={handleRequestCloseSnackBar}
+      />
+    </div>
+  );
 }
 
 MaterialDropZone.propTypes = {
