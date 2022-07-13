@@ -1,31 +1,35 @@
-import React from 'react';
-import { PropTypes } from 'prop-types';
-import { Router, Switch, Route } from 'react-router-dom';
-import NotFound from '../Pages/Standalone/NotFoundDedicated';
-import Auth from './Auth';
-import Application from './Application';
-import LandingCorporate from './Landing';
-import ThemeWrapper from './ThemeWrapper';
-window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
-
-function App(props) {
-  const { history } = props;
-  return (
-    <ThemeWrapper>
-      <Router history={history}>
-        <Switch>
-          <Route path="/" exact component={LandingCorporate} />
-          <Route path="/app" component={Application} />
-          <Route component={Auth} />
-          <Route component={NotFound} />
-        </Switch>
-      </Router>
-    </ThemeWrapper>
-  );
+import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
+import { Helmet } from 'react-helmet';
+import { FormattedMessage } from 'react-intl';
+import { compose } from 'redux';
+import { ToastContainer, toast } from 'react-toastify'
+import messages from './messages';
+import Routes from 'containers/__Routes'
+import GlobalStyle from '../../global-styles'
+import 'react-modal-video/css/modal-video.min.css';
+const App = () => {
+    return (
+        <Fragment>
+            <Helmet>
+                <title>Edefy</title>
+            </Helmet>
+            <Routes />
+            <ToastContainer position="top-center" />
+            <GlobalStyle />
+        </Fragment >
+    );
 }
 
-App.propTypes = {
-  history: PropTypes.object.isRequired,
-};
+function mapDispatchToProps(dispatch) {
+    return {
+        dispatch,
+    };
+}
 
-export default App;
+const withConnect = connect(
+    null,
+    mapDispatchToProps,
+);
+
+export default compose(withConnect)(App);

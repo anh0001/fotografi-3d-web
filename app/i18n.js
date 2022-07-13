@@ -7,46 +7,80 @@
  *   script `extract-intl`, and must use CommonJS module syntax
  *   You CANNOT use import/export in this file.
  */
+const addLocaleData = require('react-intl').addLocaleData; //eslint-disable-line
+const enLocaleData = require('react-intl/locale-data/en');
+const frLocaleData = require('react-intl/locale-data/fr');
+const deLocaleData = require('react-intl/locale-data/de');
 
 const enTranslationMessages = require('./translations/en.json');
+const frTranslationMessages = require('./translations/fr.json');
 const deTranslationMessages = require('./translations/de.json');
-const esTranslationMessages = require('./translations/es.json');
-const idTranslationMessages = require('./translations/id.json');
-const zhTranslationMessages = require('./translations/zh.json');
-const arTranslationMessages = require('./translations/ar.json');
 
-const DEFAULT_LOCALE = 'en';
+addLocaleData(enLocaleData);
+addLocaleData(deLocaleData);
+addLocaleData(frLocaleData);
+
+function setCookie(cname, cvalue) {
+    if (typeof window === 'undefined') {
+        return;
+    }
+    document.cookie = `${cname}=${cvalue}`;
+}
+
+function getCookie(cname) {
+    if (typeof window === 'undefined') {
+        return '';
+    }
+    const name = `${cname}=`;
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i += 1) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+
+    return '';
+}
+
+let cookie = getCookie('onova_lang');
+if (!cookie) {
+    cookie = 'en';
+    setCookie('onova_lang', 'en');
+}
+
+const DEFAULT_LOCALE = cookie;
 
 // prettier-ignore
 const appLocales = [
-  'en',
-  'zh',
-  'ar',
-  'id',
-  'de',
-  'es',
+    'en',
+    'fr',
+    'de',
 ];
 
 const formatTranslationMessages = (locale, messages) => {
-  const defaultFormattedMessages = locale !== DEFAULT_LOCALE
-    ? formatTranslationMessages(DEFAULT_LOCALE, enTranslationMessages)
-    : {};
-  const flattenFormattedMessages = (formattedMessages, key) => {
-    const formattedMessage = !messages[key] && locale !== DEFAULT_LOCALE
-      ? defaultFormattedMessages[key]
-      : messages[key];
-    return Object.assign(formattedMessages, { [key]: formattedMessage });
-  };
-  return Object.keys(messages).reduce(flattenFormattedMessages, {});
+    const defaultFormattedMessages =
+        locale !== DEFAULT_LOCALE
+            ? formatTranslationMessages(DEFAULT_LOCALE, enTranslationMessages)
+            : {};
+    const flattenFormattedMessages = (formattedMessages, key) => {
+        const formattedMessage =
+            !messages[key] && locale !== DEFAULT_LOCALE
+                ? defaultFormattedMessages[key]
+                : messages[key];
+        return Object.assign(formattedMessages, { [key]: formattedMessage });
+    };
+    return Object.keys(messages).reduce(flattenFormattedMessages, {});
 };
 
 const translationMessages = {
-  en: formatTranslationMessages('en', enTranslationMessages),
-  de: formatTranslationMessages('de', deTranslationMessages),
-  es: formatTranslationMessages('es', esTranslationMessages),
-  id: formatTranslationMessages('id', idTranslationMessages),
-  zh: formatTranslationMessages('zh', zhTranslationMessages),
-  ar: formatTranslationMessages('ar', arTranslationMessages),
+    en: formatTranslationMessages('en', enTranslationMessages),
+    de: formatTranslationMessages('de', deTranslationMessages),
+    fr: formatTranslationMessages('fr', frTranslationMessages),
 };
 
 exports.appLocales = appLocales;
