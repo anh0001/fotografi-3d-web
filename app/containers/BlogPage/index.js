@@ -39,13 +39,13 @@ const menus = [
 
 const blogs = [
     {
-        title: 'How to estublish a team with a great way?',
-        date: 'Sep 25,2019',
-        author_name: 'themekhr',
+        title: "Caesar statue cultural heritage using scanner",
+        date: 'Jul 7,2022',
+        author_name: '3d-fotografi-nusantara',
         author: avarar1,
         like: '34',
         details: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now.",
-        image: image1,
+        model3d: "https://sketchfab.com/models/f9b5ffe3851b4424a0822149626a0010/embed",
         id: 1
     },
     {
@@ -217,10 +217,14 @@ class BlogPage extends Component {
                             {this.state.pageOfItems.filter(searchingFor(this.state.search)).map((blog, i) => (
                                 <Grid key={i} className={blog.image || blog.slider || blog.video ? 'blogGridWrap' : 'blogGridWrap blogGridWrapStyleTwo'}>
                                     {blog.image && <Grid className="blogGridImg">
-                                        <iframe width="770px" height="500px" title="Dirty Car - Cadillac 75 Sedan 1953" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/17367b2c31f048eea3144f5a8c55165f/embed"> </iframe>
+                                        <img src={blog.image} alt="" />
                                     </Grid>}
                                     {blog.video && <Grid className="blogGridVideo">
-                                    <iframe width="770px" height="500px" title="Wisnu Statue Cultural Heritage from Scanner" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/d1ac53a6e7d845b8a9b2d8af92332f32/embed"> </iframe> 
+                                        <img src={blog.video} alt="" />
+                                        <Button
+                                            onClick={() => this.setState({ open: true })}>
+                                            <i className="fa fa-play"></i>
+                                        </Button>
                                     </Grid>}
                                     {blog.slider && <Grid className="blogGridSlider">
                                         <Swiper {...params}>
@@ -228,6 +232,13 @@ class BlogPage extends Component {
                                                 <img key={i} src={item} alt="" />
                                             ))}
                                         </Swiper>
+                                    </Grid>}
+                                    {blog.model3d && <Grid className="blogGridImg">
+                                        <iframe width="750px" height="500px" title={blog.title}
+                                                frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" 
+                                                allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share
+                                                src={blog.model3d}>
+                                        </iframe>
                                     </Grid>}
                                     <Grid className="blogGridContent">
                                         <ul className="blogGridMeta">
