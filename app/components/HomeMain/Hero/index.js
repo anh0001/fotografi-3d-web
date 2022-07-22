@@ -11,10 +11,10 @@ import bgImg from 'images/bg/hero.png'
 import heroImg from 'images/hero-img.png'
 
 const heros = {
-    title: 'The Best Template To Create Your',
-    titleColor: 'Digital Marketplace',
-    text: 'We make selling digital products a breeze. Easy Digital Downloads is simple to use and free to download.',
-    btn: 'Explore Templates',
+    title: '3D Fotografi',
+    titleColor: 'Nusantara',
+    text: 'Inovasi digital ekonomi kreatif melalui penyajian foto dalam bentuk 3D. Menyediakan pengolahan foto produk 3D dan pencetakan 3D. Dapat diimplementasikan pada 3D e-commerce, custom wedding souvenir, dan duplikasi replikasi benda bersejarah.',
+    btn: 'Katalog',
     btn2: 'Get Started Now',
     bg: bgImg,
     heroImg: heroImg
@@ -37,15 +37,21 @@ const Hero = (props) => {
                         <h2>{heros.title} <span>{heros.titleColor}</span></h2>
                         <p>{heros.text}</p>
                         <ul>
-                            <li><Button className="btn">{heros.btn}</Button></li>
-                            <li><Button className="btn btnNormal">{heros.btn2}</Button></li>
+                            <li><Button to={`/blog`} className="btn" >{heros.btn}</Button></li>
+                            {/* <li><Button className="btn btnNormal">{heros.btn2}</Button></li> */}
                         </ul>
                     </Grid>
                 </Grid>
             </Grid>
             <Grid className="heroImg">
                 {/* <img src={heros.heroImg} alt="" /> */}
-                <div class="sketchfab-embed-wrapper"> <iframe width="500px" height="500px" title="Dirty Car - Cadillac 75 Sedan 1953" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/17367b2c31f048eea3144f5a8c55165f/embed"> </iframe></div>
+                <div class="sketchfab-embed-wrapper">
+                    <iframe width="500px" height="500px" title="Kids Shoes" frameborder="0" 
+                            allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" 
+                            xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share 
+                            src="https://sketchfab.com/models/9454424987bf45eb9bf7290823ca0cf1/embed">
+                    </iframe>
+                </div>
                 
             </Grid>
             <ModalVideo

@@ -22,7 +22,7 @@ const Footer = (props) => {
             <Grid className="container" container spacing={4}>
                 <Grid item xs={12}>
                     <Grid className="newsleter">
-                        <h2>Follow us For ferther information</h2>
+                        <h2>Follow kami</h2>
                         <form>
                             <input placeholder="Enter Your Email" type="text" />
                             <Button>Subscribe</Button>
@@ -32,7 +32,7 @@ const Footer = (props) => {
                 <Grid item lg={3} md={4} sm={6} xs={12}>
                     <Grid className="footerLogo">
                         <img src={logo} alt="" />
-                        <p>Build and Earn with your online store with lots of cool and exclusive features </p>
+                        <p>Build your 3D products </p>
                         <ul className="socialMedia">
                             <li><a href="#"><i className="fa fa-facebook"></i></a></li>
                             <li><a href="#"><i className="fa fa-twitter"></i></a></li>
@@ -62,22 +62,22 @@ const Footer = (props) => {
                 <Grid item lg={3} md={4} xs={12}>
                     <div className="footerEarningWrap">
                         <h3 className="footertitle">Market Earning</h3>
-                        <p>online store with lots of cool and exclusive features Edefy</p>
+                        <p>inovasi model-model 3D</p>
                         <ul>
                             <li>
                                 <span>Item Sold</span>
-                                <h4>32567</h4>
+                                <h4>1</h4>
                             </li>
                             <li>
                                 <span>Total Earning</span>
-                                <h4>603598</h4>
+                                <h4>100000</h4>
                             </li>
                         </ul>
                     </div>
 
                 </Grid>
                 <Grid item xs={12} >
-                    <p className="copyright">© 2019 Edefy. All rights reserved</p>
+                    <p className="copyright">© 2022 3D-Fotografi-Nusantara. All rights reserved</p>
                 </Grid>
             </Grid>
         </footer >

@@ -12,7 +12,7 @@ const App = () => {
     return (
         <Fragment>
             <Helmet>
-                <title>Edefy</title>
+                <title>3D Fotografi Nusantara</title>
             </Helmet>
             <Routes />
             <ToastContainer position="top-center" />

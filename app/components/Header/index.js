@@ -85,9 +85,9 @@ const Header = (props) => {
             link: '/'
         },
         {
-            name: 'Blogs',
+            name: 'Katalogs',
             id: 5,
-            link: '/blog'
+            link: '/katalog'
         },
         {
             name: 'About us',
@@ -179,7 +179,7 @@ const Header = (props) => {
                 alignItems="center"
                 spacing={4}
                 className="container">
-                <Grid item lg={2} sm={6} xs={12}>
+                <Grid item lg={2} sm={14} xs={20}>
                     <Link to="/" className="logoWrapper">
                         <img src={props.logo} alt="" />
                     </Link>

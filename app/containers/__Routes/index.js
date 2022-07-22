@@ -15,6 +15,7 @@ import Author from 'containers/Author/Loadable'
 import CategoryPage from 'containers/CategoryPage/Loadable'
 import ProductDetails from 'containers/ProductDetails/Loadable'
 import BlogPage from 'containers/BlogPage/Loadable'
+import Katalog from 'containers/Katalog/Loadable'
 import BlogDetails from 'containers/BlogDetails/Loadable'
 import ContactPage from 'containers/ContactPage/Loadable'
 import ErrorPage from 'containers/ErrorPage/Loadable'
@@ -60,6 +61,11 @@ const Routes = () => {
                 exact
                 path="/blog"
                 component={BlogPage}
+            />
+            <PrivateRoute
+                exact
+                path="/katalog"
+                component={Katalog}
             />
             <PrivateRoute
                 exact

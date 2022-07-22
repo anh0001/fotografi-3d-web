@@ -88,7 +88,7 @@ const Testmonial = () => {
                 <Grid item xs={12}>
                     <SectionTitle
                         title="What People Say"
-                        subtitle="Build and Earn with your online store with lots of cool and exclusive features bundled with Edefy!"
+                        subtitle="Build your 3D products"
                     />
                 </Grid>
                 <Grid xs={12} item>

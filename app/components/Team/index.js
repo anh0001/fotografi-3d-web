@@ -6,74 +6,69 @@ import SingleTeam from 'components/SingleTeam/Loadable'
 import './style.scss'
 
 // images 
-import team1 from 'images/team/img1.jpg'
-import team2 from 'images/team/img2.jpg'
+import martianda_foto from 'images/team/martianda_foto.jpg'
+import anhar_foto from 'images/team/anhar_foto.jpg'
 import team3 from 'images/team/img3.jpg'
 import team4 from 'images/team/img4.jpg'
+import lutfi_foto from 'images/team/lutfi_foto.jpg'
+import ratri_foto from 'images/team/ratri_foto.jpg'
 
 const teams = [
     {
-        image: team1,
-        name: 'Angelica Watson',
-        desig: 'Director',
+        image: martianda_foto,
+        name: 'Martianda Erste Anggraeni',
+        desig: 'Ketua',
         social: ['fa-facebook', 'fa-twitter', 'fa-linkedin'],
         id: 1
     },
     {
-        image: team2,
-        name: 'Darothi Clandon',
-        desig: 'CEO',
+        image: anhar_foto,
+        name: 'Anhar Risnumawan',
+        desig: 'Anggota',
         social: ['fa-facebook', 'fa-twitter', 'fa-linkedin', 'fa-youtube'],
         id: 2
     },
     {
         image: team3,
-        name: 'Robert Simon',
-        desig: 'Founder',
+        name: 'Muhammad Gibran',
+        desig: 'Anggota',
         social: ['fa-facebook', 'fa-twitter', 'fa-linkedin'],
         id: 3
     },
     {
         image: team4,
-        name: 'Julia D’Soza',
-        desig: 'Director',
+        name: 'Nurul Istiqomah Budianti',
+        desig: 'Anggota',
         social: ['fa-facebook', 'fa-twitter', 'fa-linkedin', 'fa-youtube'],
         id: 4
     },
     {
-        image: team1,
-        name: 'Angelica Watson',
-        desig: 'Director',
+        image: team3,
+        name: 'Bening Safitri',
+        desig: 'Anggota',
         social: ['fa-facebook', 'fa-twitter', 'fa-linkedin'],
         id: 5
     },
     {
-        image: team2,
-        name: 'Darothi Clandon',
-        desig: 'CEO',
+        image: lutfi_foto,
+        name: 'Lutfi Hidayati',
+        desig: 'Teknisi',
         social: ['fa-facebook', 'fa-twitter', 'fa-linkedin', 'fa-youtube'],
         id: 6
     },
     {
-        image: team3,
-        name: 'Robert Simon',
-        desig: 'Founder',
+        image: ratri_foto,
+        name: 'Aestatica Ratri',
+        desig: 'Teknisi',
         social: ['fa-facebook', 'fa-twitter', 'fa-linkedin'],
         id: 7
-    },
-    {
-        image: team4,
-        name: 'Julia D’Soza',
-        desig: 'Director',
-        social: ['fa-facebook', 'fa-twitter', 'fa-linkedin', 'fa-youtube'],
-        id: 8
     },
 ]
 
 const Team = () => {
     const settings = {
         infinite: true,
-        slidesToShow: 4,
+        slidesToShow: 5,
         speed: 500,
         responsive: [
             {
@@ -115,7 +110,7 @@ const Team = () => {
                 <Grid item xs={12}>
                     <SectionTitle
                         title='Our Team'
-                        subtitle='Build and Earn with your online store with lots of cool and exclusive features bundled with Edefy!'
+                        subtitle='Build your 3D products'
                     />
                 </Grid>
                 <Grid xs={12} item>

@@ -13,12 +13,12 @@ const AboutContent = () => {
             <Grid container spacing={4} className="container">
                 <Grid item lg={6} md={6} xs={12}>
                     <Grid className="aboutContent">
-                        <h2>About <span>Fotografi 3D</span></h2>
-                        <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. </p>
+                        <h2>About <span>3D Fotografi Nusantara</span></h2>
+                        <p>Inovasi digital ekonomi kreatif melalui penyajian foto-foto dalam bentuk 3D. Menyediakan pengolahan foto produk 3D dan pencetakan 3D. Dapat diimplementasikan pada:</p>
                         <ul>
-                            <li>Various versions have evolved over the years.</li>
-                            <li>Sometimes by accident, sometimes on purpose. </li>
-                            <li>Injected humour and the like.</li>
+                            <li>3D e-commerce.</li>
+                            <li>Custom wedding souvenir. </li>
+                            <li>Duplikasi atau replikasi benda-benda bersejarah.</li>
                         </ul>
                     </Grid>
                 </Grid>
